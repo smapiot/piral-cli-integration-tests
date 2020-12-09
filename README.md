@@ -2,6 +2,8 @@
 
 # Piral CLI Acceptance Tests
 
+Integration tests for the `piral-cli` tool and imported plugins such as `piral-cli-parcel` or `piral-cli-webpack`.
+
 ## Status
 
 [![Overall](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)
