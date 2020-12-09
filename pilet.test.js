@@ -3,6 +3,7 @@ const { exec, spawn } = require("child_process");
 const { promisify } = require("util");
 const fs = require("fs");
 const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
+const rimraf = promisify(require("rimraf"));
 
 const execute = promisify(exec);
 const sleep = promisify(setTimeout);
@@ -37,15 +38,15 @@ const waitForRunning = (debugProcess, port) => {
 describe("pilet", () => {
     it("scaffold pilet", async () => {
         // TODO: npm list | tail -n +2 > package.list &&
-        await fsPromises.rmdir("pilet-build", { recursive: true });
+        await rimraf("pilet-build");
         await fsPromises.mkdir("pilet-build");
 
-        const info = await execute(`npm init pilet -y`, {
+        const info = await execute(`npm init pilet ${process.version.startsWith("v15") ? "-- " : ""}-y`, {
             cwd: path.resolve(process.cwd(), "pilet-build"),
         });
 
-        await fsPromises.rmdir(path.resolve("pilet-build", "node_modules"), { recursive: true });
-        await fsPromises.rm(path.resolve("pilet-build", "package-lock.json"));
+        await rimraf(path.resolve("pilet-build", "node_modules"));
+        await rimraf(path.resolve("pilet-build", "package-lock.json"));
 
         expect(info.stderr).toBe("");
 
@@ -54,15 +55,16 @@ describe("pilet", () => {
     });
 
     it("pilet scaffold with piral source", async () => {
-        await execute(`
-            rm -rf pilet &&
-            mkdir pilet
-        `);
+        await rimraf("pilet");
+        await fsPromises.mkdir("pilet");
 
         // scaffold new pilet
-        const info = await execute("npm init pilet@next --source sample-piral@next -y", {
-            cwd: path.resolve(process.cwd(), "pilet"),
-        });
+        const info = await execute(
+            `npm init pilet@next ${process.version.startsWith("v15") ? "-- " : ""}--source sample-piral@next -y`,
+            {
+                cwd: path.resolve(process.cwd(), "pilet"),
+            }
+        );
         expect(info.stderr).toBe("");
     });
 
@@ -70,10 +72,13 @@ describe("pilet", () => {
         const port = 2333;
 
         // start the debug process and wait until compiled and server running
-        const debugProcess = spawn(`timeout 60s npx pilet debug --port ${port}`, {
-            cwd: path.resolve(process.cwd(), "pilet"),
-            shell: true,
-        });
+        const debugProcess = spawn(
+            `timeout 60s npx pilet debug ${process.version.startsWith("v15") ? "-- " : ""}--port ${port}`,
+            {
+                cwd: path.resolve(process.cwd(), "pilet"),
+                shell: true,
+            }
+        );
         const handleError = jest.fn();
         debugProcess.stderr.once("data", handleError);
         await waitForRunning(debugProcess, port);

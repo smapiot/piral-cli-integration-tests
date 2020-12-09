@@ -3,7 +3,8 @@
     "jest": "^23.6.0",
     "jest-fs-snapshot": "^0.1.0",
     "jest-puppeteer": "^4.4.0",
-    "puppeteer": "^5.5.0"
+    "puppeteer": "^5.5.0",
+    "rimraf": "^3.0.2"
   },
   "scripts": {
     "test": "jest"

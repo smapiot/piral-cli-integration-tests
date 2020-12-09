@@ -8,12 +8,12 @@ Integration tests for the `piral-cli` tool and imported plugins such as `piral-c
 
 [![Overall](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)
 
-| OS      | Node | Status |
-| ------- | ---- | ------ |
-| Linux   | 10.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_10)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master) |
-| Linux   | 12.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_12)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master) |
-| Linux   | 14.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master) |
-| Linux   | 14.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master) |
+| OS      | Node | Status                                                                                                                                                                                                                                                                                         |
+| ------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Linux   | 10.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_10)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)   |
+| Linux   | 12.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_12)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)   |
+| Linux   | 14.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)   |
+| Linux   | 15.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_15)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)   |
 | Windows | 14.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20windows_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master) |
 
 ## Tests

@@ -3,6 +3,7 @@ const path = require("path");
 const { exec } = require("child_process");
 const fs = require("fs");
 const { promisify } = require("util");
+const rimraf = promisify(require("rimraf"));
 
 const execute = promisify(exec);
 const fsPromises = fs.promises;
@@ -15,14 +16,14 @@ describe("piral", () => {
     it("scaffold piral", async () => {
         // TODO: npm list | tail -n +2 > package.list &&
 
-        await fsPromises.rmdir("piral-inst", { recursive: true });
+        await rimraf("piral-inst");
         await fsPromises.mkdir("piral-inst");
 
-        const info = await execute(`npm init piral-instance -y`, {
+        const info = await execute(`npm init piral-instance ${process.version.startsWith("v15") ? "-- " : ""}-y`, {
             cwd: path.resolve(process.cwd(), "piral-inst"),
         });
 
-        await fsPromises.rmdir(path.resolve("piral-inst", "node_modules"), { recursive: true });
+        await rimraf(path.resolve("piral-inst", "node_modules"));
         await fsPromises.rm(path.resolve("piral-inst", "package-lock.json"));
 
         expect(info.stderr).toBe("");
