@@ -34,8 +34,9 @@ steps:
 
     - script: npm test
       displayName: "Run Tests"
+
     - task: PublishTestResults@2
-    inputs:
+      inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/junit.xml'
         mergeTestResults: true
