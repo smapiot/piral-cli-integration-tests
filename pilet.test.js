@@ -71,7 +71,7 @@ describe("pilet", () => {
     });
 
     it("HMR", async (done) => {
-        const port = 2333;
+        const port = 38080;
 
         // start the debug process and wait until compiled and server running
         const debugProcess = spawn(
