@@ -10,6 +10,7 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 expect.extend({ toMatchFilesystemSnapshot });
 const fsPromises = fs.promises;
+fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
 
 const srcFilePath = path.resolve(process.cwd(), "pilet", "src", "index.tsx");
 

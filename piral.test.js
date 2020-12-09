@@ -6,6 +6,7 @@ const { promisify } = require("util");
 
 const execute = promisify(exec);
 const fsPromises = fs.promises;
+fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
 
 expect.extend({ toMatchFilesystemSnapshot });
 jest.setTimeout(120 * 1000); // 60 second timeout
