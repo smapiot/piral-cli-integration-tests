@@ -34,13 +34,13 @@ const waitForRunning = (debugProcess, port) => {
 
 describe("pilet", () => {
     it("scaffold pilet", async () => {
+        // TODO: npm list | tail -n +2 > package.list &&
         const info = await execute(`
             rm -rf pilet-build &&
             mkdir pilet-build &&
             cd pilet-build &&
             npm init pilet -y &&
-            npm list | tail -n +2 > package.list &&
-            rm -rf node_modules
+            rm -rf node_modules package-lock.json
         `);
 
         expect(info.stderr).toBe("");

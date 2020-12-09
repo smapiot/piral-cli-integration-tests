@@ -1,35 +1,35 @@
 trigger:
-- main
+    - master
 
 strategy:
-  matrix:
-    linux_node_10:
-      imageName: 'ubuntu-16.04'
-      nodeVersion: 10.x
-    linux_node_12:
-      imageName: 'ubuntu-16.04'
-      nodeVersion: 12.x
-    linux_node_14:
-      imageName: 'ubuntu-16.04'
-      nodeVersion: 14.x
-    linux_node_15:
-      imageName: 'ubuntu-16.04'
-      nodeVersion: 15.x
-    windows_node_14:
-      imageName: 'vs2017-win2016'
-      nodeVersion: 14.x
+    matrix:
+        linux_node_10:
+            imageName: "ubuntu-16.04"
+            nodeVersion: 10.x
+        linux_node_12:
+            imageName: "ubuntu-16.04"
+            nodeVersion: 12.x
+        linux_node_14:
+            imageName: "ubuntu-16.04"
+            nodeVersion: 14.x
+        linux_node_15:
+            imageName: "ubuntu-16.04"
+            nodeVersion: 15.x
+        windows_node_14:
+            imageName: "vs2017-win2016"
+            nodeVersion: 14.x
 
 pool:
-  vmImage: $(imageName)
+    vmImage: $(imageName)
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: $(nodeVersion)
-  displayName: 'Install Node.js'
+    - task: NodeTool@0
+      inputs:
+          versionSpec: $(nodeVersion)
+      displayName: "Install Node.js"
 
-- script: npm install --legacy-peer-deps
-  displayName: 'Setup Tests'
+    - script: npm install --legacy-peer-deps
+      displayName: "Setup Tests"
 
-- script: npm test
-  displayName: 'Run Tests'
+    - script: npm test
+      displayName: "Run Tests"

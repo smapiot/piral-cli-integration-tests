@@ -10,13 +10,13 @@ jest.setTimeout(120 * 1000); // 60 second timeout
 
 describe("piral", () => {
     it("scaffold piral", async () => {
+        // TODO: npm list | tail -n +2 > package.list &&
         const info = await execute(`
         rm -rf piral-inst &&
         mkdir piral-inst &&
         cd piral-inst &&
         npm init piral-instance -y &&
-        npm list | tail -n +2 > package.list &&
-        rm -rf node_modules
+        rm -rf node_modules package-lock.json
     `);
 
         expect(info.stderr).toBe("");
