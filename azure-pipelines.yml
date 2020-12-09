@@ -1,7 +1,6 @@
 trigger:
     - master
 
-
 strategy:
     matrix:
         linux_node_10:

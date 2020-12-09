@@ -1,19 +1,36 @@
 {
-  "dependencies": {
-    "jest": "^23.6.0",
-    "jest-fs-snapshot": "^0.1.0",
-    "jest-puppeteer": "^4.4.0",
-    "puppeteer": "^5.5.0",
-    "rimraf": "^3.0.2"
+  "name": "piral-cli-integration-tests",
+  "version": "1.0.0",
+  "description": "The acceptance tests for the Piral CLI and its plugins.",
+  "author": "smapiot",
+  "homepage": "https://piral.io",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smapiot/piral-cli-integration-tests.git"
   },
   "scripts": {
     "test": "jest"
   },
   "jest": {
     "preset": "jest-puppeteer",
-    "reporters": [ "default", "jest-junit" ]
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
+  },
+  "dependencies": {
+    "jest": "^23.6.0",
+    "jest-cli": "^26.6.3",
+    "jest-fs-snapshot": "^0.1.0",
+    "jest-junit": "^12.0.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^5.5.0",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
-    "jest-junit": "^12.0.0"
   }
 }
