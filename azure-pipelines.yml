@@ -1,6 +1,7 @@
 trigger:
     - master
 
+
 strategy:
     matrix:
         linux_node_10:
@@ -33,3 +34,8 @@ steps:
 
     - script: npm test
       displayName: "Run Tests"
+    - task: PublishTestResults@2
+    inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/junit.xml'
+        mergeTestResults: true
