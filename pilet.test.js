@@ -4,6 +4,7 @@ const { promisify } = require("util");
 const fs = require("fs");
 const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
 const rimraf = promisify(require("rimraf"));
+const { type } = require("os");
 
 const execute = promisify(exec);
 const sleep = promisify(setTimeout);
@@ -14,6 +15,7 @@ const fsPromises = fs.promises;
 fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
 
 const srcFilePath = path.resolve(process.cwd(), "pilet", "src", "index.tsx");
+const timeoutCommand = type().startsWith("Linux") ? "timeout 60s " : "";
 
 jest.setTimeout(300 * 1000); // 300 second timeout
 
@@ -73,7 +75,7 @@ describe("pilet", () => {
 
         // start the debug process and wait until compiled and server running
         const debugProcess = spawn(
-            `timeout 60s npx pilet debug ${process.version.startsWith("v15") ? "-- " : ""}--port ${port}`,
+            `${timeoutCommand}npx pilet debug ${process.version.startsWith("v15") ? "-- " : ""}--port ${port}`,
             {
                 cwd: path.resolve(process.cwd(), "pilet"),
                 shell: true,
