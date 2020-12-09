@@ -9,6 +9,7 @@ const sleep = promisify(setTimeout);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 expect.extend({ toMatchFilesystemSnapshot });
+const fsPromises = fs.promises;
 
 const srcFilePath = path.resolve(process.cwd(), "pilet", "src", "index.tsx");
 
@@ -35,13 +36,15 @@ const waitForRunning = (debugProcess, port) => {
 describe("pilet", () => {
     it("scaffold pilet", async () => {
         // TODO: npm list | tail -n +2 > package.list &&
-        const info = await execute(`
-            rm -rf pilet-build &&
-            mkdir pilet-build &&
-            cd pilet-build &&
-            npm init pilet -y &&
-            rm -rf node_modules package-lock.json
-        `);
+        await fsPromises.rmdir("pilet-build", { recursive: true });
+        await fsPromises.mkdir("pilet-build");
+
+        const info = await execute(`npm init pilet -y`, {
+            cwd: path.resolve(process.cwd(), "pilet-build"),
+        });
+
+        await fsPromises.rmdir(path.resolve("pilet-build", "node_modules"), { recursive: true });
+        await fsPromises.rm(path.resolve("pilet-build", "package-lock.json"));
 
         expect(info.stderr).toBe("");
 
