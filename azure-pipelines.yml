@@ -1,6 +1,12 @@
 trigger:
     - master
 
+parameters:
+- name: piralCliVersion
+  displayName: Piral CLI Version
+  type: string
+  default: 'next'
+
 strategy:
     matrix:
         linux_node_10:
@@ -33,6 +39,8 @@ steps:
 
     - script: npm test
       displayName: "Run Tests"
+      env:
+        CLI_VERSION: ${{ parameters.piralCliVersion }}
 
     - task: PublishTestResults@2
       inputs:
