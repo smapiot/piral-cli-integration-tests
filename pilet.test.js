@@ -29,7 +29,7 @@ const serverHasStarted = (resolve, port, timeout, ref) => (data) => {
 
 const waitForRunning = (debugProcess, port) => {
     return new Promise((resolve, reject) => {
-        timeout = setTimeout(() => reject(new Error("Server not started after 60s")), 60 * 1000);
+        timeout = setTimeout(() => reject(new Error("Server not started after 180s")), 180 * 1000);
         const ref = {};
         const onData = serverHasStarted(resolve, port, timeout, ref);
         debugProcess.stdout.on("data", onData);
