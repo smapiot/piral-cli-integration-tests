@@ -10,6 +10,10 @@
     "test": "jest"
   },
   "jest": {
-    "preset": "jest-puppeteer"
+    "preset": "jest-puppeteer",
+    "reporters": [ "default", "jest-junit" ]
+  },
+  "devDependencies": {
+    "jest-junit": "^12.0.0"
   }
 }
