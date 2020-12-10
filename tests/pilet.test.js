@@ -73,17 +73,21 @@ describe("pilet", () => {
 
     it("HMR", async (done) => {
         const pathToBuildDir = path.resolve(process.cwd(), "pilet");
-        const port = 1234;
+        const port = 38080;
+
+        // fixing node15 issue
+        if (process.version.startsWith("v15") && type().startsWith("Linux"))
+            try {
+                await execute(`timeout 60s npx pilet debug --port 2323`, {
+                    cwd: pathToBuildDir,
+                });
+            } catch (error) {}
 
         // start the debug process and wait until compiled and server running
-
-        const debugProcess = spawn(
-            `${timeoutCommand} npx pilet debug ${process.version.startsWith("v15") ? "-- " : ""} --port ${port}`,
-            {
-                cwd: pathToBuildDir,
-                shell: true,
-            }
-        );
+        const debugProcess = spawn(`${timeoutCommand} npx pilet debug --port ${port}`, {
+            cwd: pathToBuildDir,
+            shell: true,
+        });
 
         const handleError = jest.fn();
         debugProcess.stderr.once("data", handleError);
