@@ -38,6 +38,7 @@ steps:
       displayName: "Setup Tests"
 
     - script: npm test
+      continueOnError: true
       displayName: "Run Tests"
       env:
         CLI_VERSION: ${{ parameters.piralCliVersion }}
