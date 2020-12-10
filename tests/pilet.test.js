@@ -73,7 +73,7 @@ describe("pilet", () => {
 
     it("HMR", async (done) => {
         const pathToBuildDir = path.resolve(process.cwd(), "pilet");
-        const port = 38080;
+        const port = 1234;
 
         // start the debug process and wait until compiled and server running
 
