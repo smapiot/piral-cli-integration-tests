@@ -1,9 +1,10 @@
-const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
 const path = require("path");
 const { exec } = require("child_process");
 const fs = require("fs");
 const { promisify } = require("util");
+
 const rimraf = promisify(require("rimraf"));
+const diff = require("jest-diff");
 
 const fsPromises = fs.promises;
 fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
@@ -30,9 +31,24 @@ const getInitializerOptions = () => {
     ].join(" ");
 };
 
+const snapshotOptions = {
+    customCompare: [
+        {
+            check: (path) => path.endsWith("package.json"),
+
+            compare: (actualBuffer, expectedBuffer) => {
+                const actual = JSON.parse(actualBuffer);
+                const expected = JSON.parse(expectedBuffer);
+                return diff(actual, expected);
+            },
+        },
+    ],
+};
+
 module.exports = {
     execute,
     cleanDir,
     cleanupForSnapshot,
     getInitializerOptions,
+    snapshotOptions,
 };

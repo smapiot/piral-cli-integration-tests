@@ -2,4 +2,8 @@ pilet/
 pilet-build/
 piral-inst/
 node_modules/
+
 junit.xml
+
+yarn.lock
+package-lock.json

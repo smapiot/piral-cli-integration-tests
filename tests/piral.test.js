@@ -1,22 +1,8 @@
 const path = require("path");
-const diff = require("jest-diff");
 
-const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
+const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
 
-const { cleanDir, cleanupForSnapshot, getInitializerOptions, execute } = require("./common");
-
-const snapshotOptions = {
-    customCompare: [
-        [
-            (path) => path.endsWith("package.json"),
-            (actualBuffer, expectedBuffer) => {
-                const actual = JSON.parse(actualBuffer);
-                const expected = JSON.parse(expectedBuffer);
-                return diff(actual, expected);
-            },
-        ],
-    ],
-};
+const { cleanDir, cleanupForSnapshot, getInitializerOptions, execute, snapshotOptions } = require("../src/common");
 
 expect.extend({ toMatchFilesystemSnapshot });
 
@@ -38,6 +24,6 @@ describe("piral", () => {
 
         expect(info.stderr).toBe("");
 
-        expect(pathToBuildDir).toMatchFilesystemSnapshot();
+        expect(pathToBuildDir).toMatchFilesystemSnapshot(undefined, snapshotOptions);
     });
 });

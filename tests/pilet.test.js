@@ -2,10 +2,10 @@ const path = require("path");
 const { exec, spawn } = require("child_process");
 const { promisify } = require("util");
 const fs = require("fs");
-const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
+const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
 const rimraf = promisify(require("rimraf"));
 const { type } = require("os");
-const { getInitializerOptions, cleanDir, cleanupForSnapshot } = require("./common");
+const { getInitializerOptions, cleanDir, cleanupForSnapshot, snapshotOptions } = require("../src/common");
 
 const execute = promisify(exec);
 const sleep = promisify(setTimeout);
@@ -54,7 +54,7 @@ describe("pilet", () => {
 
         expect(info.stderr).toBe("");
 
-        expect(pathToBuildDir).toMatchFilesystemSnapshot();
+        expect(pathToBuildDir).toMatchFilesystemSnapshot(undefined, snapshotOptions);
     });
 
     it("pilet scaffold with piral source", async () => {
