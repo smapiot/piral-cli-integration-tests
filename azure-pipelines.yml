@@ -43,23 +43,23 @@ steps:
       env:
           CLI_VERSION: ${{ parameters.piralCliVersion }}
 
-    - script: npm test
-      continueOnError: true
-      displayName: "Run Tests with parcel"
-      env:
-          CLI_VERSION: ${{ parameters.piralCliVersion }}
-          BUNDLER: parcel
-          JEST_JUNIT_OUTPUT_NAME: "junit-parcel.xml"
-          JEST_JUNIT_SUITE_NAME: "{title}-parcel"
+    # - script: npm test
+    #   continueOnError: true
+    #   displayName: "Run Tests with parcel"
+    #   env:
+    #       CLI_VERSION: ${{ parameters.piralCliVersion }}
+    #       BUNDLER: parcel
+    #       JEST_JUNIT_OUTPUT_NAME: "junit-parcel.xml"
+    #       JEST_JUNIT_SUITE_NAME: "{title}-parcel"
 
-    - script: npm test
-      continueOnError: true
-      displayName: "Run Tests with webpack5"
-      env:
-          CLI_VERSION: ${{ parameters.piralCliVersion }}
-          BUNDLER: webpack5
-          JEST_JUNIT_OUTPUT_NAME: "junit-webpack5.xml"
-          JEST_JUNIT_SUITE_NAME: "{title}-webpack5"
+    # - script: npm test
+    #   continueOnError: true
+    #   displayName: "Run Tests with webpack5"
+    #   env:
+    #       CLI_VERSION: ${{ parameters.piralCliVersion }}
+    #       BUNDLER: webpack5
+    #       JEST_JUNIT_OUTPUT_NAME: "junit-webpack5.xml"
+    #       JEST_JUNIT_SUITE_NAME: "{title}-webpack5"
 
     - task: PublishTestResults@2
       inputs:
