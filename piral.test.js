@@ -12,7 +12,7 @@ expect.extend({ toMatchFilesystemSnapshot });
 
 const cliVersion = process.env.CLI_VERSION || "latest";
 const installFlag = process.version.startsWith("v15")
-  ? "--legacy-peer-deps -- "
+  ? "-y --legacy-peer-deps -- "
   : "";
 
 jest.setTimeout(120 * 1000); // 60 second timeout

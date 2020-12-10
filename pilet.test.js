@@ -18,7 +18,7 @@ const srcFilePath = path.resolve(process.cwd(), "pilet", "src", "index.tsx");
 const timeoutCommand = type().startsWith("Linux") ? "timeout 60s " : "";
 const cliVersion = process.env.CLI_VERSION || "latest";
 const installFlag = process.version.startsWith("v15")
-  ? "--legacy-peer-deps -- "
+  ? "-y --legacy-peer-deps -- "
   : "";
 
 jest.setTimeout(300 * 1000); // 300 second timeout
