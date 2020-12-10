@@ -1,42 +1,43 @@
-const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
 const path = require("path");
-const { exec } = require("child_process");
-const fs = require("fs");
-const { promisify } = require("util");
-const rimraf = promisify(require("rimraf"));
+const diff = require("jest-diff");
 
-const execute = promisify(exec);
-const fsPromises = fs.promises;
-fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
+const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
+
+const { cleanDir, cleanupForSnapshot, getInitializerOptions, execute } = require("./common");
+
+const snapshotOptions = {
+    customCompare: [
+        [
+            (path) => path.endsWith("package.json"),
+            (actualBuffer, expectedBuffer) => {
+                const actual = JSON.parse(actualBuffer);
+                const expected = JSON.parse(expectedBuffer);
+                return diff(actual, expected);
+            },
+        ],
+    ],
+};
+
 expect.extend({ toMatchFilesystemSnapshot });
 
 const cliVersion = process.env.CLI_VERSION || "latest";
-const installFlag = process.version.startsWith("v15")
-  ? "-y --legacy-peer-deps -- "
-  : "";
 
 jest.setTimeout(120 * 1000); // 60 second timeout
 
 describe("piral", () => {
-  it("scaffold piral", async () => {
-    // TODO: npm list | tail -n +2 > package.list &&
+    it("scaffold piral", async () => {
+        const pathToBuildDir = path.resolve(process.cwd(), "piral-inst");
 
-    await rimraf("piral-inst");
-    await fsPromises.mkdir("piral-inst");
+        await cleanDir(pathToBuildDir);
 
-    const info = await execute(
-      `npm init piral-instance@${cliVersion} ${installFlag}--tag ${cliVersion} -y`,
-      {
-        cwd: path.resolve(process.cwd(), "piral-inst"),
-      }
-    );
+        const info = await execute(`npm init piral-instance@${cliVersion} ` + getInitializerOptions(), {
+            cwd: pathToBuildDir,
+        });
 
-    await rimraf(path.resolve("piral-inst", "node_modules"));
-    await fsPromises.rm(path.resolve("piral-inst", "package-lock.json"));
+        await cleanupForSnapshot(pathToBuildDir);
 
-    expect(info.stderr).toBe("");
+        expect(info.stderr).toBe("");
 
-    const pathToBuildDir = path.resolve(process.cwd(), "piral-inst");
-    expect(pathToBuildDir).toMatchFilesystemSnapshot();
-  });
+        expect(pathToBuildDir).toMatchFilesystemSnapshot();
+    });
 });
