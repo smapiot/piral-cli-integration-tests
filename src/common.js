@@ -40,6 +40,21 @@ const snapshotOptions = {
             compare: (actualBuffer, expectedBuffer) => {
                 const actual = JSON.parse(actualBuffer);
                 const expected = JSON.parse(expectedBuffer);
+
+                [
+                    // delete piral cli dependencies
+                    actual.dependencies,
+                    actual.devDependencies,
+                    expected.dependencies,
+                    expected.devDependencies,
+                ].forEach((obj) =>
+                    Object.keys(obj)
+                        .filter((key) => key.startsWith("piral-cli-"))
+                        .forEach((key) => {
+                            delete obj[key];
+                        })
+                );
+
                 return diff(actual, expected);
             },
         },

@@ -3,7 +3,7 @@
 *piral-inst/
 node_modules/
 
-junit.xml
+junit*.xml
 
 yarn.lock
 package-lock.json
