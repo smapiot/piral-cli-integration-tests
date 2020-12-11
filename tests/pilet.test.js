@@ -3,43 +3,27 @@ const { exec, spawn } = require("child_process");
 const { promisify } = require("util");
 const fs = require("fs");
 const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
-const rimraf = promisify(require("rimraf"));
-const { type } = require("os");
-const { getInitializerOptions, cleanDir, cleanupForSnapshot, snapshotOptions } = require("../src/common");
+const {
+    getInitializerOptions,
+    cleanDir,
+    cleanupForSnapshot,
+    snapshotOptions,
+    waitForRunning,
+    timeoutCommand,
+} = require("../src/common");
 
 const execute = promisify(exec);
 const sleep = promisify(setTimeout);
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
 expect.extend({ toMatchFilesystemSnapshot });
 const fsPromises = fs.promises;
 fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
 
 const srcFilePath = path.resolve(process.cwd(), "pilet", "src", "index.tsx");
-const timeoutCommand = type().startsWith("Linux") ? "timeout 60s " : "";
 
 const cliVersion = process.env.CLI_VERSION || "latest";
 const installFlag = process.version.startsWith("v15") ? "-y --legacy-peer-deps -- " : "";
 
 jest.setTimeout(300 * 1000); // 300 second timeout
-
-const serverHasStarted = (resolve, port, timeout, ref) => (data) => {
-    if (data.toString().includes(`Running at http://localhost:${port}`)) {
-        clearTimeout(timeout);
-        ref.unsubscribe();
-        resolve();
-    }
-};
-
-const waitForRunning = (debugProcess, port) => {
-    return new Promise((resolve, reject) => {
-        timeout = setTimeout(() => reject(new Error("Server not started after 180s")), 180 * 1000);
-        const ref = {};
-        const onData = serverHasStarted(resolve, port, timeout, ref);
-        debugProcess.stdout.on("data", onData);
-        ref.unsubscribe = () => debugProcess.stdout.off("data", onData);
-    });
-};
 
 describe("pilet", () => {
     it("scaffold pilet", async () => {
@@ -111,8 +95,8 @@ describe("pilet", () => {
 
         // Update in src/index.tsx to trigger HMR
         const newString = `Welcome to Test${Math.floor(Math.random() * 10000)}!`;
-        const indexFile = await readFile(srcFilePath);
-        await writeFile(srcFilePath, indexFile.toString().replace("Welcome to Piral!", newString));
+        const indexFile = await fsPromises.readFile(srcFilePath);
+        await fsPromises.writeFile(srcFilePath, indexFile.toString().replace("Welcome to Piral!", newString));
 
         // Wait until changes have been applied and check the updated pilet
         await backendReloaded;

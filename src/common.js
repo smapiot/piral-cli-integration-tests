@@ -2,6 +2,7 @@ const path = require("path");
 const { exec } = require("child_process");
 const fs = require("fs");
 const { promisify } = require("util");
+const { type } = require("os");
 
 const rimraf = promisify(require("rimraf"));
 const diff = require("jest-diff");
@@ -45,10 +46,35 @@ const snapshotOptions = {
     ],
 };
 
+const serverHasStarted = (resolve, port, timeout, ref) => (data) => {
+    if (data.toString().includes(`Running at http://localhost:${port}`)) {
+        clearTimeout(timeout);
+        ref.unsubscribe();
+        resolve();
+    }
+};
+
+const waitForRunning = (debugProcess, port) => {
+    return new Promise((resolve, reject) => {
+        timeout = setTimeout(() => reject(new Error("Server not started after 180s")), 180 * 1000);
+        const ref = {};
+        const onData = serverHasStarted(resolve, port, timeout, ref);
+        debugProcess.stdout.on("data", onData);
+        ref.unsubscribe = () => debugProcess.stdout.off("data", onData);
+    });
+};
+
+const timeoutCommand = type().startsWith("Linux") ? "timeout 60s " : "";
+
+const sleep = promisify(setTimeout);
+
 module.exports = {
     execute,
     cleanDir,
     cleanupForSnapshot,
     getInitializerOptions,
     snapshotOptions,
+    waitForRunning,
+    timeoutCommand,
+    sleep,
 };

@@ -39,6 +39,13 @@ Integration tests for the `piral-cli` tool and imported plugins such as `piral-c
 -   ✅ Change pilet while debugging (HMR)
 -   🔲 Check pilet with browser extension (piral-inspector)
 
+## Enviroment variables
+
+| ENV           | description                                   | default            |
+| ------------- | --------------------------------------------- | ------------------ |
+| `CLI_VERSION` | piral version                                 | `"latest"`         |
+| `BUNDLER`     | `"webpack"` \|\| `"webpack5"` \|\| `"parcel"` | `""` ≙ `"webpack"` |
+
 ## License
 
 Piral is released using the MIT license. For more information see the [license file](./LICENSE).
