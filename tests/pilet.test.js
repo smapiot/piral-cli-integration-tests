@@ -24,6 +24,7 @@ const srcFilePath = path.resolve(process.cwd(), "pilet", "src", "index.tsx");
 
 const cliVersion = process.env.CLI_VERSION || "latest";
 const installFlag = process.version.startsWith("v15") ? "-y --legacy-peer-deps -- " : "";
+const bundlerPrefix = !!process.env.BUNDLER ? process.env.BUNDLER + "-" : "";
 
 jest.setTimeout(300 * 1000); // 300 second timeout
 
@@ -31,7 +32,7 @@ const afterAllHandlers = [];
 
 describe("pilet", () => {
     it("scaffold pilet", async () => {
-        const pathToBuildDir = path.resolve(process.cwd(), "pilet-build");
+        const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "pilet-build");
         await cleanDir(pathToBuildDir);
 
         const info = await execute(`npm init pilet@${cliVersion} ${installFlag} -y`, {
@@ -46,7 +47,7 @@ describe("pilet", () => {
     });
 
     it("pilet scaffold with piral source", async () => {
-        const pathToBuildDir = path.resolve(process.cwd(), "pilet");
+        const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "pilet");
         await cleanDir(pathToBuildDir);
 
         // scaffold new pilet
@@ -60,7 +61,7 @@ describe("pilet", () => {
     });
 
     it("HMR", async (done) => {
-        const pathToBuildDir = path.resolve(process.cwd(), "pilet");
+        const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "pilet");
         const port = 38080;
 
         // fixing node15 issue

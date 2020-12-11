@@ -21,7 +21,7 @@ const {
 expect.extend({ toMatchFilesystemSnapshot });
 
 const cliVersion = process.env.CLI_VERSION || "latest";
-// const bundlerPrefix = !!process.env.BUNDLER ? process.env.BUNDLER + "-" : "";
+const bundlerPrefix = !!process.env.BUNDLER ? process.env.BUNDLER + "-" : "";
 
 jest.setTimeout(300 * 1000); // 60 second timeout
 
@@ -29,7 +29,7 @@ const afterAllHandlers = [];
 
 describe("piral", () => {
     it("scaffold piral", async () => {
-        const pathToBuildDir = path.resolve(process.cwd(), "piral-inst");
+        const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "piral-inst");
 
         await cleanDir(pathToBuildDir);
 
@@ -45,7 +45,7 @@ describe("piral", () => {
     });
 
     it("HMR", async (done) => {
-        const pathToBuildDir = path.resolve(process.cwd(), "piral-inst");
+        const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "piral-inst");
         const layoutFilePath = path.resolve(pathToBuildDir, "src", "layout.tsx");
         const port = 38082;
 
