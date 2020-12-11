@@ -55,6 +55,8 @@ const snapshotOptions = {
                         })
                 );
 
+                actual.name = actual.name.replace(/^(webpack[5]*|parcel)-/, "");
+
                 return diff(actual, expected);
             },
         },
