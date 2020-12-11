@@ -2,6 +2,8 @@ const path = require("path");
 const { exec, spawn } = require("child_process");
 const { promisify } = require("util");
 const fs = require("fs");
+const { type } = require("os");
+
 const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
 const {
     getInitializerOptions,
