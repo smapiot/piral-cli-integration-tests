@@ -27,6 +27,8 @@ const installFlag = process.version.startsWith("v15") ? "-y --legacy-peer-deps -
 
 jest.setTimeout(300 * 1000); // 300 second timeout
 
+const afterAllHandlers = [];
+
 describe("pilet", () => {
     it("scaffold pilet", async () => {
         const pathToBuildDir = path.resolve(process.cwd(), "pilet-build");
@@ -74,6 +76,11 @@ describe("pilet", () => {
             cwd: pathToBuildDir,
             shell: true,
         });
+        afterAllHandlers.push(() => {
+            debugProcess.kill("SIGTERM");
+            debugProcess.stdout.destroy();
+            debugProcess.stderr.destroy();
+        });
 
         const handleError = jest.fn();
         debugProcess.stderr.once("data", handleError);
@@ -115,4 +122,8 @@ describe("pilet", () => {
 
         done();
     });
+});
+
+afterAll(() => {
+    afterAllHandlers.forEach((handler) => handler());
 });

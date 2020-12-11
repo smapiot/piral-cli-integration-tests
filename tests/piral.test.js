@@ -1,7 +1,10 @@
 const path = require("path");
 const { exec, spawn } = require("child_process");
+const { type } = require("os");
 const fs = require("fs");
+
 const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
+
 const fsPromises = fs.promises;
 
 const {
@@ -18,13 +21,15 @@ const {
 expect.extend({ toMatchFilesystemSnapshot });
 
 const cliVersion = process.env.CLI_VERSION || "latest";
-const bundlerPrefix = !!process.env.BUNDLER ? process.env.BUNDLER + "-" : "";
+// const bundlerPrefix = !!process.env.BUNDLER ? process.env.BUNDLER + "-" : "";
 
 jest.setTimeout(300 * 1000); // 60 second timeout
 
+const afterAllHandlers = [];
+
 describe("piral", () => {
     it("scaffold piral", async () => {
-        const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "piral-inst");
+        const pathToBuildDir = path.resolve(process.cwd(), "piral-inst");
 
         await cleanDir(pathToBuildDir);
 
@@ -40,7 +45,7 @@ describe("piral", () => {
     });
 
     it("HMR", async (done) => {
-        const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "piral-inst");
+        const pathToBuildDir = path.resolve(process.cwd(), "piral-inst");
         const layoutFilePath = path.resolve(pathToBuildDir, "src", "layout.tsx");
         const port = 38082;
 
@@ -50,9 +55,22 @@ describe("piral", () => {
             cwd: pathToBuildDir,
         });
 
+        // fixing node15 issue
+        if (process.version.startsWith("v15") && type().startsWith("Linux"))
+            try {
+                await execute(`timeout 60s npx piral debug --port 2323`, {
+                    cwd: pathToBuildDir,
+                });
+            } catch (error) {}
+
         const debugProcess = spawn(`${timeoutCommand} npx piral debug --port ${port}`, {
             cwd: pathToBuildDir,
             shell: true,
+        });
+        afterAllHandlers.push(() => {
+            debugProcess.kill("SIGTERM");
+            debugProcess.stdout.destroy();
+            debugProcess.stderr.destroy();
         });
         const handleError = jest.fn();
         debugProcess.stderr.once("data", handleError);
@@ -92,4 +110,8 @@ describe("piral", () => {
 
         done();
     });
+});
+
+afterAll(() => {
+    afterAllHandlers.forEach((handler) => handler());
 });
