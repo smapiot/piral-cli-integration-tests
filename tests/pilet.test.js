@@ -20,8 +20,6 @@ expect.extend({ toMatchFilesystemSnapshot });
 const fsPromises = fs.promises;
 fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
 
-const srcFilePath = path.resolve(process.cwd(), "pilet", "src", "index.tsx");
-
 const cliVersion = process.env.CLI_VERSION || "latest";
 const installFlag = process.version.startsWith("v15") ? "-y --legacy-peer-deps -- " : "";
 const bundlerPrefix = !!process.env.BUNDLER ? process.env.BUNDLER + "-" : "";
@@ -62,6 +60,8 @@ describe("pilet", () => {
 
     it("HMR", async (done) => {
         const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "pilet");
+        const srcFilePath = path.resolve(pathToBuildDir, "src", "index.tsx");
+
         const port = 38080;
 
         // fixing node15 issue
