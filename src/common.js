@@ -9,7 +9,6 @@ const diff = require("jest-diff");
 
 const fsPromises = fs.promises;
 fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
-const bundlerOption = !!process.env.BUNDLER ? ` --bundler ${process.env.BUNDLER} ` : "";
 
 const execute = promisify(exec);
 
@@ -23,7 +22,9 @@ const cleanupForSnapshot = async (dirPath) => {
     await fsPromises.rm(path.resolve(dirPath, "package-lock.json"));
 };
 
-const getInitializerOptions = () => {
+const getInitializerOptions = (bundler) => {
+    const bundlerOption = !!bundler ? ` --bundler ${bundler} ` : "";
+
     return [
         //
         process.version.startsWith("v15") ? "-y --legacy-peer-deps -- " : "",
