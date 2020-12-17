@@ -1,30 +1,18 @@
+const path = require("path");
+const { spawn } = require("child_process");
+const fs = require("fs");
+const { type } = require("os");
+
+const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
+const { cleanDir, waitForRunning, timeoutCommand, execute, sleep } = require("../src/common");
+
 module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, bundler, port) => {
-    const path = require("path");
-    const { spawn } = require("child_process");
-    const { promisify } = require("util");
-    const fs = require("fs");
-    const { type } = require("os");
-
-    const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
-    const {
-        getInitializerOptions,
-        cleanDir,
-        cleanupForSnapshot,
-        snapshotOptions,
-        waitForRunning,
-        timeoutCommand,
-        execute,
-        sleep,
-    } = require("../src/common");
-
-    expect.extend({ toMatchFilesystemSnapshot });
     const fsPromises = fs.promises;
-    fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
-
     const bundlerPrefix = !!bundler ? bundler + "-" : "";
     const installFlag = process.version.startsWith("v15") ? "-y --legacy-peer-deps -- " : "";
 
     jest.setTimeout(300 * 1000); // 300 second timeout
+    expect.extend({ toMatchFilesystemSnapshot });
 
     describe("pilet", () => {
         it("HMR", async (done) => {

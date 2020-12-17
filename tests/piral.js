@@ -4,17 +4,15 @@ const { type } = require("os");
 const fs = require("fs");
 
 const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
+const { cleanDir, getInitializerOptions, execute, waitForRunning, timeoutCommand, sleep } = require("../src/common");
 
 const fsPromises = fs.promises;
 
-const { cleanDir, getInitializerOptions, execute, waitForRunning, timeoutCommand, sleep } = require("../src/common");
-
 module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, bundler, port) => {
-    expect.extend({ toMatchFilesystemSnapshot });
-
     const bundlerPrefix = !!bundler ? bundler + "-" : "";
 
     jest.setTimeout(300 * 1000); // 60 second timeout
+    expect.extend({ toMatchFilesystemSnapshot });
 
     describe(`${bundlerPrefix}piral`, () => {
         it("HMR", async (done) => {
@@ -23,7 +21,7 @@ module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, 
 
             await cleanDir(pathToBuildDir);
 
-            const info = await execute(`npm init piral-instance@${cliVersion} ` + getInitializerOptions(bundler), {
+            await execute(`npm init piral-instance@${cliVersion} ` + getInitializerOptions(bundler), {
                 cwd: pathToBuildDir,
             });
 
