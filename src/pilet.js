@@ -3,8 +3,8 @@ const { spawn } = require("child_process");
 const fs = require("fs");
 const { type } = require("os");
 
-const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
-const { cleanDir, waitForRunning, timeoutCommand, execute, sleep } = require("../src/common");
+const { toMatchFilesystemSnapshot } = require("./jest-fs-snapshot");
+const { cleanDir, waitForRunning, timeoutCommand, execute, sleep } = require("./common");
 
 module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, bundler, port) => {
     const fsPromises = fs.promises;

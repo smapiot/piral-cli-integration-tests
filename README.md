@@ -41,10 +41,9 @@ Integration tests for the `piral-cli` tool and imported plugins such as `piral-c
 
 ## Enviroment variables
 
-| ENV           | description                                   | default            |
-| ------------- | --------------------------------------------- | ------------------ |
-| `CLI_VERSION` | piral version                                 | `"latest"`         |
-| `BUNDLER`     | `"webpack"` \|\| `"webpack5"` \|\| `"parcel"` | `""` ≙ `"webpack"` |
+| ENV           | description   | default    |
+| ------------- | ------------- | ---------- |
+| `CLI_VERSION` | piral version | `"latest"` |
 
 ## License
 

@@ -50,11 +50,14 @@ const snapshotOptions = {
                     expected.devDependencies,
                 ].forEach((obj) =>
                     Object.keys(obj)
-                        .filter((key) => key.startsWith("piral-cli-"))
+                        .filter((key) => key.startsWith("piral"))
                         .forEach((key) => {
                             delete obj[key];
                         })
                 );
+
+                delete actual.peerModules;
+                delete expected.peerModules;
 
                 actual.name = actual.name.replace(/^(webpack[5]*|parcel)-/, "");
 

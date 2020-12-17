@@ -3,8 +3,8 @@ const { spawn } = require("child_process");
 const { type } = require("os");
 const fs = require("fs");
 
-const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
-const { cleanDir, getInitializerOptions, execute, waitForRunning, timeoutCommand, sleep } = require("../src/common");
+const { toMatchFilesystemSnapshot } = require("./jest-fs-snapshot");
+const { cleanDir, getInitializerOptions, execute, waitForRunning, timeoutCommand, sleep } = require("./common");
 
 const fsPromises = fs.promises;
 
