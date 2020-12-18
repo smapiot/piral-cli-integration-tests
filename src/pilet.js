@@ -1,13 +1,13 @@
 const path = require("path");
 const { spawn } = require("child_process");
 const fs = require("fs");
-const { type } = require("os");
 
 const { toMatchFilesystemSnapshot } = require("./jest-fs-snapshot");
-const { cleanDir, waitForRunning, timeoutCommand, execute, sleep } = require("./common");
+const { cleanDir, waitForRunning, timeoutCommand, execute, sleep, isNodeV15 } = require("./common");
+
+const fsPromises = fs.promises;
 
 module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, bundler, port) => {
-    const fsPromises = fs.promises;
     const bundlerPrefix = !!bundler ? bundler + "-" : "";
     const installFlag = process.version.startsWith("v15") ? "-y --legacy-peer-deps -- " : "";
 
@@ -25,7 +25,7 @@ module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, 
             });
 
             // fixing node15 issue
-            if (process.version.startsWith("v15") && type().startsWith("Linux"))
+            if (isNodeV15)
                 try {
                     await execute(`timeout 60s npx pilet debug --port 2323`, {
                         cwd: pathToBuildDir,

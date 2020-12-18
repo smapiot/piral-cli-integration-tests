@@ -33,6 +33,8 @@ const getInitializerOptions = (bundler) => {
     ].join(" ");
 };
 
+const isNodeV15 = process.version.startsWith("v15") && type().startsWith("Linux");
+
 const snapshotOptions = {
     customCompare: [
         {
@@ -43,7 +45,7 @@ const snapshotOptions = {
                 const expected = JSON.parse(expectedBuffer);
 
                 [
-                    // delete piral cli dependencies
+                    // delete piral dependencies
                     actual.dependencies,
                     actual.devDependencies,
                     expected.dependencies,
@@ -98,4 +100,5 @@ module.exports = {
     waitForRunning,
     timeoutCommand,
     sleep,
+    isNodeV15,
 };
