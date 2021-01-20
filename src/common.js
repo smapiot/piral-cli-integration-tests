@@ -17,9 +17,54 @@ const cleanDir = async (dirPath) => {
     await fsPromises.mkdir(dirPath);
 };
 
+const hashTest = new RegExp(/index.\w*.js/);
 const cleanupForSnapshot = async (dirPath) => {
     await rimraf(path.resolve(dirPath, "node_modules"));
+    await rimraf(path.resolve(dirPath, ".cache"));
     await fsPromises.rm(path.resolve(dirPath, "package-lock.json"));
+
+    const releasePath = path.resolve(dirPath, "dist", "release");
+    if (await fsPromises.stat(releasePath).catch(() => {}))
+        await Promise.all([
+            fsPromises
+                .readdir(releasePath)
+                .then((files) =>
+                    Promise.all(
+                        files
+                            .filter((name) => {
+                                return hashTest.test(name);
+                            })
+                            .map((name) => {
+                                return fsPromises.rename(
+                                    path.resolve(releasePath, name),
+                                    path.resolve(releasePath, name.replace(hashTest, "index.js"))
+                                );
+                            })
+                    )
+                )
+                .then(() => {
+                    return fsPromises
+                        .readFile(path.resolve(releasePath, "index.js"))
+                        .then((str) => {
+                            data = str.toString();
+
+                            if (data)
+                                return fsPromises.writeFile(
+                                    path.resolve(releasePath, "index.js"),
+                                    data.toString().replace(hashTest, "index.js")
+                                );
+                        })
+                        .catch(() => {});
+                }),
+            fsPromises.readFile(path.resolve(releasePath, "index.html")).then((str) => {
+                data = str.toString();
+                if (data)
+                    return fsPromises.writeFile(
+                        path.resolve(releasePath, "index.html"),
+                        data.toString().replace(hashTest, "index.js")
+                    );
+            }),
+        ]);
 };
 
 const getInitializerOptions = (bundler) => {
@@ -37,6 +82,11 @@ const isNodeV15 = process.version.startsWith("v15") && type().startsWith("Linux"
 
 const snapshotOptions = {
     customCompare: [
+        {
+            check: (path) => path.endsWith(".tgz"),
+            compare: () => "\x1B[2mCompared values have no visual difference.\x1B[22m",
+        },
+
         {
             check: (path) => path.endsWith("package.json"),
 
@@ -61,7 +111,7 @@ const snapshotOptions = {
                 delete actual.peerModules;
                 delete expected.peerModules;
 
-                actual.name = actual.name.replace(/^(webpack[5]*|parcel)-/, "");
+                // actual.name = actual.name.replace(/^(webpack[5]*|parcel)-/, "");
 
                 return diff(actual, expected);
             },

@@ -3,10 +3,21 @@ const { spawn } = require("child_process");
 const { type } = require("os");
 const fs = require("fs");
 
-const { toMatchFilesystemSnapshot } = require("./jest-fs-snapshot");
-const { cleanDir, getInitializerOptions, execute, waitForRunning, timeoutCommand, sleep } = require("./common");
+const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
+const {
+    cleanDir,
+    getInitializerOptions,
+    execute,
+    waitForRunning,
+    timeoutCommand,
+    sleep,
+    snapshotOptions,
+    cleanupForSnapshot,
+} = require("./common");
 
 const fsPromises = fs.promises;
+expect.extend({ toMatchFilesystemSnapshot });
+const installFlag = process.version.startsWith("v15") ? "-y --legacy-peer-deps -- " : "";
 
 module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, bundler, port) => {
     const bundlerPrefix = !!bundler ? bundler + "-" : "";
@@ -15,6 +26,46 @@ module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, 
     expect.extend({ toMatchFilesystemSnapshot });
 
     describe(`${bundlerPrefix}piral`, () => {
+        it("build", async () => {
+            const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "piral-shell-build");
+
+            await cleanDir(pathToBuildDir);
+
+            await execute(`npm init piral-instance@${cliVersion} ` + getInitializerOptions(bundler), {
+                cwd: pathToBuildDir,
+            });
+
+            await execute(`npm run build`, {
+                cwd: pathToBuildDir,
+            });
+
+            await cleanupForSnapshot(pathToBuildDir);
+
+            // TODO: clean renaming paterns
+
+            expect(pathToBuildDir).toMatchFilesystemSnapshot(undefined, snapshotOptions);
+        });
+
+        it("scaffold pilet", async () => {
+            const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "piral-shell-build");
+            const piletDir = path.resolve(pathToBuildDir, "sc-pilet");
+
+            await cleanDir(piletDir);
+
+            const info = await execute(
+                `npx pilet new --target sc-pilet --source ./dist/emulator/${bundler}-piral-shell-build-1.0.0.tgz ${installFlag}`,
+                {
+                    cwd: pathToBuildDir,
+                }
+            );
+
+            expect(info.stderr).toBe("");
+
+            await cleanupForSnapshot(piletDir);
+
+            expect(piletDir).toMatchFilesystemSnapshot(undefined, snapshotOptions);
+        });
+
         it("HMR", async (done) => {
             const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "piral-inst");
             const layoutFilePath = path.resolve(pathToBuildDir, "src", "layout.tsx");

@@ -1,6 +1,6 @@
 const path = require("path");
 
-const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
+const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
 const { cleanDir, cleanupForSnapshot, snapshotOptions, execute } = require("../src/common");
 
 const cliVersion = process.env.CLI_VERSION || "latest";
@@ -12,7 +12,7 @@ expect.extend({ toMatchFilesystemSnapshot });
 
 describe("pilet", () => {
     it("scaffold pilet", async () => {
-        const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "pilet-build");
+        const pathToBuildDir = path.resolve(process.cwd(), "pilet-build");
         await cleanDir(pathToBuildDir);
 
         const info = await execute(`npm init pilet@${cliVersion} ${installFlag} -y`, {
@@ -27,7 +27,7 @@ describe("pilet", () => {
     });
 
     it("pilet scaffold with piral source", async () => {
-        const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "pilet");
+        const pathToBuildDir = path.resolve(process.cwd(), "pilet");
         await cleanDir(pathToBuildDir);
 
         // scaffold new pilet

@@ -22,22 +22,23 @@ Integration tests for the `piral-cli` tool and imported plugins such as `piral-c
 
 -   ✅ Scaffold Piral instance
 -   ✅ Run/debug Piral instance
--   🔲 Build Piral instance
+-   ✅ Build Piral instance
 -   ✅ Validate Piral instance (through snapshot compare)
--   🔲 Use Piral instance emulator for scaffolding locally
--   🔲 Change Piral instance while debugging (HMR)
--   🔲 Check Piral instance with browser extension (piral-inspector)
--   🔲 Upgrade Piral instance from older to recent version
+-   ✅ Use Piral instance emulator for scaffolding locally
+-   ✅ Change Piral instance while debugging (HMR)
+-   🔲 Upgrade Piral instance from older (0.12.0 -> ENV) to recent version
+-   ⏸️ Check Piral instance with browser extension (piral-inspector)
 
 ### Pilet
 
 -   ✅ Scaffold pilet (using sample-piral with next)
 -   ✅ Run/debug new pilet
--   🔲 Build pilet
+-   ✅ Build pilet
 -   🔲 Publish pilet (to temp. feed) pilet publish --api-key {key} --url https://feed.piral.cloud/api/v1/pilet/temp --fresh
+    -   https://github.com/smapiot/sample-pilet-service
 -   ✅ Validate pilet (through snapshot compare)
 -   ✅ Change pilet while debugging (HMR)
--   🔲 Check pilet with browser extension (piral-inspector)
+-   ⏸️ Check pilet with browser extension (piral-inspector)
 
 ## Enviroment variables
 

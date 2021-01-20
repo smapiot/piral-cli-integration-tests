@@ -1,5 +1,5 @@
 const path = require("path");
-const { toMatchFilesystemSnapshot } = require("../src/jest-fs-snapshot");
+const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
 const { cleanDir, cleanupForSnapshot, getInitializerOptions, execute, snapshotOptions } = require("../src/common");
 
 const cliVersion = process.env.CLI_VERSION || "latest";

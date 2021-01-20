@@ -2,8 +2,18 @@ const path = require("path");
 const { spawn } = require("child_process");
 const fs = require("fs");
 
-const { toMatchFilesystemSnapshot } = require("./jest-fs-snapshot");
-const { cleanDir, waitForRunning, timeoutCommand, execute, sleep, isNodeV15 } = require("./common");
+const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
+const {
+    cleanDir,
+    waitForRunning,
+    timeoutCommand,
+    execute,
+    sleep,
+    isNodeV15,
+    getInitializerOptions,
+    snapshotOptions,
+    cleanupForSnapshot,
+} = require("./common");
 
 const fsPromises = fs.promises;
 
@@ -14,7 +24,27 @@ module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, 
     jest.setTimeout(300 * 1000); // 300 second timeout
     expect.extend({ toMatchFilesystemSnapshot });
 
-    describe("pilet", () => {
+    describe(`${bundlerPrefix}pilet`, () => {
+        it("build", async () => {
+            const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "bundler-pilet-build");
+
+            await cleanDir(pathToBuildDir);
+
+            await execute(
+                `npm init pilet@${cliVersion} ${installFlag}--source sample-piral@${cliVersion} --name ${"bundler-pilet-build"} -y`,
+                {
+                    cwd: pathToBuildDir,
+                }
+            );
+
+            await execute(`npm run build`, {
+                cwd: pathToBuildDir,
+            });
+
+            await cleanupForSnapshot(pathToBuildDir);
+
+            expect(pathToBuildDir).toMatchFilesystemSnapshot(undefined, snapshotOptions);
+        });
         it("HMR", async (done) => {
             const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + "pilet");
             const srcFilePath = path.resolve(pathToBuildDir, "src", "index.tsx");
