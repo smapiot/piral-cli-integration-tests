@@ -13,7 +13,8 @@
     "url": "git+https://github.com/smapiot/piral-cli-integration-tests.git"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "sample-feed": "sample-pilet-service"
   },
   "jest": {
     "preset": "jest-puppeteer",
@@ -34,6 +35,7 @@
     "jest-puppeteer": "^4.4.0",
     "puppeteer": "^5.5.0",
     "rimraf": "^3.0.2",
+    "sample-pilet-service": "^1.4.0",
     "utf-8-validate": "^5.0.1"
   },
   "devDependencies": {}
