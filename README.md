@@ -34,7 +34,7 @@ Integration tests for the `piral-cli` tool and imported plugins such as `piral-c
 -   ✅ Scaffold pilet (using sample-piral with next)
 -   ✅ Run/debug new pilet
 -   ✅ Build pilet
--   🔲 Publish pilet (to temp. feed) pilet publish --api-key {key} --url https://feed.piral.cloud/api/v1/pilet/temp --fresh
+-   ✅ Publish pilet (to temp. feed) pilet publish --api-key {key} --url https://feed.piral.cloud/api/v1/pilet/temp --fresh
     -   https://github.com/smapiot/sample-pilet-service
 -   ✅ Validate pilet (through snapshot compare)
 -   ✅ Change pilet while debugging (HMR)
