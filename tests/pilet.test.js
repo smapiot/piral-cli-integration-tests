@@ -1,7 +1,7 @@
 const path = require("path");
-const { spawn } = require("child_process");
-const { exec } = require('child_process');
+const { spawn, exec } = require("child_process");
 const kill  = require('tree-kill');
+const http = require('http');
 
 const { toMatchFilesystemSnapshot } = require("jest-fs-snapshot");
 const { cleanDir, cleanupForSnapshot, snapshotOptions, execute, sleep } = require("../src/common");
@@ -53,7 +53,7 @@ describe("pilet", () => {
             shell: true
         });
 
-        await sleep(5000); //wait for feed service to come up
+        await sleep(5000); //wait for feed service to come up. TODO: Replace with waitForRunning function (src/pilet.js)
 
         const publish = new Promise((res, rej) => {
             exec(`npx pilet publish --fresh --url ${testFeedUrl} --api-key ${testFeedKey}`,
@@ -71,11 +71,37 @@ describe("pilet", () => {
 
         await publish.then(success => {
             publishOutput = success.stdout.toString();
-        }).catch(err => {
-            publishOutput = err.stdout.toString();
-        });
+        }).catch(err => expect(false));
         
+        const pilets = await new Promise(resolve => {
+
+            const options = {
+                host: `localhost`,
+                port: port,
+                path: '/api/v1/pilet',
+                headers: {
+                    "Authorization": testFeedKey
+                }
+            };
+
+            http.request(options, response => {
+    
+                let str = '';
+    
+                response.on('data', chunk => {
+                    str += chunk;
+                });
+    
+                response.on('end', () => {
+                    const asJson = JSON.parse(str);
+                    resolve(asJson);
+                });
+    
+            }).end();
+        })
+
         expect(publishOutput).not.toMatch(/\[[0-9]+\]\s+Failed/gm);
+        expect(pilets.items.length).toBe(1);
 
         kill(localFeedService.pid);
         done();
