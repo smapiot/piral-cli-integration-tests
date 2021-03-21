@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const diff = require('jest-diff');
-const rimraf = promisify(require('rimraf'));
 
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const { type } = require('os');
 
+const rimraf = promisify(require('rimraf'));
 const fsPromises = fs.promises;
 fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
 
