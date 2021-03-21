@@ -13,7 +13,6 @@ const {
   isNodeV15,
   snapshotOptions,
   cleanupForSnapshot,
-  cliVersion,
 } = require('./common');
 
 const fsPromises = fs.promises;
