@@ -1,7 +1,7 @@
+const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 const { type } = require('os');
-const fs = require('fs');
 
 const { toMatchFilesystemSnapshot } = require('jest-fs-snapshot');
 const {
@@ -12,6 +12,7 @@ const {
   timeoutCommand,
   sleep,
   snapshotOptions,
+  cliVersion,
   cleanupForSnapshot,
 } = require('./common');
 

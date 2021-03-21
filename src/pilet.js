@@ -1,6 +1,6 @@
+const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
-const fs = require('fs');
 
 const { toMatchFilesystemSnapshot } = require('jest-fs-snapshot');
 const {
@@ -13,6 +13,7 @@ const {
   isNodeV15,
   snapshotOptions,
   cleanupForSnapshot,
+  cliVersion,
 } = require('./common');
 
 const fsPromises = fs.promises;
