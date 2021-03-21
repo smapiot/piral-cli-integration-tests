@@ -17,9 +17,8 @@ const {
 
 const fsPromises = fs.promises;
 expect.extend({ toMatchFilesystemSnapshot });
-const installFlag = process.version.startsWith('v15') ? '-y --legacy-peer-deps -- ' : '';
 
-module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, bundler, port) => {
+module.exports = ({ jest, expect, describe, it, afterAllHandlers }, bundler, port) => {
   const bundlerPrefix = !!bundler ? bundler + '-' : '';
 
   jest.setTimeout(300 * 1000); // 60 second timeout
