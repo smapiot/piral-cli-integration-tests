@@ -4,9 +4,8 @@ const kill = require('tree-kill');
 const http = require('http');
 
 const { toMatchFilesystemSnapshot } = require('jest-fs-snapshot');
-const { cleanDir, cleanupForSnapshot, snapshotOptions, execute, sleep } = require('../src/common');
+const { cleanDir, cleanupForSnapshot, snapshotOptions, execute, sleep, cliVersion } = require('../src/common');
 
-const cliVersion = process.env.CLI_VERSION || 'latest';
 const installFlag = process.version.startsWith('v15') ? '-y --legacy-peer-deps -- ' : '';
 
 jest.setTimeout(300 * 1000); // 300 second timeout

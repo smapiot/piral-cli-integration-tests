@@ -5,19 +5,19 @@ const fs = require('fs');
 const { toMatchFilesystemSnapshot } = require('jest-fs-snapshot');
 const {
   cleanDir,
+  cliVersion,
   waitForRunning,
   timeoutCommand,
   execute,
   sleep,
   isNodeV15,
-  getInitializerOptions,
   snapshotOptions,
   cleanupForSnapshot,
 } = require('./common');
 
 const fsPromises = fs.promises;
 
-module.exports = ({ jest, expect, describe, it, afterAllHandlers }, cliVersion, bundler, port) => {
+module.exports = ({ jest, expect, describe, it, afterAllHandlers }, bundler, port) => {
   const bundlerPrefix = !!bundler ? bundler + '-' : '';
   const installFlag = process.version.startsWith('v15') ? '-y --legacy-peer-deps -- ' : '';
 

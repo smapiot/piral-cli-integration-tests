@@ -1,14 +1,16 @@
-const path = require('path');
-const { exec } = require('child_process');
 const fs = require('fs');
+const path = require('path');
+const diff = require('jest-diff');
+const rimraf = promisify(require('rimraf'));
+
+const { exec } = require('child_process');
 const { promisify } = require('util');
 const { type } = require('os');
 
-const rimraf = promisify(require('rimraf'));
-const diff = require('jest-diff');
-
 const fsPromises = fs.promises;
 fsPromises.rm = fsPromises.rm || promisify(fs.unlink);
+
+const cliVersion = process.env.CLI_VERSION || 'next';
 
 const execute = promisify(exec);
 
@@ -149,6 +151,7 @@ module.exports = {
   snapshotOptions,
   waitForRunning,
   timeoutCommand,
+  cliVersion,
   sleep,
   isNodeV15,
 };

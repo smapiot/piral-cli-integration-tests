@@ -1,8 +1,14 @@
 const path = require('path');
 const { toMatchFilesystemSnapshot } = require('jest-fs-snapshot');
-const { cleanDir, cleanupForSnapshot, getInitializerOptions, execute, snapshotOptions } = require('../src/common');
+const {
+  cliVersion,
+  cleanDir,
+  cleanupForSnapshot,
+  getInitializerOptions,
+  execute,
+  snapshotOptions,
+} = require('../src/common');
 
-const cliVersion = process.env.CLI_VERSION || 'latest';
 const bundlerPrefix = !!process.env.BUNDLER ? process.env.BUNDLER + '-' : '';
 
 jest.setTimeout(300 * 1000); // 300 second timeout
