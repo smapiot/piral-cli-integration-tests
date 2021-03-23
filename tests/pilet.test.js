@@ -44,7 +44,7 @@ describe('pilet', () => {
     const testFeedUrl = `http://localhost:${port}/api/v1/pilet`;
     const testFeedKey = 'df133a512569cbc85f69788d1b7ff5a909f6bcfe1c9a2794283a2fc35175882c';
 
-    const localFeedService = spawn(`npm run sample-feed`, {
+    const localFeedService = spawn(`PORT=${port} npm run sample-feed`, {
       cwd: process.cwd(),
       shell: true,
     });
