@@ -13,7 +13,7 @@
     "url": "git+https://github.com/smapiot/piral-cli-integration-tests.git"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand",
     "sample-feed": "sample-pilet-service"
   },
   "jest": {

@@ -53,7 +53,9 @@ module.exports = ({ jest, expect, describe, it, afterAllHandlers }, bundler, por
       await cleanDir(piletDir);
 
       const info = await execute(
-        `npm init pilet --target sc-pilet --source ./dist/emulator/${bundler}-piral-shell-build-1.0.0.tgz ${getInitializerOptions(bundler)}`,
+        `npm init pilet --target sc-pilet --source ./dist/emulator/${bundler}-piral-shell-build-1.0.0.tgz ${getInitializerOptions(
+          bundler,
+        )}`,
         {
           cwd: pathToBuildDir,
         },
