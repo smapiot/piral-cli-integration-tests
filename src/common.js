@@ -5,6 +5,7 @@ const diff = require('jest-diff');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const { type } = require('os');
+const { NO_DIFF_MESSAGE } = require('jest-diff/build/constants');
 
 const rimraf = promisify(require('rimraf'));
 const fsPromises = fs.promises;
@@ -86,7 +87,7 @@ const snapshotOptions = {
   customCompare: [
     {
       check: (path) => path.endsWith('.tgz'),
-      compare: () => '\x1B[2mCompared values have no visual difference.\x1B[22m',
+      compare: () => NO_DIFF_MESSAGE,
     },
 
     {
