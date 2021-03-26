@@ -5,7 +5,7 @@ parameters:
     - name: piralCliVersion
       displayName: Piral CLI Version
       type: string
-      default: "latest"
+      default: "next"
 
 strategy:
     matrix:
