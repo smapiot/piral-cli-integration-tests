@@ -1,20 +1,20 @@
-[![Piral Logo](https://github.com/smapiot/piral/raw/master/docs/assets/logo.png)](https://piral.io)
+[![Piral Logo](https://github.com/smapiot/piral/raw/main/docs/assets/logo.png)](https://piral.io)
 
 # Piral CLI Acceptance Tests
 
-Integration tests for the `piral-cli` tool and imported plugins such as `piral-cli-parcel` or `piral-cli-webpack`.
+Integration tests for the `piral-cli` tool and its default bundler. Can be used as a test bench when implementing a new bundler, too.
 
 ## Status
 
-[![Overall](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)
+[![Overall](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main)
 
-| OS      | Node | Status                                                                                                                                                                                                                                                                                         |
-| ------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Linux   | 10.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_10)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)   |
-| Linux   | 12.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_12)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)   |
-| Linux   | 14.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)   |
-| Linux   | 15.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20linux_node_15)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master)   |
-| Windows | 14.x | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=master&jobName=Job&configuration=Job%20windows_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=master) |
+| OS           | Node   | Status       |
+| ------------ | ------ | ------------ |
+| Linux        | 12.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20linux_node_12)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main)   |
+| Linux        | 14.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20linux_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main)   |
+| Linux        | 16.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20linux_node_16)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main)   |
+| Linux        | 17.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20linux_node_17)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main)   |
+| Windows      | 14.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20windows_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main) |
 
 ## Tests
 
@@ -27,24 +27,32 @@ Integration tests for the `piral-cli` tool and imported plugins such as `piral-c
 -   ✅ Use Piral instance emulator for scaffolding locally
 -   ✅ Change Piral instance while debugging (HMR)
 -   🔲 Upgrade Piral instance from older (0.12.0 -> ENV) to recent version
--   ⏸️ Check Piral instance with browser extension (piral-inspector)
+-   ⏸️ Check Piral instance with browser extension (`piral-inspector`)
 
 ### Pilet
 
--   ✅ Scaffold pilet (using sample-piral with next)
+-   ✅ Scaffold pilet (using `sample-piral@next`)
 -   ✅ Run/debug new pilet
 -   ✅ Build pilet
--   ✅ Publish pilet (to temp. feed) pilet publish --api-key {key} --url https://feed.piral.cloud/api/v1/pilet/temp --fresh
-    -   https://github.com/smapiot/sample-pilet-service
+-   ✅ Publish pilet (to temp. feed)
 -   ✅ Validate pilet (through snapshot compare)
 -   ✅ Change pilet while debugging (HMR)
--   ⏸️ Check pilet with browser extension (piral-inspector)
+-   ⏸️ Check pilet with browser extension (`piral-inspector`)
+
+The publish pilet command uses:
+
+```sh
+pilet publish --api-key {key} --url https://feed.piral.cloud/api/v1/pilet/temp --fresh
+```
+
+It also can perform against a feed [hosted by the `sample-pilet-service`](https://github.com/smapiot/sample-pilet-service).
 
 ## Enviroment variables
 
-| ENV           | description   | default    |
-| ------------- | ------------- | ---------- |
-| `CLI_VERSION` | piral version | `"latest"` |
+| ENV              | description                        | default    |
+| ---------------- | ---------------------------------- | ---------- |
+| `CLI_VERSION`    | Version of the `piral-cli` package | `latest`   |
+| `BUNDLER`        | Prefix of the bundler to use       |            |
 
 ## License
 
