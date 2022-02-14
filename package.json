@@ -8,6 +8,9 @@
   "engines": {
     "node": ">=10.0"
   },
+  "bin": {
+    "piral-cli-tests": "./bin/run.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smapiot/piral-cli-integration-tests.git"
