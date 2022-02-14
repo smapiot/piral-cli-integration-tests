@@ -1,11 +1,6 @@
-*pilet/
-*pilet-build/
-*piral-inst/
-*piral-build/
-*piral-shell-build/
+dist/
 node_modules/
 
 junit*.xml
 
-yarn.lock
 package-lock.json

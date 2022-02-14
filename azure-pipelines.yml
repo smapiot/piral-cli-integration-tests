@@ -1,50 +1,50 @@
 trigger:
-    - main
+  - main
 
 parameters:
-    - name: piralCliVersion
-      displayName: Piral CLI Version
-      type: string
-      default: "next"
+  - name: piralCliVersion
+    displayName: Piral CLI Version
+    type: string
+    default: "next"
 
 strategy:
-    matrix:
-        linux_node_12:
-            imageName: "ubuntu-20.04"
-            nodeVersion: 12.x
-        linux_node_14:
-            imageName: "ubuntu-20.04"
-            nodeVersion: 14.x
-        linux_node_16:
-            imageName: "ubuntu-20.04"
-            nodeVersion: 16.x
-        linux_node_17:
-            imageName: "ubuntu-20.04"
-            nodeVersion: 17.x
-        windows_node_14:
-            imageName: "vs2017-win2016"
-            nodeVersion: 14.x
+  matrix:
+    linux_node_12:
+      imageName: "ubuntu-20.04"
+      nodeVersion: 12.x
+    linux_node_14:
+      imageName: "ubuntu-20.04"
+      nodeVersion: 14.x
+    linux_node_16:
+      imageName: "ubuntu-20.04"
+      nodeVersion: 16.x
+    linux_node_17:
+      imageName: "ubuntu-20.04"
+      nodeVersion: 17.x
+    windows_node_14:
+      imageName: "vs2017-win2016"
+      nodeVersion: 14.x
 
 pool:
-    vmImage: $(imageName)
+  vmImage: $(imageName)
 
 steps:
-    - task: NodeTool@0
-      inputs:
-          versionSpec: $(nodeVersion)
-      displayName: "Install Node.js"
+  - task: NodeTool@0
+    inputs:
+      versionSpec: $(nodeVersion)
+    displayName: "Install Node.js"
 
-    - script: npm install --legacy-peer-deps
-      displayName: "Setup Tests"
+  - script: npm install --legacy-peer-deps
+    displayName: "Setup Tests"
 
-    - script: npm test
-      continueOnError: true
-      displayName: "Run Tests"
-      env:
-          CLI_VERSION: ${{ parameters.piralCliVersion }}
+  - script: npm test
+    continueOnError: true
+    displayName: "Run Tests"
+    env:
+      CLI_VERSION: ${{ parameters.piralCliVersion }}
 
-    - task: PublishTestResults@2
-      inputs:
-          testResultsFormat: "JUnit"
-          testResultsFiles: "**/junit*.xml"
-          mergeTestResults: true
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: "JUnit"
+      testResultsFiles: "dist/junit*.xml"
+      mergeTestResults: true
