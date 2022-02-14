@@ -2,5 +2,3 @@ dist/
 node_modules/
 
 junit*.xml
-
-package-lock.json

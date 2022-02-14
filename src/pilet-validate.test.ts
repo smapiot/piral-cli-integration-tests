@@ -1,11 +1,5 @@
-import { prepareTests, TestEnvironment } from './utils';
+import { runTests } from './utils';
 
-let testEnv: TestEnvironment;
-
-describe('pilet-validate', () => {
-  beforeAll(async () => {
-    testEnv = await prepareTests('pilet-validate');
-  });
-
-  it('foo', async () => {});
+runTests('pilet-validate', ({ test }) => {
+  test('foo', 'foo', [], async () => {});
 });

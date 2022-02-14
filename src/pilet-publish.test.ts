@@ -1,11 +1,5 @@
-import { prepareTests, TestEnvironment } from './utils';
+import { runTests } from './utils';
 
-let testEnv: TestEnvironment;
-
-describe('pilet-publish', () => {
-  beforeAll(async () => {
-    testEnv = await prepareTests('pilet-publish');
-  });
-
-  it('foo', async () => {});
+runTests('pilet-publish', ({ test }) => {
+  test('foo', 'foo', [], async () => {});
 });

@@ -1,11 +1,5 @@
-import { prepareTests, TestEnvironment } from './utils';
+import { runTests } from './utils';
 
-let testEnv: TestEnvironment;
-
-describe('piral-debug', () => {
-  beforeAll(async () => {
-    testEnv = await prepareTests('piral-debug');
-  });
-
-  it('foo', async () => {});
+runTests('piral-debug', ({ test }) => {
+  test('foo', 'foo', [], async () => {});
 });

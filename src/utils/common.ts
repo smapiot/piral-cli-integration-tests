@@ -1,6 +1,6 @@
 import * as diff from 'jest-diff';
 
-import { expect } from '@jest/globals';
+import { expect, describe, it } from '@jest/globals';
 import { promises as fsPromises, unlink } from 'fs';
 import { resolve } from 'path';
 import { ChildProcess } from 'child_process';
@@ -11,13 +11,32 @@ import { exists, rimraf } from './io';
 fsPromises.rm = fsPromises.rm || promisify(unlink);
 
 const hashTest = new RegExp(/index.\w*.js/);
+const allFeatures = [
+  'codegen',
+  'splitting',
+  'pilet.v0',
+  'pilet.v1',
+  'pilet.v2',
+  'importmap.ref',
+  'importmap.local',
+  'build.pilet',
+  'build.piral',
+  'build.emulator',
+  'debug.pilet',
+  'debug.piral',
+  'hmr',
+].join(',');
 
 export const cliVersion = process.env.CLI_VERSION || 'next';
+export const selectedBundler = process.env.BUNDLER_PLUGIN || 'piral-cli-webpack5';
+export const isBundlerPlugin = !!process.env.BUNDLER_PLUGIN;
+export const bundlerFeatures = (process.env.BUNDLER_FEATURES || allFeatures).split(',');
 
 export type FileAssertions = Record<string, boolean | ((content: string) => boolean)>;
 
 export interface TestContext {
   root: string;
+  id: string;
   assertFiles(files: FileAssertions): Promise<void>;
 }
 
@@ -26,15 +45,51 @@ export interface TestEnvironment {
   createTestContext(id: string): Promise<TestContext>;
 }
 
+export interface TestEnvironmentRef {
+  env: TestEnvironment;
+  test(
+    prefix: string,
+    description: string,
+    bundlerFeatures: Array<string>,
+    cb: (ctx: TestContext) => Promise<void>,
+  ): void;
+}
+
+export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
+  const ref: TestEnvironmentRef = {
+    env: undefined,
+    test(prefix, description, features, cb) {
+      // either we run in the "standard repo" (i.e., not as a bundler plugin)
+      // or we need to have some bundler-features defined (and all features should be available from the bundler - otherwise its broken by default)
+      const canRun = !isBundlerPlugin || (features.length > 0 && features.every((s) => bundlerFeatures.includes(s)));
+      const define = canRun ? it : it.skip;
+
+      define(description, async () => {
+        const ctx = await ref.env.createTestContext(prefix);
+        await cb(ctx);
+      });
+    },
+  };
+
+  describe(area, () => {
+    beforeAll(async () => {
+      ref.env = await prepareTests('pilet-new');
+    });
+
+    cb(ref);
+  });
+}
+
 export async function prepareTests(area: string): Promise<TestEnvironment> {
   const dir = resolve(__dirname, '..', '..', 'dist', area);
   await rimraf(dir);
   await fsPromises.mkdir(dir, { recursive: true });
   return {
     dir,
-    async createTestContext(id) {
+    async createTestContext(prefix) {
       const suffix = Math.random().toString(26).substring(2, 8);
-      const root = resolve(dir, `${id}_${suffix}`);
+      const id = `${prefix}_${suffix}`;
+      const root = resolve(dir, id);
       const assertFiles = async (files: FileAssertions) => {
         await Promise.all(
           Object.keys(files).map(async (file) => {
@@ -53,7 +108,7 @@ export async function prepareTests(area: string): Promise<TestEnvironment> {
         );
       };
       await fsPromises.mkdir(root, { recursive: true });
-      return { root, assertFiles };
+      return { id, root, assertFiles };
     },
   };
 }
@@ -120,7 +175,6 @@ export function getInitializerOptions(bundler: string) {
     '-y',
   ].join(' ');
 }
-
 
 export const snapshotOptions = {
   customCompare: [
