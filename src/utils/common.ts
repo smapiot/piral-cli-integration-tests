@@ -252,17 +252,6 @@ export async function cleanupForSnapshot(dirPath: string) {
   }
 }
 
-export function getInitializerOptions(bundler: string) {
-  const bundlerOption = !!bundler ? ` --bundler ${bundler} ` : '';
-
-  return [
-    //
-    process.version.startsWith('v15') ? '-y --legacy-peer-deps -- ' : '',
-    bundlerOption,
-    '-y',
-  ].join(' ');
-}
-
 export const snapshotOptions = {
   customCompare: [
     {
@@ -301,23 +290,3 @@ export const snapshotOptions = {
     },
   ],
 };
-
-export function serverHasStarted(done: () => void, port: number, timeout: any, ref: { unsubscribe: () => void }) {
-  return (data) => {
-    if (data.toString().includes(`Running at http://localhost:${port}`)) {
-      clearTimeout(timeout);
-      ref.unsubscribe();
-      done();
-    }
-  };
-}
-
-export function waitForRunning(debugProcess: ChildProcess, port: number) {
-  return new Promise<void>((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error('Server not started after 180s')), 180 * 1000);
-    const ref = { unsubscribe: undefined };
-    const onData = serverHasStarted(resolve, port, timeout, ref);
-    debugProcess.stdout.on('data', onData);
-    ref.unsubscribe = () => debugProcess.stdout.off('data', onData);
-  });
-}

@@ -26,6 +26,7 @@
   "dependencies": {
     "@babel/core": "^7.0.0",
     "asar": "^0.14.3",
+    "axios": "^0.26.0",
     "babel-jest": "^25.5.1",
     "filenamify": "^2.1.0",
     "iconv-lite": "^0.4.23",
