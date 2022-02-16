@@ -1,4 +1,4 @@
-import { cliVersion, runTests, run } from './utils';
+import { cliVersion, runTests } from './utils';
 
 runTests('pilet-new', ({ test }) => {
   test(
@@ -6,10 +6,10 @@ runTests('pilet-new', ({ test }) => {
     'can create a new TS pilet with modules using `sample-piral` from cli in the same directory',
     [],
     async (ctx) => {
-      await run(`npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion}`, ctx.root);
+      await ctx.run(`npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion}`);
 
       await ctx.assertFiles({
-        'package.json'(content) {
+        'package.json'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('"sample-piral"');
           expect(content).toContain('"piral-cli"');
@@ -18,7 +18,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'tsconfig.json': true,
         'node_modules/react/package.json': true,
-        'src/index.tsx'(content) {
+        'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain("import { PiletApi } from 'sample-piral';");
           expect(content).toContain('export function setup(app: PiletApi) {');
@@ -33,13 +33,10 @@ runTests('pilet-new', ({ test }) => {
     'can create a new TS pilet with modules using `sample-piral` from cli in a new directory',
     [],
     async (ctx) => {
-      await run(
-        `npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --base foo-pilet`,
-        ctx.root,
-      );
+      await ctx.run(`npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --base foo-pilet`);
 
       await ctx.assertFiles({
-        'foo-pilet/package.json'(content) {
+        'foo-pilet/package.json'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('"sample-piral"');
           expect(content).toContain('"piral-cli"');
@@ -48,7 +45,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'foo-pilet/tsconfig.json': true,
         'foo-pilet/node_modules/react/package.json': true,
-        'foo-pilet/src/index.tsx'(content) {
+        'foo-pilet/src/index.tsx'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain("import { PiletApi } from 'sample-piral';");
           expect(content).toContain('export function setup(app: PiletApi) {');
@@ -63,13 +60,12 @@ runTests('pilet-new', ({ test }) => {
     'can create a new JS pilet without installation using `sample-piral` from cli',
     [],
     async (ctx) => {
-      await run(
+      await ctx.run(
         `npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --no-install --language js`,
-        ctx.root,
       );
 
       await ctx.assertFiles({
-        'package.json'(content) {
+        'package.json'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('"sample-piral"');
           expect(content).toContain('"piral-cli"');
@@ -78,7 +74,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'tsconfig.json': false,
         'node_modules/react/package.json': false,
-        'src/index.jsx'(content) {
+        'src/index.jsx'(content: string) {
           expect(content).not.toBe('');
           expect(content).not.toContain("import { PiletApi } from 'sample-piral';");
           expect(content).toContain('export function setup(app) {');
@@ -93,10 +89,10 @@ runTests('pilet-new', ({ test }) => {
     'can create a new TS pilet with modules using `sample-piral` from npm initializer',
     [],
     async (ctx) => {
-      await run(`npm init pilet@${cliVersion} --source sample-piral@${cliVersion} --defaults`, ctx.root);
+      await ctx.run(`npm init pilet@${cliVersion} --source sample-piral@${cliVersion} --defaults`);
 
       await ctx.assertFiles({
-        'package.json'(content) {
+        'package.json'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('"sample-piral"');
           expect(content).toContain('"piral-cli"');
@@ -105,7 +101,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'tsconfig.json': true,
         'node_modules/react/package.json': true,
-        'src/index.tsx'(content) {
+        'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain("import { PiletApi } from 'sample-piral';");
           expect(content).toContain('export function setup(app: PiletApi) {');

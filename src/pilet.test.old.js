@@ -12,32 +12,6 @@
 // expect.extend({ toMatchFilesystemSnapshot });
 
 // describe('pilet', () => {
-//   it('scaffold pilet', async () => {
-//     const pathToBuildDir = path.resolve(process.cwd(), 'pilet-build');
-//     await cleanDir(pathToBuildDir);
-
-//     const info = await execute(`npm init pilet@${cliVersion} ${installFlag} -y`, {
-//       cwd: pathToBuildDir,
-//     });
-
-//     await cleanupForSnapshot(pathToBuildDir);
-
-//     expect(info.stderr).toBe('');
-
-//     expect(pathToBuildDir).toMatchFilesystemSnapshot(undefined, snapshotOptions);
-//   });
-
-//   it('pilet scaffold with piral source', async () => {
-//     const pathToBuildDir = path.resolve(process.cwd(), 'pilet');
-//     await cleanDir(pathToBuildDir);
-
-//     // scaffold new pilet
-//     const info = await execute(`npm init pilet@${cliVersion} ${installFlag}--source sample-piral@${cliVersion} -y`, {
-//       cwd: pathToBuildDir,
-//     });
-//     expect(info.stderr).toBe('');
-//   });
-
 //   it('pilet publish', async (done) => {
 //     const pathToBuildDir = path.resolve(process.cwd(), 'pilet');
 //     const port = 9000;

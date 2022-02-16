@@ -1,12 +1,13 @@
 import * as diff from 'jest-diff';
 
-import { expect, describe, it } from '@jest/globals';
+import { expect, describe, it, beforeEach } from '@jest/globals';
 import { promises as fsPromises, unlink } from 'fs';
 import { resolve } from 'path';
 import { ChildProcess } from 'child_process';
 import { promisify } from 'util';
 import { NO_DIFF_MESSAGE } from 'jest-diff/build/constants';
-import { exists, rimraf } from './io';
+import { exists, rimraf, copyAll, globFiles } from './io';
+import { run } from './process';
 
 fsPromises.rm = fsPromises.rm || promisify(unlink);
 
@@ -28,16 +29,20 @@ const allFeatures = [
 ].join(',');
 
 export const cliVersion = process.env.CLI_VERSION || 'next';
-export const selectedBundler = process.env.BUNDLER_PLUGIN || 'piral-cli-webpack5';
+export const selectedBundler = process.env.BUNDLER_PLUGIN || `piral-cli-webpack5@${cliVersion}`;
 export const isBundlerPlugin = !!process.env.BUNDLER_PLUGIN;
 export const bundlerFeatures = (process.env.BUNDLER_FEATURES || allFeatures).split(',');
 
-export type FileAssertions = Record<string, boolean | ((content: string) => boolean)>;
+export type FileAssertions = Record<string, boolean | ((content: any) => boolean)>;
+
+export type FileMutations = Record<string, string | ((content: string) => string)>;
 
 export interface TestContext {
   root: string;
   id: string;
+  run(cmd: string): Promise<string>;
   assertFiles(files: FileAssertions): Promise<void>;
+  setFiles(files: FileMutations): Promise<void>;
 }
 
 export interface TestEnvironment {
@@ -47,6 +52,7 @@ export interface TestEnvironment {
 
 export interface TestEnvironmentRef {
   env: TestEnvironment;
+  setup(cb: (ctx: TestContext) => Promise<void>): void;
   test(
     prefix: string,
     description: string,
@@ -56,8 +62,17 @@ export interface TestEnvironmentRef {
 }
 
 export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
+  let template = undefined;
   const ref: TestEnvironmentRef = {
     env: undefined,
+    setup(cb) {
+      beforeEach(async () => {
+        if (!template) {
+          template = await ref.env.createTestContext('_template');
+          await cb(template);
+        }
+      });
+    },
     test(prefix, description, features, cb) {
       // either we run in the "standard repo" (i.e., not as a bundler plugin)
       // or we need to have some bundler-features defined (and all features should be available from the bundler - otherwise its broken by default)
@@ -66,6 +81,11 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
 
       define(description, async () => {
         const ctx = await ref.env.createTestContext(prefix);
+
+        if (template) {
+          await copyAll(template.root, ctx.root);
+        }
+
         await cb(ctx);
       });
     },
@@ -73,7 +93,7 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
 
   describe(area, () => {
     beforeAll(async () => {
-      ref.env = await prepareTests('pilet-new');
+      ref.env = await prepareTests(area);
     });
 
     cb(ref);
@@ -98,17 +118,46 @@ export async function prepareTests(area: string): Promise<TestEnvironment> {
             const status = await exists(path);
 
             if (typeof handler === 'function') {
-              expect(status).toBeTruthy();
-              const content = await fsPromises.readFile(path, 'utf8');
-              expect(handler(content)).toBeTruthy();
+              if (file.indexOf('*') === -1) {
+                expect(status).toBeTruthy();
+                const content = await fsPromises.readFile(path, 'utf8');
+                expect(handler(content)).toBeTruthy();
+              } else {
+                const files = await globFiles(root, file);
+                expect(handler(files)).toBeTruthy();
+              }
             } else if (typeof handler === 'boolean') {
               expect(status).toBe(handler);
             }
           }),
         );
       };
+      const setFiles = async (files: FileMutations) => {
+        await Promise.all(
+          Object.keys(files).map(async (file) => {
+            const path = resolve(root, file);
+            const content = files[file];
+
+            if (typeof content === 'string') {
+              await fsPromises.writeFile(path, content, 'utf8');
+            } else if (typeof content === 'function') {
+              const original = await fsPromises.readFile(path, 'utf8');
+              const modified = content(original);
+              await fsPromises.writeFile(path, modified, 'utf8');
+            }
+          }),
+        );
+      };
       await fsPromises.mkdir(root, { recursive: true });
-      return { id, root, assertFiles };
+      return {
+        id,
+        root,
+        setFiles,
+        assertFiles,
+        run(cmd) {
+          return run(cmd, root);
+        },
+      };
     },
   };
 }

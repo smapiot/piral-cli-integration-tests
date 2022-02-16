@@ -25,26 +25,6 @@ module.exports = ({ jest, expect, describe, it, afterAllHandlers }, bundler, por
   expect.extend({ toMatchFilesystemSnapshot });
 
   describe(`${bundlerPrefix}pilet`, () => {
-    it('build', async () => {
-      const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + 'bundler-pilet-build');
-
-      await cleanDir(pathToBuildDir);
-
-      await execute(
-        `npm init pilet@${cliVersion} ${installFlag}--source sample-piral@${cliVersion} --name ${'bundler-pilet-build'} -y`,
-        {
-          cwd: pathToBuildDir,
-        },
-      );
-
-      await execute(`npm run build`, {
-        cwd: pathToBuildDir,
-      });
-
-      await cleanupForSnapshot(pathToBuildDir);
-
-      expect(pathToBuildDir).toMatchFilesystemSnapshot(undefined, snapshotOptions);
-    });
     it('HMR', async (done) => {
       const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + 'pilet');
       const srcFilePath = path.resolve(pathToBuildDir, 'src', 'index.tsx');
