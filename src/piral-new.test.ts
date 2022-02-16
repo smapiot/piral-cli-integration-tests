@@ -15,20 +15,17 @@ runTests('piral-new', ({ test }) => {
           expect(content).toContain('"piral"');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"${ctx.id}"`);
-          return true;
         },
         'tsconfig.json': true,
         'node_modules/piral-cli/package.json': true,
         'src/index.html'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('<script src="./index.tsx"></script>');
-          return true;
         },
         'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain("from 'piral'");
           expect(content).toContain("const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/empty';");
-          return true;
         },
       });
     },
@@ -50,21 +47,18 @@ runTests('piral-new', ({ test }) => {
           expect(content).toContain('"piral-core"');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"my-piral-instance"`);
-          return true;
         },
         'my-piral-instance/tsconfig.json': true,
         'my-piral-instance/node_modules/piral-cli/package.json': true,
         'my-piral-instance/src/index.html'(content) {
           expect(content).not.toBe('');
           expect(content).toContain('<script src="./index.tsx"></script>');
-          return true;
         },
         'my-piral-instance/src/index.tsx'(content) {
           expect(content).not.toBe('');
           expect(content).toContain('from "piral-core"');
           expect(content).toContain('fetch("https://feed.piral.cloud/api/v1/pilet/empty")');
           expect(content).toContain('render(<Piral instance={instance} />, document.querySelector("#app"));');
-          return true;
         },
       });
     },
@@ -84,20 +78,17 @@ runTests('piral-new', ({ test }) => {
           expect(content).toContain('"piral"');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"${ctx.id}"`);
-          return true;
         },
         'tsconfig.json': false,
         'node_modules/piral-cli/package.json': false,
         'src/index.html'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('<script src="./index.jsx"></script>');
-          return true;
         },
         'src/index.jsx'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain("from 'piral'");
           expect(content).toContain("const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/empty';");
-          return true;
         },
       });
     },
@@ -117,20 +108,17 @@ runTests('piral-new', ({ test }) => {
           expect(content).toContain('"piral"');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"${ctx.id}"`);
-          return true;
         },
         'tsconfig.json': true,
         'node_modules/piral-cli/package.json': true,
         'src/index.html'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('<script src="./index.tsx"></script>');
-          return true;
         },
         'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain("from 'piral'");
           expect(content).toContain("const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/empty';");
-          return true;
         },
       });
     },

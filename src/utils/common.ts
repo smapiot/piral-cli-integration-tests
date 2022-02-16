@@ -9,7 +9,37 @@ import { NO_DIFF_MESSAGE } from 'jest-diff/build/constants';
 import { exists, rimraf, copyAll, globFiles } from './io';
 import { run } from './process';
 
+interface CustomMatchers<R> {
+  toBePresent(status: boolean): R;
+}
+
+declare module 'expect/build/types' {
+  interface Matchers<R> extends CustomMatchers<R> {}
+}
+
+declare global {
+  namespace jest {
+    interface Matchers<R> extends CustomMatchers<R> {}
+  }
+}
+
 fsPromises.rm = fsPromises.rm || promisify(unlink);
+
+expect.extend({
+  toBePresent(received: string, status: boolean) {
+    if (status) {
+      return {
+        message: () => `File "${received}" exists but should be missing.`,
+        pass: true,
+      };
+    } else {
+      return {
+        message: () => `File "${received}" should be existing but does not.`,
+        pass: false,
+      };
+    }
+  },
+});
 
 const hashTest = new RegExp(/index.\w*.js/);
 const allFeatures = [
@@ -33,7 +63,7 @@ export const selectedBundler = process.env.BUNDLER_PLUGIN || `piral-cli-webpack5
 export const isBundlerPlugin = !!process.env.BUNDLER_PLUGIN;
 export const bundlerFeatures = (process.env.BUNDLER_FEATURES || allFeatures).split(',');
 
-export type FileAssertions = Record<string, boolean | ((content: any) => boolean)>;
+export type FileAssertions = Record<string, boolean | ((content: any) => void | Promise<void>)>;
 
 export type FileMutations = Record<string, string | ((content: string) => string)>;
 
@@ -41,6 +71,7 @@ export interface TestContext {
   root: string;
   id: string;
   run(cmd: string): Promise<string>;
+  readFile(file: string): Promise<string>;
   assertFiles(files: FileAssertions): Promise<void>;
   setFiles(files: FileMutations): Promise<void>;
 }
@@ -119,18 +150,24 @@ export async function prepareTests(area: string): Promise<TestEnvironment> {
 
             if (typeof handler === 'function') {
               if (file.indexOf('*') === -1) {
-                expect(status).toBeTruthy();
+                expect(file).toBePresent(status);
                 const content = await fsPromises.readFile(path, 'utf8');
-                expect(handler(content)).toBeTruthy();
+                await handler(content);
               } else {
                 const files = await globFiles(root, file);
-                expect(handler(files)).toBeTruthy();
+                await handler(files);
               }
-            } else if (typeof handler === 'boolean') {
-              expect(status).toBe(handler);
+            } else if (handler === true) {
+              expect(file).toBePresent(status);
+            } else if (handler === false) {
+              expect(file).not.toBePresent(status);
             }
           }),
         );
+      };
+      const readFile = (file: string) => {
+        const path = resolve(root, file);
+        return fsPromises.readFile(path, 'utf8');
       };
       const setFiles = async (files: FileMutations) => {
         await Promise.all(
@@ -152,6 +189,7 @@ export async function prepareTests(area: string): Promise<TestEnvironment> {
       return {
         id,
         root,
+        readFile,
         setFiles,
         assertFiles,
         run(cmd) {
