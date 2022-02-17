@@ -26,48 +26,6 @@ module.exports = ({ jest, expect, describe, it, afterAllHandlers }, bundler, por
   expect.extend({ toMatchFilesystemSnapshot });
 
   describe(`${bundlerPrefix}piral`, () => {
-    it('build', async () => {
-      const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + 'piral-shell-build');
-
-      await cleanDir(pathToBuildDir);
-
-      await execute(`npm init piral-instance@${cliVersion} ${getInitializerOptions(bundler)}`, {
-        cwd: pathToBuildDir,
-      });
-
-      await execute(`npm run build`, {
-        cwd: pathToBuildDir,
-      });
-
-      await cleanupForSnapshot(pathToBuildDir);
-
-      // TODO: clean renaming paterns
-
-      expect(pathToBuildDir).toMatchFilesystemSnapshot(undefined, snapshotOptions);
-    });
-
-    it('scaffold pilet', async () => {
-      const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + 'piral-shell-build');
-      const piletDir = path.resolve(pathToBuildDir, 'sc-pilet');
-
-      await cleanDir(piletDir);
-
-      const info = await execute(
-        `npm init pilet --target sc-pilet --source ./dist/emulator/${bundler}-piral-shell-build-1.0.0.tgz ${getInitializerOptions(
-          bundler,
-        )}`,
-        {
-          cwd: pathToBuildDir,
-        },
-      );
-
-      expect(info.stderr).toBe('');
-
-      await cleanupForSnapshot(piletDir);
-
-      expect(piletDir).toMatchFilesystemSnapshot(undefined, snapshotOptions);
-    });
-
     it('HMR', async (done) => {
       const pathToBuildDir = path.resolve(process.cwd(), bundlerPrefix + 'piral-inst');
       const layoutFilePath = path.resolve(pathToBuildDir, 'src', 'layout.tsx');

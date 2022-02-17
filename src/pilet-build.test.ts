@@ -209,7 +209,7 @@ runTests('pilet-build', ({ test, setup }) => {
         'dist/index.js'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('//@pilet v:2');
-          expect(content).toContain(',{"emojis-list@548188f1fd7bf2cdb92cf42deaf5de0ffbfe709a":"https://unpkg.com/browse/emojis-list@3.0.0/index.js"})');
+          expect(content).toContain(',{"emojis-list@b881d6c":"https://unpkg.com/browse/emojis-list@3.0.0/index.js"})');
         },
       });
     },

@@ -1,29 +1,9 @@
-import * as diff from 'jest-diff';
-
 import { expect, describe, it, beforeEach } from '@jest/globals';
-import { promises as fsPromises, unlink } from 'fs';
+import { promises as fsPromises } from 'fs';
 import { resolve } from 'path';
-import { ChildProcess } from 'child_process';
-import { promisify } from 'util';
-import { NO_DIFF_MESSAGE } from 'jest-diff/build/constants';
-import { exists, rimraf, copyAll, globFiles } from './io';
-import { run } from './process';
-
-interface CustomMatchers<R> {
-  toBePresent(status: boolean): R;
-}
-
-declare module 'expect/build/types' {
-  interface Matchers<R> extends CustomMatchers<R> {}
-}
-
-declare global {
-  namespace jest {
-    interface Matchers<R> extends CustomMatchers<R> {}
-  }
-}
-
-fsPromises.rm = fsPromises.rm || promisify(unlink);
+import { rimraf, copyAll } from './io';
+import { createTestContextFactory } from './context';
+import { TestEnvironment, TestEnvironmentRef } from './types';
 
 expect.extend({
   toBePresent(received: string, status: boolean) {
@@ -41,7 +21,6 @@ expect.extend({
   },
 });
 
-const hashTest = new RegExp(/index.\w*.js/);
 const allFeatures = [
   'codegen',
   'splitting',
@@ -63,35 +42,6 @@ export const selectedBundler = process.env.BUNDLER_PLUGIN || `piral-cli-webpack5
 export const isBundlerPlugin = !!process.env.BUNDLER_PLUGIN;
 export const bundlerFeatures = (process.env.BUNDLER_FEATURES || allFeatures).split(',');
 
-export type FileAssertions = Record<string, boolean | ((content: any) => void | Promise<void>)>;
-
-export type FileMutations = Record<string, string | ((content: string) => string)>;
-
-export interface TestContext {
-  root: string;
-  id: string;
-  run(cmd: string): Promise<string>;
-  readFile(file: string): Promise<string>;
-  assertFiles(files: FileAssertions): Promise<void>;
-  setFiles(files: FileMutations): Promise<void>;
-}
-
-export interface TestEnvironment {
-  dir: string;
-  createTestContext(id: string): Promise<TestContext>;
-}
-
-export interface TestEnvironmentRef {
-  env: TestEnvironment;
-  setup(cb: (ctx: TestContext) => Promise<void>): void;
-  test(
-    prefix: string,
-    description: string,
-    bundlerFeatures: Array<string>,
-    cb: (ctx: TestContext) => Promise<void>,
-  ): void;
-}
-
 export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
   let template = undefined;
   const ref: TestEnvironmentRef = {
@@ -104,7 +54,9 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
         }
       });
     },
-    test(prefix, description, features, cb) {
+    test(prefix, description, flags, cb) {
+      const noTemplate = flags.includes('#empty');
+      const features = flags.filter(flag => !flag.startsWith('#'));
       // either we run in the "standard repo" (i.e., not as a bundler plugin)
       // or we need to have some bundler-features defined (and all features should be available from the bundler - otherwise its broken by default)
       const canRun = !isBundlerPlugin || (features.length > 0 && features.every((s) => bundlerFeatures.includes(s)));
@@ -113,7 +65,7 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
       define(description, async () => {
         const ctx = await ref.env.createTestContext(prefix);
 
-        if (template) {
+        if (!noTemplate && template) {
           await copyAll(template.root, ctx.root);
         }
 
@@ -133,160 +85,11 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
 
 export async function prepareTests(area: string): Promise<TestEnvironment> {
   const dir = resolve(__dirname, '..', '..', 'dist', area);
+  const createTestContext = createTestContextFactory(dir);
   await rimraf(dir);
   await fsPromises.mkdir(dir, { recursive: true });
   return {
     dir,
-    async createTestContext(prefix) {
-      const suffix = Math.random().toString(26).substring(2, 8);
-      const id = `${prefix}_${suffix}`;
-      const root = resolve(dir, id);
-      const assertFiles = async (files: FileAssertions) => {
-        await Promise.all(
-          Object.keys(files).map(async (file) => {
-            const path = resolve(root, file);
-            const handler = files[file];
-            const status = await exists(path);
-
-            if (typeof handler === 'function') {
-              if (file.indexOf('*') === -1) {
-                expect(file).toBePresent(status);
-                const content = await fsPromises.readFile(path, 'utf8');
-                await handler(content);
-              } else {
-                const files = await globFiles(root, file);
-                await handler(files);
-              }
-            } else if (handler === true) {
-              expect(file).toBePresent(status);
-            } else if (handler === false) {
-              expect(file).not.toBePresent(status);
-            }
-          }),
-        );
-      };
-      const readFile = (file: string) => {
-        const path = resolve(root, file);
-        return fsPromises.readFile(path, 'utf8');
-      };
-      const setFiles = async (files: FileMutations) => {
-        await Promise.all(
-          Object.keys(files).map(async (file) => {
-            const path = resolve(root, file);
-            const content = files[file];
-
-            if (typeof content === 'string') {
-              await fsPromises.writeFile(path, content, 'utf8');
-            } else if (typeof content === 'function') {
-              const original = await fsPromises.readFile(path, 'utf8');
-              const modified = content(original);
-              await fsPromises.writeFile(path, modified, 'utf8');
-            }
-          }),
-        );
-      };
-      await fsPromises.mkdir(root, { recursive: true });
-      return {
-        id,
-        root,
-        readFile,
-        setFiles,
-        assertFiles,
-        run(cmd) {
-          return run(cmd, root);
-        },
-      };
-    },
+    createTestContext,
   };
 }
-
-export async function cleanupForSnapshot(dirPath: string) {
-  await rimraf(resolve(dirPath, 'node_modules'));
-  await rimraf(resolve(dirPath, '.cache'));
-  await fsPromises.rm(resolve(dirPath, 'package-lock.json'));
-
-  const releasePath = resolve(dirPath, 'dist', 'release');
-
-  if (await exists(releasePath)) {
-    await Promise.all([
-      fsPromises
-        .readdir(releasePath)
-        .then((files) =>
-          Promise.all(
-            files
-              .filter((name) => {
-                return hashTest.test(name);
-              })
-              .map((name) => {
-                return fsPromises.rename(
-                  resolve(releasePath, name),
-                  resolve(releasePath, name.replace(hashTest, 'index.js')),
-                );
-              }),
-          ),
-        )
-        .then(() => {
-          return fsPromises
-            .readFile(resolve(releasePath, 'index.js'))
-            .then((str) => {
-              const data = str.toString();
-
-              if (data)
-                return fsPromises.writeFile(
-                  resolve(releasePath, 'index.js'),
-                  data.toString().replace(hashTest, 'index.js'),
-                );
-            })
-            .catch(() => {});
-        }),
-      fsPromises.readFile(resolve(releasePath, 'index.html')).then((str) => {
-        const data = str.toString();
-
-        if (data)
-          return fsPromises.writeFile(
-            resolve(releasePath, 'index.html'),
-            data.toString().replace(hashTest, 'index.js'),
-          );
-      }),
-    ]);
-  }
-}
-
-export const snapshotOptions = {
-  customCompare: [
-    {
-      check: (dir: string) => dir.endsWith('.tgz'),
-      compare: () => NO_DIFF_MESSAGE,
-    },
-
-    {
-      check: (dir: string) => dir.endsWith('package.json'),
-
-      compare: (actualBuffer, expectedBuffer) => {
-        const actual = JSON.parse(actualBuffer);
-        const expected = JSON.parse(expectedBuffer);
-
-        [
-          // delete piral dependencies
-          actual.dependencies,
-          actual.devDependencies,
-          expected.dependencies,
-          expected.devDependencies,
-        ].forEach((obj) =>
-          Object.keys(obj)
-            .filter((key) => key.startsWith('piral'))
-            .forEach((key) => {
-              delete obj[key];
-            }),
-        );
-
-        delete actual.peerModules;
-        delete expected.peerModules;
-
-        // actual.name = actual.name.replace(/^(webpack[5]*|parcel)-/, "");
-
-        return diff(actual, expected);
-      },
-    },
-  ],
-};
