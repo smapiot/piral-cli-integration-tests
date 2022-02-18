@@ -16,6 +16,34 @@ Integration tests for the `piral-cli` tool and its default bundler. Can be used 
 | Linux        | 17.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20linux_node_17)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main)   |
 | Windows      | 14.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20windows_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main) |
 
+## Important Links
+
+* 📢 **[We are hiring!](https://smapiot.com/jobs)** - work with us on Piral, its ecosystem and our users
+* 🌍 [Website](https://piral.io/) - learn more about Piral
+* 📖 [Documentation](https://docs.piral.io/) - everything to get started and master micro frontends
+* 🉐 **Help translating Piral!** - making PRs in the [documentation branch](https://github.com/smapiot/piral/tree/documentation)
+* 🐞 [Issue Tracker](https://github.com/smapiot/piral/issues) - report bugs or suggest new features
+* 🗨  [Forums](https://stackoverflow.com/questions/tagged/piral) - use the community support on StackOverflow
+* 👪 [Community Chat](https://gitter.im/piral-io/community) - ask questions and provide answers in our Gitter room
+
+## Testing Package
+
+[![npm version](https://img.shields.io/npm/v/piral-cli-webpack.svg?style=flat)](https://www.npmjs.com/package/piral-cli-webpack)
+
+The tests are also available as a drop-in package to test bundler plugins. You can install it with:
+
+```sh
+npm i @smapiot/piral-cli-integration-tests
+```
+
+Then run the tests using
+
+```sh
+npx piral-cli-tests <your-bundler-name>
+```
+
+If you don't specify the bundler name then the current working directory's *package.json* will be used to infer it.
+
 ## Tests
 
 ### Piral

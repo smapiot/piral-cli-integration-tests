@@ -1,3 +1,5 @@
+const { resolve } = require('path');
+
 module.exports = {
   collectCoverage: false,
   globals: {
@@ -24,11 +26,14 @@ module.exports = {
     [
       'jest-junit',
       {
-        outputDirectory: 'dist',
+        outputDirectory: resolve(__dirname, 'dist'),
       },
     ],
   ],
-  roots: ['src/'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  testPathIgnorePatterns: ['<rootDir>/node_modules/'],
+  modulePathIgnorePatterns: ['<rootDir>/node_modules/'],
+  roots: ['<rootDir>/src/'],
   testRegex: '(/__tests__/.*|\\.test)\\.ts$',
   testURL: 'http://localhost',
   transform: {

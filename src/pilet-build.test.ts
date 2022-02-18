@@ -82,7 +82,7 @@ runTests('pilet-build', ({ test, setup }) => {
           export function setup(api: PiletApi) {
             api.registerPage('/foo', Page);
           }
-        `
+        `,
       });
 
       await ctx.run(`npx pilet build`);
@@ -94,9 +94,9 @@ runTests('pilet-build', ({ test, setup }) => {
           expect(content).toContain('System.register(');
         },
         'dist/*.js'(files: Array<string>) {
-          const nonIndexFiles = files.filter(f => f !== 'dist/index.js');
+          const nonIndexFiles = files.filter((f) => f !== 'dist/index.js');
           expect(nonIndexFiles).toHaveLength(1);
-        }
+        },
       });
     },
   );
@@ -118,7 +118,7 @@ runTests('pilet-build', ({ test, setup }) => {
           export function setup(api: PiletApi) {
             api.registerPage('/foo', () => <div className="foo">Content</div>);
           }
-        `
+        `,
       });
 
       await ctx.run(`npx pilet build`);
@@ -132,7 +132,7 @@ runTests('pilet-build', ({ test, setup }) => {
         },
         'dist/*.css'(files: Array<string>) {
           expect(files).toHaveLength(1);
-        }
+        },
       });
     },
   );
@@ -147,7 +147,7 @@ runTests('pilet-build', ({ test, setup }) => {
           const data = JSON.parse(content);
           data.importmap = {
             imports: {
-              "emojis-list": "emojis-list",
+              'emojis-list': 'emojis-list',
             },
           };
           return JSON.stringify(data, undefined, 2);
@@ -160,7 +160,7 @@ runTests('pilet-build', ({ test, setup }) => {
           export function setup(api: PiletApi) {
             api.registerPage('/foo', () => <div>{emojisList[25]}</div>);
           }
-        `
+        `,
       });
 
       await ctx.run(`npx pilet build`);
@@ -186,7 +186,7 @@ runTests('pilet-build', ({ test, setup }) => {
           const data = JSON.parse(content);
           data.importmap = {
             imports: {
-              "emojis-list": "https://unpkg.com/browse/emojis-list@3.0.0/index.js",
+              'emojis-list': 'https://unpkg.com/browse/emojis-list@3.0.0/index.js',
             },
           };
           return JSON.stringify(data, undefined, 2);
@@ -199,7 +199,7 @@ runTests('pilet-build', ({ test, setup }) => {
           export function setup(api: PiletApi) {
             api.registerPage('/foo', () => <div>{emojisList[25]}</div>);
           }
-        `
+        `,
       });
 
       await ctx.run(`npx pilet build`);

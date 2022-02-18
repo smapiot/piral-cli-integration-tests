@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 
-const jest = require('jest');
+const Runtime = require('jest-runtime');
 const { resolve } = require('path');
+
+const origCreateHasteMap = Runtime.createHasteMap;
+
+Runtime.createHasteMap = function (...args) {
+  const result = origCreateHasteMap.call(this, ...args);
+  result._options.retainAllFiles = true;
+  return result;
+};
 
 const argv = process.argv;
 const root = resolve(__dirname, '..', 'src');
@@ -13,8 +21,9 @@ if (argv.length < 2 || bundler.startsWith('-')) {
   process.exit(1);
 }
 
-const [node, _, ...rest] = argv;
+const [_node, _exec, ...rest] = argv;
+const config = resolve(__dirname, '..', 'jest.config.js');
 
 process.env.BUNDLER_PLUGIN = '';
 
-jest.run([node, root, '--runInBand', ...rest], 'jest.config.js');
+require('jest').run([root, '--runInBand', ...rest], config);
