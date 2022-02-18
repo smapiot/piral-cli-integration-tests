@@ -12,12 +12,11 @@
     "skipLibCheck": true,
     "target": "es6",
     "sourceMap": true,
-    "lib": ["es6", "esnext"]
+    "lib": ["es6", "esnext"],
+    "types": ["@types/jest", "jest-playwright-preset", "expect-playwright"]
   },
   "exclude": [
     "dist",
-    "node_modules",
-    "**/*.test.ts",
-    "**/*.test.tsx"
+    "node_modules"
   ]
 }

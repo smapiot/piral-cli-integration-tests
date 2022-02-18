@@ -6,6 +6,17 @@ module.exports = {
       diagnostics: false,
     },
   },
+  testEnvironmentOptions: {
+    'jest-playwright': {
+      browsers: ['chromium'],
+      exitOnPageError: false,
+      collectCoverage: false,
+      launchOptions: {
+        headless: true,
+      },
+    },
+  },
+  setupFilesAfterEnv: ['expect-playwright'],
   testTimeout: 60 * 1000,
   preset: 'jest-playwright-preset',
   reporters: [

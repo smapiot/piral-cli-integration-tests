@@ -10,7 +10,7 @@ runTests('piral-build', ({ test, setup }) => {
   test(
     'release-standard-template',
     'can produce a release build',
-    ['codegen', 'build.piral'],
+    ['build.piral'],
     async (ctx) => {
       await ctx.run(`npx piral build --type release`);
 
@@ -25,7 +25,7 @@ runTests('piral-build', ({ test, setup }) => {
   test(
     'emulator-standard-template',
     'can produce an emulator build',
-    ['codegen', 'build.emulator'],
+    ['build.emulator'],
     async (ctx) => {
       await ctx.setFiles({
         'package.json'(content: string) {

@@ -2,10 +2,18 @@ export type FileAssertions = Record<string, boolean | ((content: any) => void | 
 
 export type FileMutations = Record<string, string | ((content: string) => string)>;
 
+export interface RunningProcess {
+  waitEnd(): Promise<void>;
+  waitUntil(str: string): Promise<void>;
+  end(): void;
+}
+
 export interface TestContext {
   root: string;
   id: string;
+  clean(): Promise<void>;
   run(cmd: string): Promise<string>;
+  runAsync(cmd: string): RunningProcess;
   setRef(id: string, file: string): void;
   getRef(id: string): string;
   readFile(file: string): Promise<string>;

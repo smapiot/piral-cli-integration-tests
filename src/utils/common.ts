@@ -1,4 +1,4 @@
-import { expect, describe, it, beforeEach } from '@jest/globals';
+import { expect, describe, it, beforeEach, beforeAll, afterAll } from '@jest/globals';
 import { promises as fsPromises } from 'fs';
 import { resolve } from 'path';
 import { rimraf, copyAll } from './io';
@@ -42,6 +42,17 @@ export const selectedBundler = process.env.BUNDLER_PLUGIN || `piral-cli-webpack5
 export const isBundlerPlugin = !!process.env.BUNDLER_PLUGIN;
 export const bundlerFeatures = (process.env.BUNDLER_FEATURES || allFeatures).split(',');
 
+export async function prepareTests(area: string): Promise<TestEnvironment> {
+  const dir = resolve(__dirname, '..', '..', 'dist', area);
+  const createTestContext = createTestContextFactory(dir);
+  await rimraf(dir);
+  await fsPromises.mkdir(dir, { recursive: true });
+  return {
+    dir,
+    createTestContext,
+  };
+}
+
 export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
   let template = undefined;
   const ref: TestEnvironmentRef = {
@@ -69,7 +80,11 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
           await copyAll(template.root, ctx.root);
         }
 
-        await cb(ctx);
+        try {
+          await cb(ctx);
+        } finally {
+          ctx.clean();
+        }
       });
     },
   };
@@ -79,17 +94,10 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
       ref.env = await prepareTests(area);
     });
 
+    afterAll(async () => {
+      // all good here
+    });
+
     cb(ref);
   });
-}
-
-export async function prepareTests(area: string): Promise<TestEnvironment> {
-  const dir = resolve(__dirname, '..', '..', 'dist', area);
-  const createTestContext = createTestContextFactory(dir);
-  await rimraf(dir);
-  await fsPromises.mkdir(dir, { recursive: true });
-  return {
-    dir,
-    createTestContext,
-  };
 }

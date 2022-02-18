@@ -28,7 +28,7 @@ export function createServer(port: number): ServerRunner {
       return new Promise<void>((resolve) => {
         cp.once('message', (msg) => {
           if (msg === 'stopped') {
-            cp.kill();
+            cp.kill('SIGTERM');
             resolve();
           }
         });

@@ -2,7 +2,7 @@ import { expect } from '@jest/globals';
 import { promises as fsPromises } from 'fs';
 import { resolve } from 'path';
 import { exists, globFiles } from './io';
-import { run as runFrom } from './process';
+import { run as runFrom, runAsync as runAsyncFrom } from './process';
 import { FileAssertions, FileMutations, TestContext } from './types';
 
 export function createTestContextFactory(dir: string) {
@@ -12,6 +12,7 @@ export function createTestContextFactory(dir: string) {
     const suffix = Math.random().toString(26).substring(2, 8);
     const id = `${prefix}_${suffix}`;
     const root = resolve(dir, id);
+    const cleanups: Array<() => Promise<void>> = [];
 
     const assertFiles = async (files: FileAssertions) => {
       await Promise.all(
@@ -72,11 +73,26 @@ export function createTestContextFactory(dir: string) {
 
     const run = (cmd: string) => runFrom(cmd, root);
 
+    const runAsync = (cmd: string) => {
+      const cp = runAsyncFrom(cmd, root);
+      cleanups.push(() => {
+        const result = cp.waitEnd();
+        cp.end();
+        return result;
+      });
+      return cp;
+    };
+
+    const clean = async () => {
+      await Promise.all(cleanups.map(doCleanup => doCleanup()));
+    };
+
     await fsPromises.mkdir(root, { recursive: true });
 
     return {
       id,
       root,
+      clean,
       setRef,
       getRef,
       readFile,
@@ -84,6 +100,7 @@ export function createTestContextFactory(dir: string) {
       findFiles,
       assertFiles,
       run,
+      runAsync,
     };
   };
 }
