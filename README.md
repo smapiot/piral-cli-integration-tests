@@ -50,22 +50,30 @@ If you don't specify the bundler name then the current working directory's *pack
 
 -   ✅ Scaffold Piral instance
 -   ✅ Run/debug Piral instance
--   ✅ Build Piral instance
--   ✅ Validate Piral instance (through snapshot compare)
+-   ✅ Build Piral instance release
+-   ✅ Build Piral instance emulator
+-   ⏸️ Build Piral instance emulator sources
+-   ✅ Generate Piral instance declaration
+-   ✅ Validate Piral instance
 -   ✅ Use Piral instance emulator for scaffolding locally
 -   ✅ Change Piral instance while debugging (HMR)
 -   ✅ Upgrade Piral instance from older (0.12.0 -> ENV) to recent version
--   ⏸️ Check Piral instance with browser extension (`piral-inspector`)
+-   ✅ Check Piral instance with debugging API (e.g., for `piral-inspector`)
 
 ### Pilet
 
--   ✅ Scaffold pilet (using `sample-piral@next`)
+-   ✅ Scaffold pilet (using `sample-piral`)
 -   ✅ Run/debug new pilet
--   ✅ Build pilet
+-   ✅ Build v2 pilet
+-   ✅ Build v1 pilet
+-   ✅ Build v0 pilet
+-   ⏸️ Build standalone pilet
+-   ⏸️ Build pilet manifest file
 -   ✅ Publish pilet (to temp. feed)
--   ✅ Validate pilet (through snapshot compare)
--   ✅ Change pilet while debugging (HMR)
--   ⏸️ Check pilet with browser extension (`piral-inspector`)
+-   ✅ Validate pilet
+-   ✅ Change pilet while debugging (reinject pilet)
+-   ⏸️ Upgrade pilet from older `sample-piral` to current
+-   ✅ Check pilet with debugging API (e.g., for `piral-inspector`)
 
 The publish pilet command uses:
 
@@ -77,10 +85,26 @@ It also can perform against a feed [hosted by the `sample-pilet-service`](https:
 
 ## Enviroment variables
 
-| ENV              | description                        | default    |
-| ---------------- | ---------------------------------- | ---------- |
-| `CLI_VERSION`    | Version of the `piral-cli` package | `latest`   |
-| `BUNDLER`        | Prefix of the bundler to use       |            |
+| ENV                | Description                        | Default    |
+| ------------------ | ---------------------------------- | ---------- |
+| `CLI_VERSION`      | Version of the `piral-cli` package | `latest`   |
+| `BUNDLER_PLUGIN`   | The name of the bundler to use     |            |
+| `BUNDLER_FEATURES` | The features of the bundler plugin | *all*      |
+
+Available features:
+
+- `codegen`, can handle `*.codegen` files
+- `splitting`, can handle `import()` calls with a new JS side-bundle
+- `pilet.v0`, supports the `v0` schema
+- `pilet.v1`, supports the `v1` schema
+- `pilet.v2`, supports the `v2` schema
+- `importmap.ref`, supports usage of an importmap
+- `importmap.local`, supports local creation of importmap side-bundles
+- `build.pilet`, supports building a pilet
+- `build.piral`, supports building a Piral instance
+- `debug.pilet`, supports debugging a pilet
+- `debug.piral`, supports debugging a Piral instance
+- `hmr`, supports hot module reloading (for Piral instances)
 
 ## License
 

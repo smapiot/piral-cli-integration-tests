@@ -25,7 +25,7 @@ runTests('piral-build', ({ test, setup }) => {
   test(
     'emulator-standard-template',
     'can produce an emulator build',
-    ['build.emulator'],
+    ['build.piral'],
     async (ctx) => {
       await ctx.setFiles({
         'package.json'(content: string) {

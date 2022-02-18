@@ -6,11 +6,15 @@ runTests('piral-declaration', ({ test, setup }) => {
   });
 
   test('declaration-standard-template', 'declaration of the standard template should work', [], async (ctx) => {
-    const result = await ctx.run(`npx piral declaration`);
+    await ctx.run(`npx piral declaration`);
 
     ctx.assertFiles({
       'dist/index.d.ts'(content: string) {
         expect(content).not.toBe('');
+        expect(content).toContain("import * as React from 'react';");
+        expect(content).toContain('export interface PiletApi extends');
+        expect(content).toContain('export interface PiletCustomApi');
+        expect(content).toContain('export interface PiletCoreApi');
       },
     });
   });

@@ -31,7 +31,6 @@ const allFeatures = [
   'importmap.local',
   'build.pilet',
   'build.piral',
-  'build.emulator',
   'debug.pilet',
   'debug.piral',
   'hmr',
