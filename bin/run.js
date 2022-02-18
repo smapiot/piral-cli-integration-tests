@@ -17,4 +17,4 @@ const [node, _, ...rest] = argv;
 
 process.env.BUNDLER_PLUGIN = '';
 
-jest.run([node, root, '--maxWorkers=2', ...rest], 'jest.config.js');
+jest.run([node, root, '--runInBand', ...rest], 'jest.config.js');

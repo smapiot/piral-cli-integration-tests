@@ -12,7 +12,7 @@ export function run(cmd: string, cwd = process.cwd()) {
       if (err) {
         reject(err);
       } else {
-        resolve(result);
+        resolve(result.trim());
       }
     });
   });

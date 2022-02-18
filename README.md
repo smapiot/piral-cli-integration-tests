@@ -26,7 +26,7 @@ Integration tests for the `piral-cli` tool and its default bundler. Can be used 
 -   ✅ Validate Piral instance (through snapshot compare)
 -   ✅ Use Piral instance emulator for scaffolding locally
 -   ✅ Change Piral instance while debugging (HMR)
--   🔲 Upgrade Piral instance from older (0.12.0 -> ENV) to recent version
+-   ✅ Upgrade Piral instance from older (0.12.0 -> ENV) to recent version
 -   ⏸️ Check Piral instance with browser extension (`piral-inspector`)
 
 ### Pilet
