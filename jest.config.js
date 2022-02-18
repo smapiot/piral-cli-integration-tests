@@ -6,8 +6,8 @@ module.exports = {
       diagnostics: false,
     },
   },
-  testTimeout: 60000,
-  preset: 'jest-puppeteer',
+  testTimeout: 60 * 1000,
+  preset: 'jest-playwright-preset',
   reporters: [
     'default',
     [

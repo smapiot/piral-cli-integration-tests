@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import { type } from 'os';
 
@@ -18,11 +18,8 @@ export function run(cmd: string, cwd = process.cwd()) {
   });
 }
 
-export async function runWithJson<T = any>(cmd: string, cwd?: string) {
-  const result = await run(cmd, cwd);
-  return JSON.parse(result) as T;
+export function runAsync(cmd: string, cwd = process.cwd()) {
+  spawn(cmd, { cwd });
 }
-
-export const timeoutCommand = type().startsWith('Linux') ? 'timeout 60s ' : '';
 
 export const isNodeV15 = process.version.startsWith('v15') && type().startsWith('Linux');

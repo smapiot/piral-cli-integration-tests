@@ -6,7 +6,7 @@
   "homepage": "https://piral.io",
   "license": "MIT",
   "engines": {
-    "node": ">=10.0"
+    "node": ">=12.0"
   },
   "bin": {
     "piral-cli-tests": "./bin/run.js"
@@ -16,32 +16,22 @@
     "url": "git+https://github.com/smapiot/piral-cli-integration-tests.git"
   },
   "scripts": {
-    "test": "jest",
-    "sample-feed": "sample-pilet-service"
-  },
-  "devDependencies": {
-    "@types/jest": "^26.0.0",
-    "typescript": "^4.5.5"
+    "start": "jest --maxWorkers=2",
+    "test": "jest"
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
-    "asar": "^0.14.3",
+    "@types/jest": "^26.0.0",
     "axios": "^0.26.0",
     "babel-jest": "^25.5.1",
-    "filenamify": "^2.1.0",
-    "iconv-lite": "^0.4.23",
     "jest": "^26.0.0",
     "jest-cli": "^26.0.0",
-    "jest-diff": "^23.0.0",
-    "jest-fs-snapshot": "^0.2.1",
-    "jest-junit": "^12.3.0",
-    "jest-matcher-utils": "^23.0.0",
-    "jest-puppeteer": "^4.4.0",
-    "puppeteer": "^5.5.0",
-    "rimraf": "^3.0.2",
+    "jest-junit": "^13.0.0",
+    "jest-playwright-preset": "^1.7.0",
+    "playwright": "^1.19.1",
+    "rimraf": "^3.0.0",
     "sample-pilet-service": "^1.5.2",
-    "tree-kill": "^1.2.2",
     "ts-jest": "^26.0.0",
-    "utf-8-validate": "^5.0.8"
+    "typescript": "^4.0.0"
   }
 }
