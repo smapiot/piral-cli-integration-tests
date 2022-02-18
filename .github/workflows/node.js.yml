@@ -37,7 +37,7 @@ jobs:
           node-version: "14.x"
           registry-url: "https://registry.npmjs.org"
       - name: Setup Preview Version
-        run: sed -i -e "s/\(\"version\":\\s\+\"\([0-9]\+\.\?\)\+\)/\1-pre.$BUILD_BUILDNUMBER/" package.json;
+        run: sed -i -e "s/\(\"version\":\\s\+\"\([0-9]\+\.\?\)\+\)/\1-pre.${{ github.run_number }}/" package.json;
       - name: Publish Package
         run: npm publish
         env:
