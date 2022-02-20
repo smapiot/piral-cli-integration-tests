@@ -24,6 +24,6 @@ if (argv.length < 2 || bundler.startsWith('-')) {
 const [_node, _exec, ...rest] = argv;
 const config = resolve(__dirname, '..', 'jest.config.js');
 
-process.env.BUNDLER_PLUGIN = '';
+process.env.BUNDLER_PLUGIN = bundler;
 
 require('jest').run([root, '--runInBand', ...rest], config);

@@ -36,13 +36,15 @@ const allFeatures = [
   'hmr',
 ].join(',');
 
+const outdir = process.env.OUTPUT_DIR;
+
 export const cliVersion = process.env.CLI_VERSION || 'next';
 export const selectedBundler = process.env.BUNDLER_PLUGIN || `piral-cli-webpack5@${cliVersion}`;
 export const isBundlerPlugin = !!process.env.BUNDLER_PLUGIN;
 export const bundlerFeatures = (process.env.BUNDLER_FEATURES || allFeatures).split(',');
 
 export async function prepareTests(area: string): Promise<TestEnvironment> {
-  const dir = resolve(__dirname, '..', '..', 'dist', area);
+  const dir = resolve(outdir, area);
   const createTestContext = createTestContextFactory(dir);
   await rimraf(dir);
   await fsPromises.mkdir(dir, { recursive: true });

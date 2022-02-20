@@ -1,4 +1,4 @@
-import { cliVersion, runTests, selectedBundler } from './utils';
+import { cliVersion, getFreePort, runTests, selectedBundler } from './utils';
 
 runTests('piral-debug', ({ test, setup }) => {
   setup(async (ctx) => {
@@ -7,7 +7,7 @@ runTests('piral-debug', ({ test, setup }) => {
   });
 
   test('debug-standard-template', 'can produce a debug build', ['codegen', 'debug.piral'], async (ctx) => {
-    const port = '1235';
+    const port = await getFreePort(1235);
     const cp = ctx.runAsync(`npx piral debug --port ${port}`);
 
     await cp.waitUntil('Ready');
@@ -27,7 +27,7 @@ runTests('piral-debug', ({ test, setup }) => {
   });
 
   test('hmr-standard-template', 'can hmr when developing a debug build', ['codegen', 'debug.piral', 'hmr'], async (ctx) => {
-    const port = '1236';
+    const port = await getFreePort(1236);
     const cp = ctx.runAsync(`npx piral debug --port ${port}`);
 
     await cp.waitUntil('Ready');

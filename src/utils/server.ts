@@ -1,3 +1,4 @@
+import getPort from 'get-port';
 import { fork } from 'child_process';
 import { resolve } from 'path';
 
@@ -8,6 +9,10 @@ export interface ServerRunner {
   apiKey: string;
 }
 
+export function getFreePort(preference: number) {
+  return getPort(preference && { port: preference });
+}
+
 export function createServer(port: number): ServerRunner {
   const apiKey = Math.random().toString(16).substring(2);
   const path = resolve(__dirname, 'server-proxy.js');
@@ -15,7 +20,7 @@ export function createServer(port: number): ServerRunner {
 
   return {
     start() {
-      return new Promise<void>(resolve => {
+      return new Promise<void>((resolve) => {
         cp.once('message', (msg) => {
           if (msg === 'started') {
             resolve();

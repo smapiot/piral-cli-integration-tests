@@ -1,4 +1,4 @@
-import { cliVersion, runTests, selectedBundler } from './utils';
+import { cliVersion, runTests, selectedBundler, getFreePort } from './utils';
 
 runTests('pilet-debug', ({ test, setup }) => {
   setup(async (ctx) => {
@@ -8,7 +8,7 @@ runTests('pilet-debug', ({ test, setup }) => {
   });
 
   test('debug-standard-template', 'can produce a debug build', ['debug.pilet'], async (ctx) => {
-    const port = '1256';
+    const port = await getFreePort(1256);
     const cp = ctx.runAsync(`npx pilet debug --port ${port}`);
 
     await cp.waitUntil('Ready');
@@ -21,7 +21,7 @@ runTests('pilet-debug', ({ test, setup }) => {
   });
 
   test('reload-standard-template', 'can reload when developing a debug build', ['debug.pilet'], async (ctx) => {
-    const port = '1257';
+    const port = await getFreePort(1257);
     const cp = ctx.runAsync(`npx pilet debug --port ${port}`);
 
     await cp.waitUntil('Ready');

@@ -39,7 +39,7 @@ jobs:
       - name: Setup Preview Version
         run: sed -i -e "s/\(\"version\":\\s\+\"\([0-9]\+\.\?\)\+\)/\1-pre.${{ github.run_number }}/" package.json;
       - name: Publish Package
-        run: npm publish
+        run: npm publish --tag next
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 

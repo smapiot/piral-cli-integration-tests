@@ -3,6 +3,7 @@
     "module": "commonjs",
     "declaration": true,
     "noImplicitAny": false,
+    "esModuleInterop": true,
     "removeComments": false,
     "jsx": "react",
     "noLib": false,

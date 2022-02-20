@@ -1,5 +1,10 @@
 const { resolve } = require('path');
 
+const outDirName = process.env.OUTDIR || 'dist';
+const outputDirectory = resolve(process.cwd(), outDirName);
+
+process.env.OUTPUT_DIR = outputDirectory;
+
 module.exports = {
   collectCoverage: false,
   globals: {
@@ -26,11 +31,17 @@ module.exports = {
     [
       'jest-junit',
       {
-        outputDirectory: resolve(__dirname, 'dist'),
+        outputDirectory,
       },
     ],
   ],
-  transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  transformIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    'node_modules/@babel',
+    'node_modules/@jest',
+    'signal-exit',
+    'is-typedarray',
+  ],
   testPathIgnorePatterns: ['<rootDir>/node_modules/'],
   modulePathIgnorePatterns: ['<rootDir>/node_modules/'],
   roots: ['<rootDir>/src/'],
