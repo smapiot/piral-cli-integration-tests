@@ -20,6 +20,7 @@ export function run(cmd: string, cwd = process.cwd()) {
 
 export function runAsync(cmd: string, cwd = process.cwd()): RunningProcess {
   const cp = exec(cmd, { cwd });
+  const timeoutInSeconds = 45;
 
   return {
     waitEnd() {
@@ -29,16 +30,26 @@ export function runAsync(cmd: string, cwd = process.cwd()): RunningProcess {
         cp.on('close', resolve);
       });
     },
-    waitUntil(str) {
+    waitUntil(condition, error) {
       return new Promise<void>((resolve, reject) => {
-        const timeout = setTimeout(() => reject(new Error('Process not started after 45s')), 45 * 1000);
+        const ref = { timeout: undefined };
         const onData = (data: Buffer) => {
-          if (data.toString().includes(str)) {
-            clearTimeout(timeout);
+          const line = data.toString();
+
+          if (line.includes(condition)) {
+            clearTimeout(ref.timeout);
             cp.stdout.off('data', onData);
             resolve();
+          } else if (error && line.includes(error)) {
+            clearTimeout(ref.timeout);
+            cp.stdout.off('data', onData);
+            reject(new Error(`Process encountered an error: ${line}`));
           }
         };
+        ref.timeout = setTimeout(() => {
+          cp.stdout.off('data', onData);
+          reject(new Error(`Process not started after ${timeoutInSeconds}s`));
+        }, timeoutInSeconds * 1000);
         cp.stdout.on('data', onData);
       });
     },
@@ -46,7 +57,6 @@ export function runAsync(cmd: string, cwd = process.cwd()): RunningProcess {
       cp.kill('SIGTERM');
       cp.stdout.destroy();
       cp.stderr.destroy();
-      cp.removeAllListeners();
     },
   };
 }

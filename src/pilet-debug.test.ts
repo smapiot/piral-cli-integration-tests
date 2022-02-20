@@ -11,7 +11,7 @@ runTests('pilet-debug', ({ test, setup }) => {
     const port = await getFreePort(1256);
     const cp = ctx.runAsync(`npx pilet debug --port ${port}`);
 
-    await cp.waitUntil('Ready');
+    await cp.waitUntil('Ready', 'The bundling process failed');
 
     await page.goto(`http://localhost:${port}`);
 
@@ -24,7 +24,7 @@ runTests('pilet-debug', ({ test, setup }) => {
     const port = await getFreePort(1257);
     const cp = ctx.runAsync(`npx pilet debug --port ${port}`);
 
-    await cp.waitUntil('Ready');
+    await cp.waitUntil('Ready', 'The bundling process failed');
 
     await page.goto(`http://localhost:${port}`);
 

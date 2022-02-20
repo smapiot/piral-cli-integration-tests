@@ -10,7 +10,7 @@ runTests('piral-debug', ({ test, setup }) => {
     const port = await getFreePort(1235);
     const cp = ctx.runAsync(`npx piral debug --port ${port}`);
 
-    await cp.waitUntil('Ready');
+    await cp.waitUntil('Ready', 'The bundling process failed');
 
     await page.goto(`http://localhost:${port}`);
 
@@ -30,7 +30,7 @@ runTests('piral-debug', ({ test, setup }) => {
     const port = await getFreePort(1236);
     const cp = ctx.runAsync(`npx piral debug --port ${port}`);
 
-    await cp.waitUntil('Ready');
+    await cp.waitUntil('Ready', 'The bundling process failed');
 
     await page.goto(`http://localhost:${port}`);
 

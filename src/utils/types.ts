@@ -4,7 +4,7 @@ export type FileMutations = Record<string, string | ((content: string) => string
 
 export interface RunningProcess {
   waitEnd(): Promise<void>;
-  waitUntil(str: string): Promise<void>;
+  waitUntil(condition: string, error?: string): Promise<void>;
   end(): void;
 }
 
