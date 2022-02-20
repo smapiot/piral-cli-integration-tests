@@ -1,9 +1,9 @@
-import * as rimrafSync from 'rimraf';
+import * as rimrafClassic from 'rimraf';
 import { promises as fsPromises } from 'fs';
 import { resolve, relative } from 'path';
 import { promisify } from 'util';
 
-export const rimraf = promisify(rimrafSync);
+export const rimraf = promisify(rimrafClassic.default || rimrafClassic);
 
 export async function cleanDir(dirPath: string) {
   await rimraf(dirPath);
