@@ -1,4 +1,4 @@
-import { cliVersion, runTests } from './utils';
+import { cliVersion, npmInit, runTests } from './utils';
 
 runTests('pilet-new', ({ test }) => {
   test(
@@ -83,7 +83,7 @@ runTests('pilet-new', ({ test }) => {
     'can create a new TS pilet with modules using `sample-piral` from npm initializer',
     [],
     async (ctx) => {
-      await ctx.run(`npm init pilet@${cliVersion} --source sample-piral@${cliVersion} --defaults`);
+      await ctx.run(npmInit(`pilet@${cliVersion}`, `--source sample-piral@${cliVersion} --defaults`));
 
       await ctx.assertFiles({
         'package.json'(content: string) {

@@ -1,4 +1,4 @@
-import { cliVersion, runTests } from './utils';
+import { cliVersion, npmInit, runTests } from './utils';
 
 runTests('piral-new', ({ test }) => {
   test(
@@ -99,7 +99,7 @@ runTests('piral-new', ({ test }) => {
     'can create a new TS piral instance with modules using `piral` from npm initializer',
     [],
     async (ctx) => {
-      await ctx.run(`npm init piral-instance@${cliVersion} --tag ${cliVersion} --defaults`);
+      await ctx.run(npmInit(`piral-instance@${cliVersion}`, `--tag ${cliVersion} --defaults`));
 
       await ctx.assertFiles({
         'package.json'(content: string) {

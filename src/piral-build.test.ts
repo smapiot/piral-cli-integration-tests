@@ -1,4 +1,4 @@
-import { cliVersion, runTests, selectedBundler } from './utils';
+import { cliVersion, npmInit, runTests, selectedBundler } from './utils';
 
 runTests('piral-build', ({ test, setup }) => {
   setup(async (ctx) => {
@@ -53,7 +53,7 @@ runTests('piral-build', ({ test, setup }) => {
     async (ctx) => {
       const source = ctx.getRef('emulator');
 
-      await ctx.run(`npm init pilet@${cliVersion} --source ${source} --bundler none --defaults`);
+      await ctx.run(npmInit(`pilet@${cliVersion}`, `--source ${source} --bundler none --defaults`));
 
       await ctx.assertFiles({
         'package.json'(content: string) {

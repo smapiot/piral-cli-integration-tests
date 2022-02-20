@@ -1,8 +1,8 @@
-import { cliVersion, runTests } from './utils';
+import { cliVersion, npmInit, runTests } from './utils';
 
 runTests('piral-upgrade', ({ test }) => {
   test('from-0140', 'can upgrade from 0.14.0 to current version', [], async (ctx) => {
-    await ctx.run('npm init piral-instance@0.14.0 --tag 0.14.0 --bundler none --defaults');
+    await ctx.run(npmInit('piral-instance@0.14.0', '--tag 0.14.0 --bundler none --defaults'));
 
     await ctx.assertFiles({
       'package.json'(content: string) {

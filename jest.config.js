@@ -24,7 +24,7 @@ module.exports = {
     },
   },
   setupFilesAfterEnv: ['expect-playwright'],
-  testTimeout: 60 * 1000,
+  testTimeout: 2 * 60 * 1000,
   preset: 'jest-playwright-preset',
   reporters: [
     'default',

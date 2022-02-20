@@ -1,6 +1,6 @@
 import * as rimrafClassic from 'rimraf';
 import { promises as fsPromises } from 'fs';
-import { resolve, relative } from 'path';
+import { resolve, relative, sep, posix } from 'path';
 import { promisify } from 'util';
 
 export const rimraf = promisify(rimrafClassic.default || rimrafClassic);
@@ -77,8 +77,6 @@ async function fillGlobFiles(root: string, dirs: Array<string>, file: string, fi
       files.push(path);
     }
   }
-
-  return files;
 }
 
 export async function globFiles(root: string, pattern: string) {
@@ -89,7 +87,7 @@ export async function globFiles(root: string, pattern: string) {
 
   await fillGlobFiles(root, dirs, file, files);
 
-  return files.map((file) => relative(root, file));
+  return files.map((file) => relative(root, file).split(sep).join(posix.sep));
 }
 
 export async function copyAll(sourceFolder: string, targetFolder: string) {
@@ -101,7 +99,13 @@ export async function copyAll(sourceFolder: string, targetFolder: string) {
       const targetFile = resolve(targetFolder, name);
       const stats = await fsPromises.lstat(sourceFile);
 
-      if (stats.isDirectory()) {
+      if (stats.isSymbolicLink()) {
+        const link = await fsPromises.readlink(sourceFile);
+        const absLink = resolve(sourceFolder, link);
+        const relLink = relative(sourceFolder, absLink);
+        const newLink = resolve(targetFolder, relLink);
+        await fsPromises.symlink(newLink, targetFile);
+      } else if (stats.isDirectory()) {
         await fsPromises.mkdir(targetFile);
         await copyAll(sourceFile, targetFile);
       } else if (stats.isFile()) {
