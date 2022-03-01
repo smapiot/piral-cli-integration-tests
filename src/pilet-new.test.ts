@@ -3,7 +3,7 @@ import { cliVersion, npmInit, runTests } from './utils';
 runTests('pilet-new', ({ test }) => {
   test(
     'from-cli-empty-template-language-js',
-    'can not create a new JS pilet instance without modules using empty template from cli in the same directory',
+    'can create a new JS pilet without modules using empty template from cli in the same directory',
     [],
     async (ctx) => {
       await ctx.run(
@@ -78,7 +78,7 @@ runTests('pilet-new', ({ test }) => {
 
   test(
     'from-cli-default-registry',
-    'can create a new TS pilet instance with the default registry from cli in a new directory',
+    'can create a new TS pilet with the default registry from cli in a new directory',
     [],
     async (ctx) => {
       await ctx.run(

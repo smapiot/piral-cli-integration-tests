@@ -96,7 +96,7 @@ runTests('piral-new', ({ test }) => {
 
   test(
     'from-cli-invalid-template',
-    'can not create a new TS piral instance without modules using invalid template from cli in the same directory',
+    'can create a new TS piral instance without modules using invalid template from cli in the same directory',
     [],
     async (ctx) => {
       try {
