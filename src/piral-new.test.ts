@@ -1,6 +1,7 @@
 import { cliVersion, npmInit, runTests } from './utils';
 
 runTests('piral-new', ({ test }) => {
+  // 'can create a new TS piral instance with modules using `piral` from cli in the same directory',
   test(
     'from-cli-full',
     'can create a new TS piral instance with modules using `piral` from cli in the same directory',
@@ -31,6 +32,7 @@ runTests('piral-new', ({ test }) => {
     },
   );
 
+  // 'can create a new TS piral instance with modules using piral-base from cli in the same directory',
   test(
     'from-cli-different-framework',
     'can create a new TS piral instance with modules using piral-base from cli in the same directory',
@@ -61,53 +63,7 @@ runTests('piral-new', ({ test }) => {
     },
   );
 
-  test(
-    'from-cli-invalid-template',
-    'can not create a new TS piral instance without modules using invalid template from cli in the same directory',
-    [],
-    async (ctx) => {
-      try {
-        await ctx.run(
-          `npx --package piral-cli@${cliVersion} piral new --tag ${cliVersion} --no-install --template some-invalid-template-foo`,
-        );
-        expect(true).toBe(false);
-      } catch {}
-
-      await ctx.assertFiles({
-        'package.json': true,
-        'tsconfig.json': false,
-        'node_modules/piral-cli/package.json': false,
-        'src/index.html': false,
-      });
-    },
-  );
-
-  test(
-    'from-cli-empty-template',
-    'can create a new TS piral instance without modules using empty template from cli in the same directory',
-    [],
-    async (ctx) => {
-      await ctx.run(
-        `npx --package piral-cli@${cliVersion} piral new --tag ${cliVersion} --no-install --template empty`,
-      );
-
-      await ctx.assertFiles({
-        'package.json': true,
-        'tsconfig.json': true,
-        'node_modules/piral-cli/package.json': false,
-        'src/index.html'(content: string) {
-          expect(content).not.toBe('');
-          expect(content).toContain('<script src="./index.tsx"></script>');
-        },
-        'src/index.tsx'(content: string) {
-          expect(content).not.toBe('');
-          expect(content).toContain("import { renderInstance } from 'piral';");
-          expect(content).toContain('renderInstance();');
-        },
-      });
-    },
-  );
-
+  // 'can create a new TS piral instance with modules using `piral-core` from cli in a new directory',
   test(
     'from-cli-moved',
     'can create a new TS piral instance with modules using `piral-core` from cli in a new directory',
@@ -141,6 +97,79 @@ runTests('piral-new', ({ test }) => {
     },
   );
 
+  // 'can not create a new TS piral instance without modules using invalid template from cli in the same directory',
+  test(
+    'from-cli-invalid-template',
+    'can not create a new TS piral instance without modules using invalid template from cli in the same directory',
+    [],
+    async (ctx) => {
+      try {
+        await ctx.run(
+          `npx --package piral-cli@${cliVersion} piral new --tag ${cliVersion} --no-install --template some-invalid-template-foo`,
+        );
+        expect(true).toBe(false);
+      } catch {}
+
+      await ctx.assertFiles({
+        'package.json': true,
+        'tsconfig.json': false,
+        'node_modules/piral-cli/package.json': false,
+        'src/index.html': false,
+      });
+    },
+  );
+
+  // 'can create a new TS piral instance without modules using empty template from cli in the same directory',
+  test(
+    'from-cli-empty-template',
+    'can create a new TS piral instance without modules using empty template from cli in the same directory',
+    [],
+    async (ctx) => {
+      await ctx.run(
+        `npx --package piral-cli@${cliVersion} piral new --tag ${cliVersion} --no-install --template empty`,
+      );
+
+      await ctx.assertFiles({
+        'package.json': true,
+        'tsconfig.json': true,
+        'node_modules/piral-cli/package.json': false,
+        'src/index.html'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('<script src="./index.tsx"></script>');
+        },
+        'src/index.tsx'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain("import { renderInstance } from 'piral';");
+          expect(content).toContain('renderInstance();');
+        },
+      });
+    },
+  );
+
+  // 'can not create a new JS piral instance without modules using empty template from cli in the same directory' --new
+  test(
+    'from-cli-empty-template-language-js',
+    'can not create a new JS piral instance without modules using empty template from cli in the same directory',
+    [],
+    async (ctx) => {
+      try {
+        await ctx.run(
+          `npx --package piral-cli@${cliVersion} piral new --tag ${cliVersion} --no-install --template empty --language js`,
+        );
+        expect(true).toBe(false);
+      } catch {}
+
+      await ctx.assertFiles({
+        'package.json': true,
+        'tsconfig.json': false,
+        'node_modules/piral-cli/package.json': false,
+        'src/index.html': false,
+        'src/index.tsx': false,
+      });
+    },
+  );
+
+  // 'can create a new TS piral instance with the default registry from cli in a new directory'
   test(
     'from-cli-default-registry',
     'can create a new TS piral instance with the default registry from cli in a new directory',
@@ -166,6 +195,7 @@ runTests('piral-new', ({ test }) => {
     },
   );
 
+  // 'can create a new TS piral instance with a custom registry from cli in a new directory'
   test(
     'from-cli-custom-registry',
     'can create a new TS piral instance with a custom registry from cli in a new directory',
@@ -193,9 +223,10 @@ runTests('piral-new', ({ test }) => {
     },
   );
 
+  // 'can create a new JS piral instance without installation using piral from cli',
   test(
     'from-cli-init',
-    'can create a new JS piral instance without installation using `piral` from cli',
+    'can create a new JS piral instance without installation using piral from cli',
     [],
     async (ctx) => {
       await ctx.run(`npx --package piral-cli@${cliVersion} piral new --no-install --language js --tag ${cliVersion}`);
@@ -223,6 +254,38 @@ runTests('piral-new', ({ test }) => {
     },
   );
 
+  // 'can create a new JS piral instance with installation using piral from cli' --new,
+  test(
+    'from-cli-init-with-installation',
+    'can create a new JS piral instance with installation using piral from cli',
+    [],
+    async (ctx) => {
+      await ctx.run(`npx --package piral-cli@${cliVersion} piral new --install --language js --tag ${cliVersion}`);
+
+      await ctx.assertFiles({
+        'package.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).not.toContain('"typescript"');
+          expect(content).toContain('"piral"');
+          expect(content).toContain('"piral-cli"');
+          expect(content).toContain(`"${ctx.id}"`);
+        },
+        'tsconfig.json': false,
+        'node_modules/piral-cli/package.json': true,
+        'src/index.html'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('<script src="./index.jsx"></script>');
+        },
+        'src/index.jsx'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain("from 'piral'");
+          expect(content).toContain("const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/empty';");
+        },
+      });
+    },
+  );
+
+  // 'can create a new TS piral instance with modules using `piral` from npm initializer',
   test(
     'from-initializer-full',
     'can create a new TS piral instance with modules using `piral` from npm initializer',
