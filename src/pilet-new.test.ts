@@ -1,7 +1,6 @@
 import { cliVersion, npmInit, runTests } from './utils';
 
 runTests('pilet-new', ({ test }) => {
-  // 'can not create a new JS pilet instance without modules using empty template from cli in the same directory' --new
   test(
     'from-cli-empty-template-language-js',
     'can not create a new JS pilet instance without modules using empty template from cli in the same directory',
@@ -30,8 +29,6 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
- 
-  // 'can create a new TS pilet with modules using empty template from cli in the same directory',
   test(
     'from-cli-empty-template',
     'can create a new TS pilet with modules using empty template from cli in the same directory',
@@ -59,7 +56,6 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
-  // 'can not create a new TS pilet without modules using invalid template from cli in the same directory',
   test(
     'from-cli-invalid-template',
     'can not create a new TS pilet without modules using invalid template from cli in the same directory',
@@ -80,7 +76,6 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
-  // 'can create a new TS pilet instance with the default registry from cli in a new directory',
   test(
     'from-cli-default-registry',
     'can create a new TS pilet instance with the default registry from cli in a new directory',
@@ -108,7 +103,6 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
-  // 'can create a new TS pilet with a custom registry from cli in a new directory',
   test(
     'from-cli-custom-registry',
     'can create a new TS pilet with a custom registry from cli in a new directory',
@@ -138,7 +132,6 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
-  // 'can create a new TS pilet with modules using sample-piral from cli in the same directory',
   test(
     'from-cli-full',
     'can create a new TS pilet with modules using sample-piral from cli in the same directory',
@@ -164,7 +157,6 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
-  // 'can create a new TS pilet with modules using `sample-piral` from cli in a new directory',
   test(
     'from-cli-moved',
     'can create a new TS pilet with modules using `sample-piral` from cli in a new directory',
@@ -190,7 +182,6 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
-  // 'can create a new JS pilet without installation using `sample-piral` from cli',
   test(
     'from-cli-init',
     'can create a new JS pilet without installation using `sample-piral` from cli',
@@ -218,7 +209,6 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
-  // 'can create a new JS pilet instance with installation using piral from cli' --new,
   test(
     'from-cli-init-with-installation',
     'can create a new JS pilet without installation using sample-piral from cli',
@@ -240,7 +230,7 @@ runTests('pilet-new', ({ test }) => {
         'node_modules/piral-cli/package.json': true,
         'src/index.jsx'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain("export function setup(app) {");
+          expect(content).toContain('export function setup(app) {');
           expect(content).toContain("import * as React from 'react';");
           expect(content).toContain('<a href="https://docs.piral.io" target="_blank">Documentation</a>');
         },
@@ -248,7 +238,6 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
-  // 'can create a new TS pilet with modules using `sample-piral` from npm initializer',
   test(
     'from-initializer-full',
     'can create a new TS pilet with modules using `sample-piral` from npm initializer',
