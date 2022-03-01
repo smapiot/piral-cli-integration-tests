@@ -2,8 +2,114 @@ import { cliVersion, npmInit, runTests } from './utils';
 
 runTests('pilet-new', ({ test }) => {
   test(
+    'from-cli-empty-template',
+    'can create a new TS pilet instance with modules using empty template from cli in the same directory',
+    [],
+    async (ctx) => {
+      await ctx.run(
+        `npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --no-install --template empty`,
+      );
+
+      await ctx.assertFiles({
+        'package.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"sample-piral"');
+          expect(content).toContain('"piral-cli"');
+          expect(content).toContain(`"${ctx.id}"`);
+        },
+        'tsconfig.json': true,
+        'node_modules/react/package.json': false,
+        'src/index.html': false,
+        'src/index.tsx'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain("import { PiletApi } from 'sample-piral';");
+          expect(content).toContain('export function setup(app: PiletApi) {');
+        },
+      });
+    },
+  );
+
+  test(
+    'from-cli-invalid-template',
+    'can not create a new TS pilet instance without modules using invalid template from cli in the same directory',
+    [],
+    async (ctx) => {
+      try {
+        await ctx.run(
+          `npx --package piral-cli@${cliVersion} pilet new --tag ${cliVersion} --no-install --template some-invalid-template-foo`,
+        );
+      } catch {}
+
+      await ctx.assertFiles({
+        'package.json': false,
+        'tsconfig.json': false,
+        'node_modules/piral-cli/package.json': false,
+        'src/index.html': false,
+      });
+    },
+  );
+
+  test(
+    'from-cli-default-registry',
+    'can create a new TS pilet instance with the default registry from cli in a new directory',
+    [],
+    async (ctx) => {
+      await ctx.run(
+        `npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --registry https://registry.npmjs.org/`,
+      );
+
+      await ctx.assertFiles({
+        'package.json'(content) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"typescript"');
+          expect(content).toContain('"piral"');
+          expect(content).toContain('"piral-cli"');
+        },
+        '.npmrc': false,
+        'tsconfig.json': true,
+        'node_modules/piral-cli/package.json': true,
+        'src/index.html': false,
+        'src/index.tsx'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain("import { PiletApi } from 'sample-piral';");
+        },
+      });
+    },
+  );
+
+  test(
+    'from-cli-custom-registry',
+    'can create a new TS pilet instance with a custom registry from cli in a new directory',
+    [],
+    async (ctx) => {
+      await ctx.run(
+        `npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --registry https://registry.npmmirror.com/`,
+      );
+
+      await ctx.assertFiles({
+        'package.json'(content) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"typescript"');
+          expect(content).toContain('"piral"');
+          expect(content).toContain('"piral-cli"');
+        },
+        '.npmrc'(content) {
+          expect(content).toContain('registry=https://registry.npmmirror.com/');
+        },
+        'tsconfig.json': true,
+        'node_modules/piral-cli/package.json': true,
+        'src/index.html': false,
+        'src/index.tsx'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain("import { PiletApi } from 'sample-piral';");
+        },
+      });
+    },
+  );
+
+  test(
     'from-cli-full',
-    'can create a new TS pilet with modules using `sample-piral` from cli in the same directory',
+    'can create a new TS pilet with modules using sample-piral from cli in the same directory',
     [],
     async (ctx) => {
       await ctx.run(`npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion}`);
