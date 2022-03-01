@@ -63,7 +63,7 @@ runTests('piral-new', ({ test }) => {
 
   test(
     'from-cli-moved',
-    'can create a new TS piral instance with modules using `piral-core` from cli in a new directory',
+    'can not create a new TS piral instance with modules using `piral-core` from cli in a new directory',
     [],
     async (ctx) => {
       await ctx.run(
@@ -154,8 +154,8 @@ runTests('piral-new', ({ test }) => {
         'package.json': true,
         'tsconfig.json': false,
         'node_modules/piral-cli/package.json': false,
-        'src/index.html': false,
-        'src/index.tsx': false,
+        'src/index.html': true,
+        'src/index.jsx': true,
       });
     },
   );
