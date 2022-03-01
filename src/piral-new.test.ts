@@ -143,7 +143,7 @@ runTests('piral-new', ({ test }) => {
 
   test(
     'from-cli-empty-template-language-js',
-    'can not create a new JS piral instance without modules using empty template from cli in the same directory',
+    'can create a new JS piral instance without modules using empty template from cli in the same directory',
     [],
     async (ctx) => {
       try {
