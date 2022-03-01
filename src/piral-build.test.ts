@@ -7,6 +7,7 @@ runTests('piral-build', ({ test, setup }) => {
     await ctx.run(`npm i emojis-list@3.0.0`);
   });
 
+  // 'release-standard-template',
   test(
     'release-standard-template',
     'can produce a release build',
@@ -22,6 +23,7 @@ runTests('piral-build', ({ test, setup }) => {
     },
   );
 
+  // 'emulator-standard-template',
   test(
     'emulator-standard-template',
     'can produce an emulator build',
@@ -46,6 +48,31 @@ runTests('piral-build', ({ test, setup }) => {
     },
   );
 
+  // 'can produce emulator sources build',
+  test(
+    'emulator-sources-standard-template',
+    'can produce emulator sources build',
+    ['build.piral'],
+    async (ctx) => {
+      await ctx.run(`npx piral build --type emulator-sources`);
+
+      await ctx.assertFiles({
+        'package-lock.json': true,
+        'package.json'(content: string) {
+          expect(content).toContain('"pilets": {');
+        },
+        'node_modules/piral-cli/package.json': true,
+        'emulator/package.json': true,
+        'emulator/app/index.html'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('<title>My Piral Instance</title>')
+          expect(content).toContain('<script defer src="/index.b68111.js"></script>')
+        }
+      });
+    },
+  );
+
+  // 'can scaffold from the emulator',
   test(
     'emulator-scaffold',
     'can scaffold from the emulator',
