@@ -72,6 +72,28 @@ runTests('piral-build', ({ test, setup }) => {
     },
   );
 
+  // 'can not produce build with invalid type',
+  test(
+    'invalid-type-standard-template',
+    'can not produce build with invalid type',
+    ['build.piral'],
+    async (ctx) => {
+      try {
+        await ctx.run(`npx piral build --type some-invalid-type-standard-template`);
+      } catch {}
+
+      await ctx.assertFiles({
+        'package.json': true,
+        'tsconfig.json': true,
+        'node_modules/piral-cli/package.json': true,
+        'src/index.html': true,
+        'package-lock.json': true,
+        'emulator/package.json': false,
+        'emulator/app/index.html': false,
+      });
+    },
+  );
+
   // 'can scaffold from the emulator',
   test(
     'emulator-scaffold',
