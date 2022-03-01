@@ -146,12 +146,9 @@ runTests('piral-new', ({ test }) => {
     'can create a new JS piral instance without modules using empty template from cli in the same directory',
     [],
     async (ctx) => {
-      try {
-        await ctx.run(
-          `npx --package piral-cli@${cliVersion} piral new --tag ${cliVersion} --no-install --template empty --language js`,
-        );
-        expect(true).toBe(false);
-      } catch {}
+      await ctx.run(
+        `npx --package piral-cli@${cliVersion} piral new --no-install --template empty --language js --tag ${cliVersion}`,
+      );
 
       await ctx.assertFiles({
         'package.json': true,
