@@ -110,7 +110,7 @@ runTests('piral-build', ({ test, setup }) => {
     'can produce a release build with default target ./dist',
     ['build.piral'],
     async (ctx) => {
-      await ctx.run(`npx piral build --type release --target './dist'`);
+      await ctx.run(`npx piral build --type release --target`);
 
       await ctx.assertFiles({
         'dist/release/index.html'(content: string) {
