@@ -14,6 +14,7 @@ runTests('piral-build', ({ test, setup }) => {
       'dist/release/index.html'(content: string) {
         expect(content).not.toBe('');
       },
+      'dist/emulator': false,
     });
   });
 
@@ -33,6 +34,7 @@ runTests('piral-build', ({ test, setup }) => {
         expect(files).toHaveLength(1);
         ctx.setRef('emulator', files[0]);
       },
+      'dist/release': false,
     });
   });
 
@@ -40,17 +42,10 @@ runTests('piral-build', ({ test, setup }) => {
     await ctx.run(`npx piral build --type emulator-sources`);
 
     await ctx.assertFiles({
-      'package-lock.json': true,
-      'package.json'(content: string) {
-        expect(content).toContain('"pilets": {');
-      },
       'node_modules/piral-cli/package.json': true,
-      'emulator/package.json': true,
-      'emulator/app/index.html'(content: string) {
-        expect(content).not.toBe('');
-        expect(content).toContain('<title>My Piral Instance</title>');
-        expect(content).toContain('<script defer src="/index.b68111.js"></script>');
-      },
+      'dist/emulator/package.json': true,
+      'dist/emulator/app/index.html': true,
+      'dist/release': false,
     });
   });
 
@@ -61,14 +56,12 @@ runTests('piral-build', ({ test, setup }) => {
     async (ctx) => {
       try {
         await ctx.run(`npx piral build --type some-invalid-type-standard-template`);
+        expect(true).toBe(false);
       } catch {}
 
       await ctx.assertFiles({
-        'package.json': true,
-        'tsconfig.json': true,
-        'node_modules/piral-cli/package.json': true,
-        'src/index.html': true,
-        'package-lock.json': true,
+        'dist/release': false,
+        'dist/emulator': false,
       });
     },
   );
@@ -99,7 +92,8 @@ runTests('piral-build', ({ test, setup }) => {
       await ctx.assertFiles({
         'dist/release/index.html'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('<script defer="defer" src="/different-public-url/index.');
+          expect(content).toContain('src="/different-public-url/');
+          expect(content).toContain('<link href="/different-public-url/');
         },
       });
     },
@@ -148,12 +142,8 @@ runTests('piral-build', ({ test, setup }) => {
           const indexFile = /<script.*?src="\/(.*?)"/g.exec(content)[1];
 
           const indexFileContent = await ctx.readFile(`dist/release/${indexFile}`);
-          expect(indexFileContent).toContain(
-            '(()=>{var e={2725:function(e,t,n){"undefined"!=typeof self&&self,e.exports=function(e){var t={};function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};',
-          );
-          expect(indexFileContent).toContain(
-            'Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},',
-          );
+          expect(indexFileContent).not.toBe('');
+          expect(indexFileContent).not.toContain('_useNextAtomId');
         },
       });
     },
@@ -172,9 +162,7 @@ runTests('piral-build', ({ test, setup }) => {
           const indexFile = /<script.*?src="\/(.*?)"/g.exec(content)[1];
 
           const indexFileContent = await ctx.readFile(`dist/release/${indexFile}`);
-          expect(indexFileContent).toContain('function _useNextAtomId() {');
-          expect(indexFileContent).toContain('var didValidate = validator(nextState);');
-          expect(indexFileContent).toContain('function setValidator(atom, validator) {');
+          expect(indexFileContent).toContain('_useNextAtomId');
         },
       });
     },
