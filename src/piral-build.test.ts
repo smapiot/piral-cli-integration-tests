@@ -7,7 +7,6 @@ runTests('piral-build', ({ test, setup }) => {
     await ctx.run(`npm i emojis-list@3.0.0`);
   });
 
-  // 'release-standard-template',
   test(
     'release-standard-template',
     'can produce a release build',
@@ -23,7 +22,6 @@ runTests('piral-build', ({ test, setup }) => {
     },
   );
 
-  // 'emulator-standard-template',
   test(
     'emulator-standard-template',
     'can produce an emulator build',
@@ -48,7 +46,6 @@ runTests('piral-build', ({ test, setup }) => {
     },
   );
 
-  // 'can produce emulator sources build',
   test(
     'emulator-sources-standard-template',
     'can produce emulator sources build',
@@ -72,9 +69,8 @@ runTests('piral-build', ({ test, setup }) => {
     },
   );
 
-  // 'can not produce build with invalid type',
   test(
-    'invalid-type-standard-template',
+    'some-invalid-type-standard-template',
     'can not produce build with invalid type',
     ['build.piral'],
     async (ctx) => {
@@ -88,13 +84,113 @@ runTests('piral-build', ({ test, setup }) => {
         'node_modules/piral-cli/package.json': true,
         'src/index.html': true,
         'package-lock.json': true,
-        'emulator/package.json': false,
-        'emulator/app/index.html': false,
       });
     },
   );
 
-  // 'can scaffold from the emulator',
+  test(
+    'release-standard-template-with-default-public-url',
+    'can produce a release build with default public url',
+    ['build.piral'],
+    async (ctx) => {
+      await ctx.run(`npx piral build --type release --public-url '/'`);
+
+      await ctx.assertFiles({
+        'dist/release/index.html'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('<script defer="defer" src="/index.')
+        },
+      });
+    },
+  );
+
+  test(
+    'release-standard-template-with-a-different-public-url',
+    'can produce a release build with a different public url ./',
+    ['build.piral'],
+    async (ctx) => {
+      await ctx.run(`npx piral build --type release --public-url 'different-public-url/'`);
+
+      await ctx.assertFiles({
+        'dist/release/index.html'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('<script defer="defer" src="/different-public-url/index.')
+        },
+      });
+    },
+  );
+
+  test(
+    'release-standard-template-with-default-target',
+    'can produce a release build with default target ./dist',
+    ['build.piral'],
+    async (ctx) => {
+      await ctx.run(`npx piral build --type release --target './dist'`);
+
+      await ctx.assertFiles({
+        'dist/release/index.html'(content: string) {
+          expect(content).not.toBe('');
+        },
+      });
+    },
+  );
+
+  test(
+    'release-standard-template-with-a-different-target',
+    'can produce a release build with a different target',
+    ['build.piral'],
+    async (ctx) => {
+      await ctx.run(`npx piral build --type release --target './different-target'`);
+
+      await ctx.assertFiles({
+        'different-target/release/index.html'(content: string) {
+          expect(content).not.toBe('');
+        },
+      });
+    },
+  );
+
+  test(
+    'release-standard-template-with-minify',
+    'can produce a release build with minify',
+    ['build.piral'],
+    async (ctx) => {
+      await ctx.run(`npx piral build --type release --minify`);
+
+      await ctx.assertFiles({
+        async 'dist/release/index.html'(content: string) {
+          expect(content).not.toBe('');
+          const indexFile = /<script.*?src="\/(.*?)"/g.exec(content)[1];
+          
+          const indexFileContent = await ctx.readFile(`dist/release/${indexFile}`)
+          expect(indexFileContent).toContain('(()=>{var e={2725:function(e,t,n){"undefined"!=typeof self&&self,e.exports=function(e){var t={};function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};')
+          expect(indexFileContent).toContain('Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},')
+        },
+      });
+    },
+  );
+
+  test(
+    'release-standard-template-without-minify',
+    'can produce a release build without minify',
+    ['build.piral'],
+    async (ctx) => {
+      await ctx.run(`npx piral build --type release --no-minify`);
+
+      await ctx.assertFiles({
+        async 'dist/release/index.html'(content: string) {
+          expect(content).not.toBe('');
+          const indexFile = /<script.*?src="\/(.*?)"/g.exec(content)[1];
+          
+          const indexFileContent = await ctx.readFile(`dist/release/${indexFile}`)
+          expect(indexFileContent).toContain("function _useNextAtomId() {")
+          expect(indexFileContent).toContain("var didValidate = validator(nextState);")
+          expect(indexFileContent).toContain("function setValidator(atom, validator) {")
+        },
+      });
+    },
+  );
+
   test(
     'emulator-scaffold',
     'can scaffold from the emulator',

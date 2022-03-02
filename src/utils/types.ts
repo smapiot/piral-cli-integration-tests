@@ -9,6 +9,7 @@ export interface RunningProcess {
 }
 
 export interface TestContext {
+  readFileSync(arg0: string, arg1: string);
   root: string;
   id: string;
   clean(): Promise<void>;
