@@ -35,7 +35,7 @@ runTests('piral-build', ({ test, setup }) => {
         ctx.setRef('emulator', files[0]);
       },
       'dist/release': false,
-      ' dist/emulator': false,
+      'dist/emulator': false,
     });
   });
 
@@ -43,7 +43,6 @@ runTests('piral-build', ({ test, setup }) => {
     await ctx.run(`npx piral build --type emulator-sources`);
 
     await ctx.assertFiles({
-      'node_modules/piral-cli/package.json': true,
       'dist/emulator/package.json': true,
       'dist/emulator/app/index.html': true,
       'dist/release': false,
@@ -77,10 +76,8 @@ runTests('piral-build', ({ test, setup }) => {
       await ctx.assertFiles({
         'dist/release/index.html'(content: string) {
           expect(content).not.toBe('');
-          const jsFile = /[a-zA-Z0-9\.\-\_]*?\.js/g.exec(content)[0];
-          expect(content).toContain(`src="/${jsFile}"`);
-          const cssFile =  /href="\/[a-zA-Z0-9\.\-\_]*?\.css"/g.exec(content)[0]
-          expect(content).toContain(cssFile);
+          expect(content).toMatch(/src="\/[a-zA-Z0-9\.\-\_]*?\.js/g);
+          expect(content).toMatch(/href="\/[a-zA-Z0-9\.\-\_]*?\.css"/g);
         },
       });
     },
@@ -96,10 +93,8 @@ runTests('piral-build', ({ test, setup }) => {
       await ctx.assertFiles({
         'dist/release/index.html'(content: string) {
           expect(content).not.toBe('');
-          const jsFile = /\/different-public-url\/[a-zA-Z0-9\.\-\_]*?\.js/g.exec(content)[0];
-          expect(content).toContain(`src="${jsFile}`);
-          const cssFile = /\/different-public-url\/[a-zA-Z0-9\.\-\_]*?.\.css"/g.exec(content)[0];
-          expect(content).toContain(`href="${cssFile}`);
+          expect(content).toMatch(/src="\/different-public-url\/[a-zA-Z0-9\.\-\_]*?\.js"/g);
+          expect(content).toMatch(/href="\/different-public-url\/[a-zA-Z0-9\.\-\_]*?.\.css"/g);
         },
       });
     },
@@ -116,6 +111,7 @@ runTests('piral-build', ({ test, setup }) => {
         'dist/release/index.html'(content: string) {
           expect(content).not.toBe('');
         },
+        'dist/emulator': false,
       });
     },
   );
