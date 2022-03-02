@@ -35,6 +35,7 @@ runTests('piral-build', ({ test, setup }) => {
         ctx.setRef('emulator', files[0]);
       },
       'dist/release': false,
+      ' dist/emulator': false,
     });
   });
 
@@ -76,7 +77,10 @@ runTests('piral-build', ({ test, setup }) => {
       await ctx.assertFiles({
         'dist/release/index.html'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('<script defer="defer" src="/index.');
+          const jsFile = /[a-zA-Z0-9\.\-\_]*?\.js/g.exec(content)[0];
+          expect(content).toContain(`src="/${jsFile}"`);
+          const cssFile =  /href="\/[a-zA-Z0-9\.\-\_]*?\.css"/g.exec(content)[0]
+          expect(content).toContain(cssFile);
         },
       });
     },
@@ -92,8 +96,10 @@ runTests('piral-build', ({ test, setup }) => {
       await ctx.assertFiles({
         'dist/release/index.html'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('src="/different-public-url/');
-          expect(content).toContain('<link href="/different-public-url/');
+          const jsFile = /\/different-public-url\/[a-zA-Z0-9\.\-\_]*?\.js/g.exec(content)[0];
+          expect(content).toContain(`src="${jsFile}`);
+          const cssFile = /\/different-public-url\/[a-zA-Z0-9\.\-\_]*?.\.css"/g.exec(content)[0];
+          expect(content).toContain(`href="${cssFile}`);
         },
       });
     },
@@ -125,6 +131,7 @@ runTests('piral-build', ({ test, setup }) => {
         'different-target/release/index.html'(content: string) {
           expect(content).not.toBe('');
         },
+        'different-target/emulator': false,
       });
     },
   );
