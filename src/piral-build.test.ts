@@ -35,7 +35,7 @@ runTests('piral-build', ({ test, setup }) => {
         ctx.setRef('emulator', files[0]);
       },
       'dist/release': false,
-      'dist/emulator': false,
+      'dist/emulator': true,
     });
   });
 
