@@ -314,8 +314,14 @@ export function setup(app: PiletApi) {
 
       await ctx.assertFiles({
         async 'dist/standalone/$pilet-api'(content: string){
-          const piletName = content[0]["name"];
-          expect(`dist/standalone/${piletName}/index.js`).not.toBe('')
+          const pilets = JSON.parse(content);
+          const { link } = pilets[0];
+          const indexFileContent = await ctx.readFile(`dist/standalone/${link}`);
+          expect(indexFileContent).not.toBe('');
+          expect(indexFileContent).toContain('//@pilet v:2');
+          expect(indexFileContent).toContain('System.register(');
+          expect(indexFileContent).not.toContain('currentScript.app=');
+          expect(indexFileContent).not.toContain('require("react")');
         },
 
         'dist/standalone/index.html'(content: string) {
