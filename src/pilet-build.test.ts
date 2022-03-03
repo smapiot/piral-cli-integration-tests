@@ -257,6 +257,17 @@ runTests('pilet-build', ({ test, setup }) => {
   );
 
   test('from-sample-piral-with-minify', 'can build a pilet with minify', ['pilet.v2', 'build.pilet'], async (ctx) => {
+    await ctx.setFiles({
+      'src/index.tsx'(content: string) {
+        return content.replace(
+          'export function setup(app: PiletApi) {',
+          `function foobar1234() { return 42; } 
+export function setup(app: PiletApi) {
+console.log(foobar1234)`,
+        );
+      },
+    });
+
     await ctx.run(`npx pilet build --minify`);
 
     await ctx.assertFiles({
@@ -271,15 +282,20 @@ runTests('pilet-build', ({ test, setup }) => {
     'from-sample-piral-without-minify',
     'can build a pilet without minify',
     ['pilet.v2', 'build.pilet'],
-    async (ctx) => {      
+    async (ctx) => {
       await ctx.setFiles({
-        'src/index.tsx': `
-          function foobar1234() { return 42; }
-        `,
+        'src/index.tsx'(content: string) {
+          return content.replace(
+            'export function setup(app: PiletApi) {',
+            `function foobar1234() { return 42; } 
+export function setup(app: PiletApi) {
+  console.log(foobar1234)`,
+          );
+        },
       });
 
       await ctx.run(`npx pilet build --no-minify`);
-      
+
       await ctx.assertFiles({
         'dist/index.js'(content: string) {
           expect(content).not.toBe('');
@@ -297,6 +313,11 @@ runTests('pilet-build', ({ test, setup }) => {
       await ctx.run(`npx pilet build --type 'standalone'`);
 
       await ctx.assertFiles({
+        async 'dist/standalone/$pilet-api'(content: string){
+          const piletName = content[0]["name"];
+          expect(`dist/standalone/${piletName}/index.js`).not.toBe('')
+        },
+
         'dist/standalone/index.html'(content: string) {
           expect(content).toMatch(/src="\/[a-zA-Z0-9\.\-\_]*?\.js/g);
         },
@@ -353,7 +374,7 @@ runTests('pilet-build', ({ test, setup }) => {
 
       await ctx.assertFiles({
         'dist/index.d.ts': false,
-        'dist/index.js': true
+        'dist/index.js': true,
       });
     },
   );
