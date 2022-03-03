@@ -63,7 +63,7 @@ runTests('piral-new', ({ test }) => {
 
   test(
     'from-cli-moved',
-    'can not create a new TS piral instance with modules using `piral-core` from cli in a new directory',
+    'can create a new TS piral instance with modules using `piral-core` from cli in a new directory',
     [],
     async (ctx) => {
       await ctx.run(

@@ -78,7 +78,7 @@ runTests('pilet-new', ({ test }) => {
 
   test(
     'from-cli-default-registry',
-    'can create a new TS pilet with the default registry from cli in a new directory',
+    'can create a new TS pilet with the default registry from cli in the same directory',
     [],
     async (ctx) => {
       await ctx.run(
@@ -89,7 +89,7 @@ runTests('pilet-new', ({ test }) => {
         'package.json'(content) {
           expect(content).not.toBe('');
           expect(content).toContain('"typescript"');
-          expect(content).toContain('"piral": {"');
+          expect(content).toContain('"piral": {');
           expect(content).toContain('"piral-cli"');
         },
         '.npmrc': false,
@@ -116,7 +116,7 @@ runTests('pilet-new', ({ test }) => {
         'package.json'(content) {
           expect(content).not.toBe('');
           expect(content).toContain('"typescript"');
-          expect(content).toContain('"piral": {"');
+          expect(content).toContain('"piral": {');
           expect(content).toContain('"piral-cli"');
         },
         '.npmrc'(content) {
