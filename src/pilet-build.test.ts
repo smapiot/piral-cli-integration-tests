@@ -215,7 +215,6 @@ runTests('pilet-build', ({ test, setup }) => {
     },
   );
 
-  // 'can build a pilet with default target ./dist',
   test(
     'from-sample-piral-with-default-target',
     'can build a pilet with default target ./dist/index.js',
@@ -235,7 +234,6 @@ runTests('pilet-build', ({ test, setup }) => {
     },
   );
 
-  // 'from-sample-piral-with-different-target' --done,
   test(
     'from-sample-piral-with-different-target',
     'can build a pilet with a different target',
@@ -258,7 +256,6 @@ runTests('pilet-build', ({ test, setup }) => {
     },
   );
 
-  // 'can build a pilet with minify --done'
   test('from-sample-piral-with-minify', 'can build a pilet with minify', ['pilet.v2', 'build.pilet'], async (ctx) => {
     await ctx.run(`npx pilet build --minify`);
 
@@ -270,7 +267,6 @@ runTests('pilet-build', ({ test, setup }) => {
     });
   });
 
-  // 'can build a pilet without minify' --done,
   test(
     'from-sample-piral-without-minify',
     'can build a pilet without minify',
@@ -287,7 +283,6 @@ runTests('pilet-build', ({ test, setup }) => {
     },
   );
 
-  // 'can build a pilet with standalone type' --done,
   test(
     'build-pilet-with-standalone-type',
     'can build a pilet with standalone type',
@@ -303,7 +298,6 @@ runTests('pilet-build', ({ test, setup }) => {
     },
   );
 
-  // 'can build a pilet with manifest type' --done,
   test(
     'build-pilet-with-manifest-type',
     'can build a pilet with manifest type',
@@ -327,7 +321,6 @@ runTests('pilet-build', ({ test, setup }) => {
     },
   );
 
-  // 'can build a pilet with declaration',
   test(
     'build-pilet-with-declaration',
     'can build a pilet with declaration',
@@ -341,7 +334,6 @@ runTests('pilet-build', ({ test, setup }) => {
     },
   );
 
-  // 'can build a pilet without declaration',
   test(
     'build-pilet-without-declaration',
     'can build a pilet without declaration',
