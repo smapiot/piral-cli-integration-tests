@@ -214,4 +214,174 @@ runTests('pilet-build', ({ test, setup }) => {
       });
     },
   );
+
+  test(
+    'from-sample-piral-with-default-target',
+    'can build a pilet with default target ./dist/index.js',
+    ['pilet.v2', 'build.pilet'],
+    async (ctx) => {
+      await ctx.run(`npx pilet build --target`);
+
+      await ctx.assertFiles({
+        'dist/index.js'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('//@pilet v:2');
+          expect(content).toContain('System.register(');
+          expect(content).not.toContain('currentScript.app=');
+          expect(content).not.toContain('require("react")');
+        },
+      });
+    },
+  );
+
+  test(
+    'from-sample-piral-with-different-target',
+    'can build a pilet with a different target',
+    ['pilet.v2', 'build.pilet'],
+    async (ctx) => {
+      await ctx.run(`npx pilet build --target './different-target/index.js'`);
+
+      await ctx.assertFiles({
+        dist: false,
+        'different-target/index.js'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('//@pilet v:2');
+          expect(content).toContain('System.register(');
+          expect(content).not.toContain('currentScript.app=');
+          expect(content).not.toContain('require("react")');
+        },
+        'different-target/main.css': true,
+        'dist/index.js': false,
+      });
+    },
+  );
+
+  test('from-sample-piral-with-minify', 'can build a pilet with minify', ['pilet.v2', 'build.pilet'], async (ctx) => {
+    await ctx.setFiles({
+      'src/index.tsx'(content: string) {
+        return content.replace(
+          'export function setup(app: PiletApi) {',
+          `function foobar1234() { return 42; } 
+export function setup(app: PiletApi) {
+console.log(foobar1234)`,
+        );
+      },
+    });
+
+    await ctx.run(`npx pilet build --minify`);
+
+    await ctx.assertFiles({
+      'dist/index.js'(content: string) {
+        expect(content).not.toBe('');
+        expect(content).not.toContain('foobar1234');
+      },
+    });
+  });
+
+  test(
+    'from-sample-piral-without-minify',
+    'can build a pilet without minify',
+    ['pilet.v2', 'build.pilet'],
+    async (ctx) => {
+      await ctx.setFiles({
+        'src/index.tsx'(content: string) {
+          return content.replace(
+            'export function setup(app: PiletApi) {',
+            `function foobar1234() { return 42; } 
+export function setup(app: PiletApi) {
+  console.log(foobar1234)`,
+          );
+        },
+      });
+
+      await ctx.run(`npx pilet build --no-minify`);
+
+      await ctx.assertFiles({
+        'dist/index.js'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('foobar1234');
+        },
+      });
+    },
+  );
+
+  test(
+    'build-pilet-with-standalone-type',
+    'can build a pilet with standalone type',
+    ['pilet.v2', 'build.pilet'],
+    async (ctx) => {
+      await ctx.run(`npx pilet build --type 'standalone'`);
+
+      await ctx.assertFiles({
+        async 'dist/standalone/$pilet-api'(content: string){
+          const pilets = JSON.parse(content);
+          const { link } = pilets[0];
+          const indexFileContent = await ctx.readFile(`dist/standalone/${link}`);
+          expect(indexFileContent).not.toBe('');
+          expect(indexFileContent).toContain('//@pilet v:2');
+          expect(indexFileContent).toContain('System.register(');
+          expect(indexFileContent).not.toContain('currentScript.app=');
+          expect(indexFileContent).not.toContain('require("react")');
+        },
+
+        'dist/standalone/index.html'(content: string) {
+          expect(content).toMatch(/src="\/[a-zA-Z0-9\.\-\_]*?\.js/g);
+        },
+        'dist/standalone/index.js'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain("process.env.NODE_ENV === 'test'");
+        },
+      });
+    },
+  );
+
+  test(
+    'build-pilet-with-manifest-type',
+    'can build a pilet with manifest type',
+    ['pilet.v2', 'build.pilet'],
+    async (ctx) => {
+      await ctx.run(`npx pilet build --type 'manifest'`);
+
+      await ctx.assertFiles({
+        async 'dist/pilets.json'(content: string) {
+          const pilets = JSON.parse(content);
+          const { link } = pilets[0];
+          const indexFileContent = await ctx.readFile(`dist/${link}`);
+          expect(indexFileContent).not.toBe('');
+          expect(indexFileContent).toContain('//@pilet v:2');
+          expect(indexFileContent).toContain('System.register(');
+          expect(indexFileContent).not.toContain('currentScript.app=');
+          expect(indexFileContent).not.toContain('require("react")');
+        },
+      });
+    },
+  );
+
+  test(
+    'build-pilet-with-declaration',
+    'can build a pilet with declaration',
+    ['pilet.v2', 'build.pilet'],
+    async (ctx) => {
+      await ctx.run(`npx pilet build --declaration`);
+
+      await ctx.assertFiles({
+        'dist/index.js': true,
+        'dist/index.d.ts': true,
+      });
+    },
+  );
+
+  test(
+    'build-pilet-without-declaration',
+    'can build a pilet without declaration',
+    ['pilet.v2', 'build.pilet'],
+    async (ctx) => {
+      await ctx.run(`npx pilet build --no-declaration`);
+
+      await ctx.assertFiles({
+        'dist/index.d.ts': false,
+        'dist/index.js': true,
+      });
+    },
+  );
 });
