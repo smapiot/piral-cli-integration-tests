@@ -262,7 +262,7 @@ runTests('pilet-build', ({ test, setup }) => {
     await ctx.assertFiles({
       'dist/index.js'(content: string) {
         expect(content).not.toBe('');
-        expect(content).not.toContain('var moduleUrl');
+        expect(content).not.toContain('foobar1234');
       },
     });
   });
@@ -271,13 +271,19 @@ runTests('pilet-build', ({ test, setup }) => {
     'from-sample-piral-without-minify',
     'can build a pilet without minify',
     ['pilet.v2', 'build.pilet'],
-    async (ctx) => {
-      await ctx.run(`npx pilet build --no-minify`);
+    async (ctx) => {      
+      await ctx.setFiles({
+        'src/index.tsx': `
+          function foobar1234() { return 42; }
+        `,
+      });
 
+      await ctx.run(`npx pilet build --no-minify`);
+      
       await ctx.assertFiles({
         'dist/index.js'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('var moduleUrl');
+          expect(content).toContain('foobar1234');
         },
       });
     },
@@ -294,6 +300,10 @@ runTests('pilet-build', ({ test, setup }) => {
         'dist/standalone/index.html'(content: string) {
           expect(content).toMatch(/src="\/[a-zA-Z0-9\.\-\_]*?\.js/g);
         },
+        'dist/standalone/index.js'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain("process.env.NODE_ENV === 'test'");
+        },
       });
     },
   );
@@ -307,10 +317,9 @@ runTests('pilet-build', ({ test, setup }) => {
 
       await ctx.assertFiles({
         async 'dist/pilets.json'(content: string) {
-          expect(content).not.toBe('');
-          const indexFile = /[a-zA-Z0-9\.\-\_]*?\/index.js/g.exec(content)[0];
-
-          const indexFileContent = await ctx.readFile(`dist/${indexFile}`);
+          const pilets = JSON.parse(content);
+          const { link } = pilets[0];
+          const indexFileContent = await ctx.readFile(`dist/${link}`);
           expect(indexFileContent).not.toBe('');
           expect(indexFileContent).toContain('//@pilet v:2');
           expect(indexFileContent).toContain('System.register(');
@@ -329,6 +338,7 @@ runTests('pilet-build', ({ test, setup }) => {
       await ctx.run(`npx pilet build --declaration`);
 
       await ctx.assertFiles({
+        'dist/index.js': true,
         'dist/index.d.ts': true,
       });
     },
@@ -343,6 +353,7 @@ runTests('pilet-build', ({ test, setup }) => {
 
       await ctx.assertFiles({
         'dist/index.d.ts': false,
+        'dist/index.js': true
       });
     },
   );
