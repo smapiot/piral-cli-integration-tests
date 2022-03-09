@@ -30,10 +30,7 @@ runTests('pilet-debug', ({ test, setup }) => {
 
     await ctx.setFiles({
       'src/index.tsx'(content: string) {
-        return content.replace(
-          "<div>Welcome to Piral!</div>",
-          "<div className='foobar'>Welcome to Foo...</div>",
-        );
+        return content.replace('<div>Welcome to Piral!</div>', "<div className='foobar'>Welcome to Foo...</div>");
       },
     });
 
