@@ -22,12 +22,4 @@ runTests('piral-validate', ({ test, setup }) => {
     //expect(result).toContain('Validation succeeded with 1 warning(s)');
     expect(result).toContain('Validation succeeded with 9 warning(s)');
   });
-
-  // test('depends-on-piral', 'depends-on piral', [], async (ctx) => {
-  //   const result = await ctx.run(`npx piral validate depends-on-piral`);
-
-  //   //TODO this is an issue right now
-  //   //expect(result).toContain('Validation successful. No errors or warnings.');
-  //   expect(result).toContain('Validation succeeded with 9 warning(s).');
-  // });
 });

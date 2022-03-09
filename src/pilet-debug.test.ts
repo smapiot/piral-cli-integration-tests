@@ -40,17 +40,4 @@ runTests('pilet-debug', ({ test, setup }) => {
 
     await expect(page).toMatchText('.pi-tile', 'Welcome to Foo...');
   });
-
-  // test('debug-standard-template-with-default-schema', 'can produce a debug build with default schema', ['debug.pilet'], async (ctx) => {
-  //   const port = await getFreePort(1256);
-  //   const cp = ctx.runAsync(`npx pilet debug --port ${port}`);
-
-  //   await cp.waitUntil('Ready', 'The bundling process failed');
-
-  //   await page.goto(`http://localhost:${port}`);
-
-  //   await expect(page).toHaveSelectorCount('.pi-tile', 1);
-
-  //   await expect(page).toMatchText('.pi-tile', 'Welcome to Piral!');
-  // });
 });
