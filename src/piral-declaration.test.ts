@@ -76,6 +76,7 @@ runTests('piral-declaration', ({ test, setup }) => {
         expect(content).toContain('export interface PiletApi extends');
         expect(content).toContain('export interface PiletCustomApi');
         expect(content).toContain('export interface PiletCoreApi');
+        expect(content).toContain('export interface TypesInterface {}');
       },
     });
   });
@@ -99,6 +100,7 @@ runTests('piral-declaration', ({ test, setup }) => {
         expect(content).toContain('export interface PiletApi extends');
         expect(content).toContain('export interface PiletCustomApi');
         expect(content).toContain('export interface PiletCoreApi');
+        expect(content).toContain('export interface TypesInterface {}');
       },
     });
   });
