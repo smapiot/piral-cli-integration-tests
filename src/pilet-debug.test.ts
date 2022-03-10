@@ -176,8 +176,65 @@ runTests('pilet-debug', ({ test, setup }) => {
 
       await expect(page).toHaveSelectorCount('.mario-tile', 1);
       await expect(page).toHaveSelectorCount('.spaceshoot-tile', 1);
+      await expect(page).toHaveSelectorCount('.pi-tile', 1);
+      await expect(page).toMatchText('.pi-tile', 'Welcome to Piral!');
       await expect(page).toMatchText('.mario-tile', 'Mario5');
       await expect(page).toMatchText('.spaceshoot-tile', 'Spaceshoot');
+    },
+  );
+
+  test(
+    'debug-standard-template-with-an-external-feed',
+    'can produce a debug build with an external feed',
+    ['debug.pilet'],
+    async (ctx) => {
+      const port = await getFreePort(1256);
+      const cp = ctx.runAsync(`npx pilet debug --port ${port} --feed "https://feed.piral.cloud/api/v1/pilet/sample"`);
+
+      await cp.waitUntil('Ready', 'The bundling process failed');
+
+      await page.goto(`http://localhost:${port}`);
+
+      await expect(page).toHaveSelectorCount('.mario-tile', 1);
+      await expect(page).toHaveSelectorCount('.spaceshoot-tile', 1);
+      await expect(page).toMatchText('.mario-tile', 'Mario5');
+      await expect(page).toMatchText('.spaceshoot-tile', 'Spaceshoot');
+    },
+  );
+
+  test(
+    'debug-standard-template-with-different-app-shell',
+    'can produce a debug build with different app shell',
+    ['debug.pilet'],
+    async (ctx) => {
+      await ctx.setFiles({
+        'src/index.tsx'(content: string) {
+          content = `import * as React from 'react';
+import { PiletApi } from 'sample-piral';
+          
+export function setup(app: PiletApi) {
+  app.showNotification('Hello from Piral!', {
+    autoClose: 2000,
+  });
+}`;
+          return content;
+        },
+      });
+
+      await ctx.run(`npm i netflix-piral`);
+
+      const port = await getFreePort(1256);
+      const cp = ctx.runAsync(`npx pilet debug --port ${port} --app netflix-piral`);
+
+      await cp.waitUntil('Ready', 'The bundling process failed');
+
+      await page.goto(`http://localhost:${port}`);
+
+      await expect(page).toHaveSelectorCount('.text-lightgray', 4);
+      await expect(page).toHaveSelectorCount('.error', 1);
+
+      await expect(page).toMatchText('.text-lightgray', 'Made with');
+      await expect(page).toMatchText('.error', 'Could not find the requested page. Are you sure it exists?');
     },
   );
 });
