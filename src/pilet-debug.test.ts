@@ -43,8 +43,8 @@ runTests('pilet-debug', ({ test, setup }) => {
   });
 
   test(
-    'debug-standard-template-with-default-schema-v0',
-    'can produce a debug build with default schema v0',
+    'debug-standard-template-with-schema-v0',
+    'can produce a debug build with schema v0',
     ['debug.pilet'],
     async (ctx) => {
       const port = await getFreePort(1256);
@@ -73,8 +73,8 @@ runTests('pilet-debug', ({ test, setup }) => {
   );
 
   test(
-    'debug-standard-template-with-default-schema-v1',
-    'can produce a debug build with default schema v1',
+    'debug-standard-template-with-schema-v1',
+    'can produce a debug build with schema v1',
     ['debug.pilet'],
     async (ctx) => {
       const port = await getFreePort(1256);
@@ -129,6 +129,36 @@ runTests('pilet-debug', ({ test, setup }) => {
       await expect(page).toHaveSelectorCount('.pi-tile', 1);
 
       await expect(page).toMatchText('.pi-tile', 'Welcome to Piral!');
+    },
+  );
+
+  test(
+    'debug-standard-template-with-none-schema',
+    'can produce a debug build with none schema',
+    ['debug.pilet'],
+    async (ctx) => {
+      const port = await getFreePort(1256);
+      const cp = ctx.runAsync(`npx pilet debug --port ${port} --schema none`);
+
+      await cp.waitUntil('Ready', 'The bundling process failed');
+
+      await page.goto(`http://localhost:${port}`);
+
+      const res = await axios.get(`http://localhost:${port}/$pilet-api`);
+      const pilets = res.data;
+
+      expect(pilets).toEqual({
+        name: expect.anything(),
+        version: expect.anything(),
+        link: expect.anything(),
+        spec: 'v0',
+        hash: expect.anything(),
+        noCache: expect.anything(),
+      });
+
+      await expect(page).not.toHaveSelectorCount('.pi-tile', 1);
+
+      await expect(page).not.toMatchText('.pi-tile', 'Welcome to Piral!');
     },
   );
 
