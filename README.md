@@ -15,6 +15,7 @@ Integration tests for the `piral-cli` tool and its default bundler. Can be used 
 | Linux        | 16.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20linux_node_16)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main)   |
 | Linux        | 17.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20linux_node_17)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main)   |
 | Windows      | 14.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20windows_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main) |
+| MacOS        | 14.x   | [![Build Status](https://smapiot.visualstudio.com/piral-pipelines/_apis/build/status/smapiot.piral-cli-integration-tests?branchName=main&jobName=Job&configuration=Job%20macos_node_14)](https://smapiot.visualstudio.com/piral-pipelines/_build/latest?definitionId=46&branchName=main) |
 
 ## Important Links
 
@@ -25,6 +26,48 @@ Integration tests for the `piral-cli` tool and its default bundler. Can be used 
 * 🐞 [Issue Tracker](https://github.com/smapiot/piral/issues) - report bugs or suggest new features
 * 🗨  [Forums](https://stackoverflow.com/questions/tagged/piral) - use the community support on StackOverflow
 * 👪 [Community Chat](https://gitter.im/piral-io/community) - ask questions and provide answers in our Gitter room
+
+## Running the Tests
+
+After you cloned the repository run:
+
+```sh
+npm i
+```
+
+or an alternative command using your favorite package manager.
+
+Now you can try running all tests:
+
+```sh
+npm start
+```
+
+You can also run the tests from a specific file only:
+
+```sh
+npm start -- src/pilet-build.test.ts
+```
+
+If you are only interested in a single test (e.g., `'can build a standard templated v2 pilet from sample-piral'`) then run it via:
+
+```sh
+npm start -- src/pilet-build.test.ts -t 'can build a standard templated v2 pilet from sample-piral'
+```
+
+**Caution**: Tests that leverage the integrated browser (using the `page` variable) can only be run if the whole test suite (i.e., no `-t` is specified) is run.
+
+For Ubuntu 18.04 and Ubuntu 20.04 the system dependencies can get installed automatically. Many other systems may just work without any special dependencies:
+
+```sh
+npx playwright install-deps chromium
+```
+
+To ensure everything is working with the test browser we recommend also installing the [browsers from Playwright](https://playwright.dev/docs/cli#install-browsers) via the command line:
+
+```sh
+npx playwright install chromium
+```
 
 ## Testing Package
 
@@ -52,7 +95,7 @@ If you don't specify the bundler name then the current working directory's *pack
 -   ✅ Run/debug Piral instance
 -   ✅ Build Piral instance release
 -   ✅ Build Piral instance emulator
--   ⏸️ Build Piral instance emulator sources
+-   ✅ Build Piral instance emulator sources
 -   ✅ Generate Piral instance declaration
 -   ✅ Validate Piral instance
 -   ✅ Use Piral instance emulator for scaffolding locally
@@ -67,8 +110,8 @@ If you don't specify the bundler name then the current working directory's *pack
 -   ✅ Build v2 pilet
 -   ✅ Build v1 pilet
 -   ✅ Build v0 pilet
--   ⏸️ Build standalone pilet
--   ⏸️ Build pilet manifest file
+-   ✅ Build standalone pilet
+-   ✅ Build pilet manifest file
 -   ✅ Publish pilet (to temp. feed)
 -   ✅ Validate pilet
 -   ✅ Change pilet while debugging (reinject pilet)
