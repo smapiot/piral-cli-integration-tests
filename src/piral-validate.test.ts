@@ -151,9 +151,9 @@ runTests('piral-validate', ({ test, setup }) => {
       });
 
       try {
-        const result = await ctx.run(`npx piral validate has-valid-files`);
+        await ctx.run(`npx piral validate has-valid-files`);
       } catch (err) {
-        expect(err.message).toContain('Command failed: npx piral validate has-valid-files');
+        expect(err).toContain('[0080] Validation failed. Found 1 error(s).');
       }
     },
   );

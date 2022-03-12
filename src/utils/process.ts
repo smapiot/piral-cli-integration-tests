@@ -10,7 +10,11 @@ export function run(cmd: string, cwd = process.cwd()) {
   return new Promise<string>((resolve, reject) => {
     exec(cmd, { cwd }, (err, result) => {
       if (err) {
-        reject(err);
+        if (typeof result === 'string') {
+          reject(result.trim());
+        } else {
+          reject(err);
+        }
       } else {
         resolve(result.trim());
       }

@@ -31,6 +31,21 @@ runTests('piral-new', ({ test }) => {
     },
   );
 
+  test('from-cli-template-vars', 'can create a new TS piral instance with a template variable', [], async (ctx) => {
+    const title = 'foo bar qxz';
+
+    await ctx.run(
+      `npx --package piral-cli@${cliVersion} piral new --tag ${cliVersion} --no-install --template @smapiot/piral-template-default@next --vars.title "${title}"`,
+    );
+
+    await ctx.assertFiles({
+      'src/index.html'(content: string) {
+        expect(content).not.toBe('');
+        expect(content).toContain(`<title>${title}</title>`);
+      },
+    });
+  });
+
   test(
     'from-cli-different-framework',
     'can create a new TS piral instance with modules using piral-base from cli in the same directory',

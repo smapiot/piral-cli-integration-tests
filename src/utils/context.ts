@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals';
 import { promises as fsPromises } from 'fs';
-import { resolve } from 'path';
+import { resolve, dirname } from 'path';
 import { exists, globFiles } from './io';
 import { run as runFrom, runAsync as runAsyncFrom } from './process';
 import { FileAssertions, FileMutations, TestContext } from './types';
@@ -61,11 +61,24 @@ export function createTestContextFactory(dir: string) {
           const content = files[file];
 
           if (typeof content === 'string') {
+            await fsPromises.mkdir(dirname(path), { recursive: true });
             await fsPromises.writeFile(path, content, 'utf8');
           } else if (typeof content === 'function') {
-            const original = await fsPromises.readFile(path, 'utf8');
-            const modified = content(original);
-            await fsPromises.writeFile(path, modified, 'utf8');
+            const exists = await fsPromises.access(path).then(() => true, () => false);
+
+            if (exists) {
+              const original = await fsPromises.readFile(path, 'utf8');
+              const modified = content(original);
+              await fsPromises.writeFile(path, modified, 'utf8');
+            } else {
+              await fsPromises.mkdir(dirname(path), { recursive: true });
+              const modified = content('');
+              await fsPromises.writeFile(path, modified, 'utf8');
+            }
+          } else if (content === false) {
+            await fsPromises.rm(path);
+          } else {
+            throw new Error('The given argument is wrong. It has to be either a string, function, or false.');
           }
         }),
       );

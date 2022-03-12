@@ -1,6 +1,6 @@
 {
   "name": "@smapiot/piral-cli-integration-tests",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "Acceptance tests for the `piral-cli` package and bundler plugins.",
   "author": "smapiot",
   "homepage": "https://piral.io",

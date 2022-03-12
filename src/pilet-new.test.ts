@@ -29,6 +29,21 @@ runTests('pilet-new', ({ test }) => {
     },
   );
 
+  test('from-cli-template-vars', 'can create a new TS pilet with a template variable', [], async (ctx) => {
+    const title = 'foo bar qxz';
+
+    await ctx.run(
+      `npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --no-install --template @smapiot/pilet-template-default@next --vars.title "${title}"`,
+    );
+
+    await ctx.assertFiles({
+      'src/Page.tsx'(content: string) {
+        expect(content).not.toBe('');
+        expect(content).toContain(`<h1>${title}</h1>`);
+      },
+    });
+  });
+
   test(
     'from-cli-empty-template',
     'can create a new TS pilet with modules using empty template from cli in the same directory',

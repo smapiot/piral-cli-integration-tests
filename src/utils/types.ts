@@ -1,6 +1,6 @@
 export type FileAssertions = Record<string, boolean | ((content: any) => void | Promise<void>)>;
 
-export type FileMutations = Record<string, string | ((content: string) => string)>;
+export type FileMutations = Record<string, false | string | ((content: string) => string)>;
 
 export interface RunningProcess {
   waitEnd(): Promise<void>;
