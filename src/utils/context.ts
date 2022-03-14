@@ -97,7 +97,7 @@ export function createTestContextFactory(dir: string) {
     };
 
     const clean = async () => {
-      await Promise.all(cleanups.map(doCleanup => doCleanup()));
+      await Promise.all(cleanups.map((doCleanup) => doCleanup()));
     };
 
     await fsPromises.mkdir(root, { recursive: true });
