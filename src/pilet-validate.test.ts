@@ -42,8 +42,53 @@ runTests('pilet-validate', ({ test, setup }) => {
     expect(result).toContain(`Validation succeeded with 1 warning(s).`);
   });
 
-  test('bundle-size', 'when the bundle size is over the limit should error out', [], async (ctx) => {
-    const length = 25 * 1024; // 50 kB
+  test('bundle-size-ignore', 'when the bundle size is ignored everything should be fine', [], async (ctx) => {
+    const length = 55 * 1024; // 55 kB
+    const arr = new Array(length);
+    for (let i = 0; i < length; i++) {
+      arr[i] = (i % 10).toString(); // '0' - '9'
+    }
+    const str = arr.join('');
+    await ctx.setFiles({
+      'dist/index.js': `
+    export function setup() {
+      console.log(${JSON.stringify(str)});
+    }
+  `,
+      'node_modules/sample-piral/package.json'(content: string) {
+        const packageJson = JSON.parse(content);
+        packageJson.pilets['validators'] = {
+          'stays-small': 0,
+        };
+        return JSON.stringify(packageJson, undefined, 2);
+      },
+    });
+    
+    const result = await ctx.run(`npx pilet validate`);
+    expect(result).toContain('Validation successful. No errors or warnings.');
+  });
+
+  test('bundle-size-default-warning', 'when the bundle size is over the default limit it should warn', [], async (ctx) => {
+    const length = 50 * 1024; // 50 kB
+    const arr = new Array(length);
+    for (let i = 0; i < length; i++) {
+      arr[i] = (i % 10).toString(); // '0' - '9'
+    }
+    const str = arr.join('');
+    await ctx.setFiles({
+      'dist/index.js': `
+    export function setup() {
+      console.log(${JSON.stringify(str)});
+    }
+  `,
+    });
+
+    const result  =await ctx.run(`npx pilet validate`);
+    expect(result).toContain('The main bundle is too large.');
+  });
+
+  test('bundle-size-error', 'when the bundle size is over the limit should error out', [], async (ctx) => {
+    const length = 25 * 1024; // 25 kB
     const arr = new Array(length);
     for (let i = 0; i < length; i++) {
       arr[i] = (i % 10).toString(); // '0' - '9'
@@ -102,5 +147,6 @@ runTests('pilet-validate', ({ test, setup }) => {
     const result = await ctx.run(`npx pilet validate`);
 
     expect(result).toContain(`Validation succeeded with 1 warning(s).`);
+    expect(result).toContain(`A warning message from the new validator`);
   });
 });
