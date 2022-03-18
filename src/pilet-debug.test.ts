@@ -57,14 +57,14 @@ runTests('pilet-debug', ({ test, setup }) => {
       const res = await axios.get(`http://localhost:${port}/$pilet-api`);
       const pilets = res.data;
 
-      expect(pilets).toEqual({
+      expect(pilets).toEqual([{
         name: expect.anything(),
         version: expect.anything(),
         link: expect.anything(),
         spec: 'v0',
         hash: expect.anything(),
         noCache: expect.anything(),
-      });
+      }]);
 
       await expect(page).toHaveSelectorCount('.pi-tile', 1);
 
@@ -87,14 +87,14 @@ runTests('pilet-debug', ({ test, setup }) => {
       const res = await axios.get(`http://localhost:${port}/$pilet-api`);
       const pilets = res.data;
 
-      expect(pilets).toEqual({
+      expect(pilets).toEqual([{
         name: expect.anything(),
         version: expect.anything(),
         link: expect.anything(),
         spec: 'v1',
         requireRef: expect.anything(),
         integrity: expect.anything(),
-      });
+      }]);
 
       await expect(page).toHaveSelectorCount('.pi-tile', 1);
 
@@ -117,14 +117,14 @@ runTests('pilet-debug', ({ test, setup }) => {
       const res = await axios.get(`http://localhost:${port}/$pilet-api`);
       const pilets = res.data;
 
-      expect(pilets).toEqual({
+      expect(pilets).toEqual([{
         name: expect.anything(),
         version: expect.anything(),
         link: expect.anything(),
         spec: 'v2',
         requireRef: expect.anything(),
         dependencies: expect.anything(),
-      });
+      }]);
 
       await expect(page).toHaveSelectorCount('.pi-tile', 1);
 
@@ -147,14 +147,14 @@ runTests('pilet-debug', ({ test, setup }) => {
       const res = await axios.get(`http://localhost:${port}/$pilet-api`);
       const pilets = res.data;
 
-      expect(pilets).toEqual({
+      expect(pilets).toEqual([{
         name: expect.anything(),
         version: expect.anything(),
         link: expect.anything(),
         spec: 'v0',
         hash: expect.anything(),
         noCache: expect.anything(),
-      });
+      }]);
 
       await expect(page).not.toHaveSelectorCount('.pi-tile', 1);
 

@@ -35,7 +35,7 @@ runTests('piral-new', ({ test }) => {
     const title = 'foo bar qxz';
 
     await ctx.run(
-      `npx --package piral-cli@${cliVersion} piral new --tag ${cliVersion} --no-install --template @smapiot/piral-template-default@next --vars.title "${title}"`,
+      `npx --package piral-cli@${cliVersion} piral new --tag ${cliVersion} --no-install --template @smapiot/piral-template-default@0.15.0-beta.3884 --vars.title "${title}"`,
     );
 
     await ctx.assertFiles({
