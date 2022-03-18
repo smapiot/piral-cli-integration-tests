@@ -17,17 +17,29 @@ function matches(pattern: string, name: string) {
 
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i];
-    const nextIndex = name.indexOf(part, index);
+    let nextIndex = -1;
 
-    if (nextIndex === -1) {
-      return false;
-    } else if (i === 0 && nextIndex !== 0) {
-      return false;
-    } else if (i === last && nextIndex + part.length !== name.length) {
-      return false;
+    if (i === 0) {
+      nextIndex = name.indexOf(part);
+
+      if (nextIndex !== 0) {
+        return false;
+      }
+    } else if (i === last) {
+      nextIndex = name.lastIndexOf(part);
+
+      if (nextIndex === - 1 || nextIndex + part.length !== name.length) {
+        return false;
+      }
     } else {
-      index = nextIndex + parts.length;
+      nextIndex = name.indexOf(part, index);
+
+      if (nextIndex === -1) {
+        return false;
+      }
     }
+
+    index = nextIndex + part.length;
   }
 
   return true;
