@@ -14,16 +14,18 @@ runTests('pilet-new', ({ test }) => {
         'package.json'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('"sample-piral"');
-          expect(content).toContain('"piral": {');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"${ctx.id}"`);
+        },
+        'pilet.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"sample-piral": {}');
         },
         'tsconfig.json': false,
         'node_modules/react/package.json': false,
         'src/index.jsx'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain("import * as React from 'react';");
-          expect(content).toContain('export function setup(app) {}');
+          expect(content).toContain("export function setup(app) {}");
         },
       });
     },
@@ -64,7 +66,7 @@ runTests('pilet-new', ({ test }) => {
         'node_modules/react/package.json': false,
         'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain("import { PiletApi } from 'sample-piral';");
+          expect(content).toContain("import type { PiletApi } from 'sample-piral';");
           expect(content).toContain('export function setup(app: PiletApi) {}');
         },
       });
@@ -104,15 +106,18 @@ runTests('pilet-new', ({ test }) => {
         'package.json'(content) {
           expect(content).not.toBe('');
           expect(content).toContain('"typescript"');
-          expect(content).toContain('"piral": {');
           expect(content).toContain('"piral-cli"');
+        },
+        'pilet.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"sample-piral": {}');
         },
         '.npmrc': false,
         'tsconfig.json': true,
         'node_modules/piral-cli/package.json': true,
         'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain("import { PiletApi } from 'sample-piral';");
+          expect(content).toContain("import type { PiletApi } from 'sample-piral';");
         },
       });
     },
@@ -131,8 +136,11 @@ runTests('pilet-new', ({ test }) => {
         'package.json'(content) {
           expect(content).not.toBe('');
           expect(content).toContain('"typescript"');
-          expect(content).toContain('"piral": {');
           expect(content).toContain('"piral-cli"');
+        },
+        'pilet.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"sample-piral": {}');
         },
         '.npmrc'(content) {
           expect(content).toContain('registry=https://registry.npmmirror.com/');
@@ -141,7 +149,7 @@ runTests('pilet-new', ({ test }) => {
         'node_modules/piral-cli/package.json': true,
         'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain("import { PiletApi } from 'sample-piral';");
+          expect(content).toContain("import type { PiletApi } from 'sample-piral';");
         },
       });
     },
@@ -157,15 +165,18 @@ runTests('pilet-new', ({ test }) => {
       await ctx.assertFiles({
         'package.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral"');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"${ctx.id}"`);
+        },
+        'pilet.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"sample-piral": {}');
         },
         'tsconfig.json': true,
         'node_modules/react/package.json': true,
         'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain("import { PiletApi } from 'sample-piral';");
+          expect(content).toContain("import type { PiletApi } from 'sample-piral';");
           expect(content).toContain('export function setup(app: PiletApi) {');
         },
       });
@@ -182,15 +193,18 @@ runTests('pilet-new', ({ test }) => {
       await ctx.assertFiles({
         'foo-pilet/package.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral"');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"foo-pilet"`);
+        },
+        'foo-pilet/pilet.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"sample-piral": {}');
         },
         'foo-pilet/tsconfig.json': true,
         'foo-pilet/node_modules/react/package.json': true,
         'foo-pilet/src/index.tsx'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain("import { PiletApi } from 'sample-piral';");
+          expect(content).toContain("import type { PiletApi } from 'sample-piral';");
           expect(content).toContain('export function setup(app: PiletApi) {');
         },
       });
@@ -209,9 +223,12 @@ runTests('pilet-new', ({ test }) => {
       await ctx.assertFiles({
         'package.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral"');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"${ctx.id}"`);
+        },
+        'pilet.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"sample-piral": {}');
         },
         'tsconfig.json': false,
         'node_modules/react/package.json': false,
@@ -237,9 +254,12 @@ runTests('pilet-new', ({ test }) => {
         'package.json'(content: string) {
           expect(content).not.toBe('');
           expect(content).not.toContain('"typescript"');
-          expect(content).toContain('"sample-piral"');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"${ctx.id}"`);
+        },
+        'pilet.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"sample-piral": {}');
         },
         'tsconfig.json': false,
         'node_modules/piral-cli/package.json': true,
@@ -247,7 +267,7 @@ runTests('pilet-new', ({ test }) => {
           expect(content).not.toBe('');
           expect(content).toContain('export function setup(app) {');
           expect(content).toContain("import * as React from 'react';");
-          expect(content).toContain('<a href="https://docs.piral.io" target="_blank">Documentation</a>');
+          expect(content).toContain('<Link to="/page">Page</Link>');
         },
       });
     },
@@ -263,15 +283,18 @@ runTests('pilet-new', ({ test }) => {
       await ctx.assertFiles({
         'package.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral"');
           expect(content).toContain('"piral-cli"');
           expect(content).toContain(`"${ctx.id}"`);
+        },
+        'pilet.json'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('"sample-piral": {}');
         },
         'tsconfig.json': true,
         'node_modules/react/package.json': true,
         'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain("import { PiletApi } from 'sample-piral';");
+          expect(content).toContain("import type { PiletApi } from 'sample-piral';");
           expect(content).toContain('export function setup(app: PiletApi) {');
         },
       });

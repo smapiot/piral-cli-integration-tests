@@ -8,7 +8,10 @@ export const sleep = promisify(setTimeout);
 
 export function run(cmd: string, cwd = process.cwd()) {
   return new Promise<string>((resolve, reject) => {
-    exec(cmd, { cwd }, (err, result) => {
+    const { NODE_ENV, ...env } = process.env;
+    exec(cmd, { cwd, env }, (err, stdout = '', stderr = '') => {
+      const result = stdout + stderr;
+      
       if (err) {
         if (typeof result === 'string') {
           reject(result.trim());
@@ -23,7 +26,8 @@ export function run(cmd: string, cwd = process.cwd()) {
 }
 
 export function runAsync(cmd: string, cwd = process.cwd()): RunningProcess {
-  const cp = exec(cmd, { cwd });
+  const { NODE_ENV, ...env } = process.env;
+  const cp = exec(cmd, { cwd, env });
   const timeoutInSeconds = 45;
 
   return {
@@ -43,18 +47,22 @@ export function runAsync(cmd: string, cwd = process.cwd()): RunningProcess {
           if (line.includes(condition)) {
             clearTimeout(ref.timeout);
             cp.stdout.off('data', onData);
+            cp.stderr.off('data', onData);
             resolve();
           } else if (error && line.includes(error)) {
             clearTimeout(ref.timeout);
             cp.stdout.off('data', onData);
+            cp.stderr.off('data', onData);
             reject(new Error(`Process encountered an error: ${line}`));
           }
         };
         ref.timeout = setTimeout(() => {
           cp.stdout.off('data', onData);
+          cp.stderr.off('data', onData);
           reject(new Error(`Process not started after ${timeoutInSeconds}s`));
         }, timeoutInSeconds * 1000);
         cp.stdout.on('data', onData);
+        cp.stderr.on('data', onData);
       });
     },
     end() {

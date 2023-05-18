@@ -146,7 +146,7 @@ runTests('piral-build', ({ test, setup }) => {
 
           const indexFileContent = await ctx.readFile(`dist/release/${indexFile}`);
           expect(indexFileContent).not.toBe('');
-          expect(indexFileContent).not.toContain('_useNextAtomId');
+          expect(indexFileContent).not.toContain('__webpack_modules__');
         },
       });
     },
@@ -165,7 +165,7 @@ runTests('piral-build', ({ test, setup }) => {
           const indexFile = /<script.*?src="\/(.*?)"/g.exec(content)[1];
 
           const indexFileContent = await ctx.readFile(`dist/release/${indexFile}`);
-          expect(indexFileContent).toContain('_useNextAtomId');
+          expect(indexFileContent).toContain('__webpack_modules__');
         },
       });
     },
@@ -177,10 +177,10 @@ runTests('piral-build', ({ test, setup }) => {
     await ctx.run(npmInit(`pilet@${cliVersion}`, `--source ${source} --bundler none --defaults`));
 
     await ctx.assertFiles({
-      'package.json'(content: string) {
+      'pilet.json'(content: string) {
         const packageJson = JSON.parse(content);
-        const appShell = packageJson.piral.name;
-        expect(appShell).toBe('app-shell');
+        const instances = packageJson.piralInstances;
+        expect(instances).toHaveProperty('app-shell');
       },
       'node_modules/app-shell/package.json': true,
       'node_modules/app-shell/app/index.html': true,

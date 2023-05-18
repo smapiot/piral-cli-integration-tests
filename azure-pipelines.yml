@@ -10,24 +10,27 @@ parameters:
 
 strategy:
   matrix:
-    linux_node_12:
-      imageName: "ubuntu-20.04"
-      nodeVersion: 12.x
     linux_node_14:
       imageName: "ubuntu-20.04"
       nodeVersion: 14.x
     linux_node_16:
       imageName: "ubuntu-20.04"
       nodeVersion: 16.x
-    linux_node_17:
+    linux_node_18:
       imageName: "ubuntu-20.04"
-      nodeVersion: 17.x
+      nodeVersion: 18.x
+    linux_node_20:
+      imageName: "ubuntu-20.04"
+      nodeVersion: 20.x
     windows_node_14:
       imageName: "windows-2019"
       nodeVersion: 14.x
-    macos_node_14:
+    windows_node_20:
+      imageName: "windows-2019"
+      nodeVersion: 20.x
+    macos_node_20:
       imageName: "macOS-11"
-      nodeVersion: 14.x
+      nodeVersion: 20.x
 
 pool:
   vmImage: $(imageName)

@@ -8,9 +8,7 @@ runTests('piral-validate', ({ test, setup }) => {
   test('validate-standard-template', 'standard template should be valid', [], async (ctx) => {
     const result = await ctx.run(`npx piral validate`);
 
-    //TODO this is an issue right now
-    //expect(result).toContain('Validation successful. No errors or warnings.');
-    expect(result).toContain('Validation succeeded with 9 warning(s).');
+    expect(result).toContain('Validation successful. No errors or warnings.');
   });
 
   test('validate-inconsistent-piral-cli', 'inconsistent piral CLI should yield warning', [], async (ctx) => {
@@ -18,15 +16,13 @@ runTests('piral-validate', ({ test, setup }) => {
 
     const result = await ctx.run(`npx piral validate`);
 
-    //TODO this is an issue right now
-    //expect(result).toContain('Validation succeeded with 1 warning(s)');
-    expect(result).toContain('Validation succeeded with 9 warning(s)');
+    expect(result).toContain('Validation succeeded with 1 warning(s)');
   });
 
   test('depends-on-piral-validator', 'depends-on-piral validator should work', [], async (ctx) => {
     const result = await ctx.run(`npx piral validate depends-on-piral`);
 
-    expect(result).toContain('Validation succeeded with 9 warning(s)');
+    expect(result).toContain('Validation successful. No errors or warnings.');
   });
 
   test(
@@ -53,7 +49,7 @@ runTests('piral-validate', ({ test, setup }) => {
   test('entry-ends-with-html-validator', 'entry-ends-with-html validator should work', [], async (ctx) => {
     const result = await ctx.run(`npx piral validate entry-ends-with-html`);
 
-    expect(result).toContain('Validation succeeded with 9 warning(s)');
+    expect(result).toContain('Validation successful. No errors or warnings.');
   });
 
   test(
@@ -80,7 +76,7 @@ runTests('piral-validate', ({ test, setup }) => {
   test('has-valid-externals-validator', 'has-valid-externals validator should work', [], async (ctx) => {
     const result = await ctx.run(`npx piral validate has-valid-externals-validator`);
 
-    expect(result).toContain('Validation succeeded with 9 warning(s)');
+    expect(result).toContain('Validation successful. No errors or warnings.');
   });
 
   test(
@@ -91,7 +87,9 @@ runTests('piral-validate', ({ test, setup }) => {
       await ctx.setFiles({
         'package.json'(content: string) {
           const packageJson = JSON.parse(content);
-          packageJson.pilets['externals'] = ['invalid-external'];
+          packageJson.importmap['imports'] = {
+            'invalid-external': ''
+          };
           return JSON.stringify(packageJson, undefined, 2);
         },
       });
@@ -107,7 +105,7 @@ runTests('piral-validate', ({ test, setup }) => {
   test('has-valid-devDependencies', 'has-valid-devDependencies validator should work', [], async (ctx) => {
     const result = await ctx.run(`npx piral validate has-valid-devDependencies`);
 
-    expect(result).toContain('Validation succeeded with 9 warning(s)');
+    expect(result).toContain('Validation successful. No errors or warnings.');
   });
 
   test(
@@ -116,7 +114,7 @@ runTests('piral-validate', ({ test, setup }) => {
     [],
     async (ctx) => {
       await ctx.setFiles({
-        'package.json'(content: string) {
+        'piral.json'(content: string) {
           const packageJson = JSON.parse(content);
           packageJson.pilets['devDependencies'] = { 'non-existing-dependency': true };
           return JSON.stringify(packageJson, undefined, 2);
@@ -134,7 +132,7 @@ runTests('piral-validate', ({ test, setup }) => {
   test('has-valid-files-validator', 'has-valid-files validator should work', [], async (ctx) => {
     const result = await ctx.run(`npx piral validate has-valid-files`);
 
-    expect(result).toContain('Validation succeeded with 9 warning(s)');
+    expect(result).toContain('Validation successful. No errors or warnings.');
   });
 
   test(
@@ -143,7 +141,7 @@ runTests('piral-validate', ({ test, setup }) => {
     [],
     async (ctx) => {
       await ctx.setFiles({
-        'package.json'(content: string) {
+        'piral.json'(content: string) {
           const packageJson = JSON.parse(content);
           packageJson.pilets['files'] = ['nonExistingFile.js'];
           return JSON.stringify(packageJson, undefined, 2);

@@ -69,8 +69,8 @@ runTests('piral-new', ({ test }) => {
         },
         'src/index.ts'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('from "piral-base"');
-          expect(content).toContain('return fetch("https://feed.piral.cloud/api/v1/pilet/empty")');
+          expect(content).toContain("from 'piral-base'");
+          expect(content).toContain("const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/empty';");
         },
       });
     },
@@ -101,9 +101,9 @@ runTests('piral-new', ({ test }) => {
         },
         'my-piral-instance/src/index.tsx'(content) {
           expect(content).not.toBe('');
-          expect(content).toContain('from "piral-core"');
-          expect(content).toContain('fetch("https://feed.piral.cloud/api/v1/pilet/empty")');
-          expect(content).toContain('render(<Piral instance={instance} />, document.querySelector("#app"));');
+          expect(content).toContain("from 'piral-core'");
+          expect(content).toContain("const feedUrl = 'https://feed.piral.cloud/api/v1/pilet/empty';");
+          expect(content).toContain('root.render(<Piral instance={instance} />);');
         },
       });
     },
@@ -149,8 +149,8 @@ runTests('piral-new', ({ test }) => {
         },
         'src/index.tsx'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain("import { renderInstance } from 'piral';");
-          expect(content).toContain('renderInstance();');
+          expect(content).toContain("import { createInstance, Piral } from 'piral';");
+          expect(content).toContain('root.render(<Piral instance={instance} />);');
         },
       });
     },
