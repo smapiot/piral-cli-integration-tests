@@ -42,7 +42,7 @@ interface CustomMatchers<R> {
   toBePresent(status: boolean): R;
 }
 
-declare module 'expect/build/types' {
+declare module 'expect/build/index' {
   interface Matchers<R> extends CustomMatchers<R> {}
 }
 

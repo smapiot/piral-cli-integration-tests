@@ -28,6 +28,9 @@ strategy:
     windows_node_20:
       imageName: "windows-2019"
       nodeVersion: 20.x
+    macos_node_14:
+      imageName: "macOS-11"
+      nodeVersion: 14.x
     macos_node_20:
       imageName: "macOS-11"
       nodeVersion: 20.x
