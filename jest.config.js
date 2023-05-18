@@ -14,6 +14,7 @@ module.exports = {
     },
   },
   testEnvironmentOptions: {
+    url: 'http://localhost',
     'jest-playwright': {
       browsers: ['chromium'],
       exitOnPageError: false,
@@ -46,7 +47,6 @@ module.exports = {
   modulePathIgnorePatterns: ['<rootDir>/node_modules/'],
   roots: ['<rootDir>/src/'],
   testRegex: '(/__tests__/.*|\\.test)\\.ts$',
-  testURL: 'http://localhost',
   transform: {
     '^.+\\.ts$': 'ts-jest',
     '^.+\\.js$': 'babel-jest',

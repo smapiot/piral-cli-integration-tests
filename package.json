@@ -1,6 +1,6 @@
 {
   "name": "@smapiot/piral-cli-integration-tests",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "description": "Acceptance tests for the `piral-cli` package and bundler plugins.",
   "author": "smapiot",
   "homepage": "https://piral.io",
@@ -25,19 +25,19 @@
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
-    "@types/jest": "^26.0.0",
-    "axios": "^0.26.0",
-    "babel-jest": "^25.5.1",
+    "@types/jest": "^28.0.0",
+    "axios": "^1.4.0",
+    "babel-jest": "28.0.0",
     "expect-playwright": "^0.8.0",
     "get-port": "^5.0.0",
-    "jest": "^26.0.0",
-    "jest-cli": "^26.0.0",
+    "jest": "^28.0.0",
+    "jest-cli": "^28.0.0",
     "jest-junit": "^13.0.0",
-    "jest-playwright-preset": "^1.7.0",
-    "playwright-chromium": "^1.19.1",
+    "jest-playwright-preset": "^2.0.0",
+    "playwright-chromium": "^1.33.0",
     "rimraf": "^3.0.0",
     "sample-pilet-service": "^1.5.2",
-    "ts-jest": "^26.0.0",
+    "ts-jest": "^28.0.0",
     "typescript": "^4.0.0"
   }
 }
