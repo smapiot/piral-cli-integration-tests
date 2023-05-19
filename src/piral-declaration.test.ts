@@ -4,8 +4,8 @@ runTests('piral-declaration', ({ test, setup }) => {
   setup(async (ctx) => {
     await ctx.run(`npx --package piral-cli@${cliVersion} piral new --bundler none`);
 
-    // maybe enable again for TS 5 / latest version
-    await ctx.run('npm i typescript@^4 --save-dev');
+    // enable this to test with a fixed version of TypeScript
+    // await ctx.run('npm i typescript@^4 --save-dev');
   });
 
   test('declaration-standard-template', 'declaration of the standard template should work', [], async (ctx) => {
