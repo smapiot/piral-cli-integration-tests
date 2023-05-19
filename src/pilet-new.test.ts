@@ -32,10 +32,10 @@ runTests('pilet-new', ({ test }) => {
   );
 
   test('from-cli-template-vars', 'can create a new TS pilet with a template variable', [], async (ctx) => {
-    const title = 'foo bar qxz';
+    const title = 'foobarqxz';
 
     await ctx.run(
-      `npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --no-install --template @smapiot/pilet-template-default@0.15.0-beta.3884 --vars.title "${title}"`,
+      `npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --no-install --template default --vars.title "${title}"`,
     );
 
     await ctx.assertFiles({
