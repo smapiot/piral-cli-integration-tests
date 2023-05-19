@@ -42,15 +42,18 @@ export const cliVersion = process.env.CLI_VERSION || 'next';
 export const selectedBundler = process.env.BUNDLER_PLUGIN || `piral-cli-webpack5@${cliVersion}`;
 export const isBundlerPlugin = !!process.env.BUNDLER_PLUGIN;
 export const bundlerFeatures = (process.env.BUNDLER_FEATURES || allFeatures).split(',');
+export const isCleaning = process.env.CLEANUP === 'yes';
 
 export async function prepareTests(area: string): Promise<TestEnvironment> {
   const dir = resolve(outdir, area);
   const createTestContext = createTestContextFactory(dir);
+  const destroyTestContext = () => rimraf(dir);
   await rimraf(dir);
   await fsPromises.mkdir(dir, { recursive: true });
   return {
     dir,
     createTestContext,
+    destroyTestContext,
   };
 }
 
@@ -84,7 +87,7 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
         try {
           await cb(ctx);
         } finally {
-          await ctx.clean();
+          await ctx.clean(isCleaning);
         }
       });
     },
@@ -96,7 +99,9 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
     });
 
     afterAll(async () => {
-      // all good here
+      if (isCleaning) {
+        await ref.env.destroyTestContext();
+      }
     });
 
     cb(ref);

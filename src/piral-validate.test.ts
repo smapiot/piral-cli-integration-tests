@@ -94,10 +94,33 @@ runTests('piral-validate', ({ test, setup }) => {
         },
       });
 
+      const result = await ctx.run(`npx piral validate has-valid-externals`).catch(err => err);
+
+      expect(result).toContain(
+        'The reference to "invalid-external" could not be resolved',
+      );
+    },
+  );
+
+  test(
+    'has-valid-externals-validator-with-valid-external-not-added',
+    'has-valid-externals validator should not work when adding valid external without dependencies',
+    [],
+    async (ctx) => {
+      await ctx.setFiles({
+        'package.json'(content: string) {
+          const packageJson = JSON.parse(content);
+          packageJson.importmap['imports'] = {
+            'ansi-regex': ''
+          };
+          return JSON.stringify(packageJson, undefined, 2);
+        },
+      });
+
       const result = await ctx.run(`npx piral validate has-valid-externals`);
 
       expect(result).toContain(
-        'The shared dependency "invalid-external" is listed in pilets.external, but not in dependencies.',
+        'The shared dependency "ansi-regex" is not listed in the "dependencies" and "devDependencies".',
       );
     },
   );
