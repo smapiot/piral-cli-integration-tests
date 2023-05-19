@@ -172,7 +172,7 @@ runTests('piral-build', ({ test, setup }) => {
   );
 
   test('emulator-scaffold', 'can scaffold from the emulator', ['#empty'], async (ctx) => {
-    const source = ctx.getRef('emulator');
+    const source = ctx.getRef('emulator').replace('\\', '/');
 
     await ctx.run(npmInit(`pilet@${cliVersion}`, `--source ${source} --bundler none --defaults`));
 

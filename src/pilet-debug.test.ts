@@ -54,7 +54,7 @@ runTests('pilet-debug', ({ test, setup }) => {
 
       await page.goto(`http://localhost:${port}`);
 
-      const res = await axios.get(`http://localhost:${port}/$pilet-api`);
+      const res = await axios.get(`http://127.0.0.1:${port}/$pilet-api`);
       const pilets = res.data;
 
       expect(pilets).toEqual([{
@@ -84,7 +84,7 @@ runTests('pilet-debug', ({ test, setup }) => {
 
       await page.goto(`http://localhost:${port}`);
 
-      const res = await axios.get(`http://localhost:${port}/$pilet-api`);
+      const res = await axios.get(`http://127.0.0.1:${port}/$pilet-api`);
       const pilets = res.data;
 
       expect(pilets).toEqual([{
@@ -114,7 +114,7 @@ runTests('pilet-debug', ({ test, setup }) => {
 
       await page.goto(`http://localhost:${port}`);
 
-      const res = await axios.get(`http://localhost:${port}/$pilet-api`);
+      const res = await axios.get(`http://127.0.0.1:${port}/$pilet-api`);
       const pilets = res.data;
 
       expect(pilets).toEqual([{
@@ -144,7 +144,7 @@ runTests('pilet-debug', ({ test, setup }) => {
 
       await page.goto(`http://localhost:${port}`);
 
-      const res = await axios.get(`http://localhost:${port}/$pilet-api`);
+      const res = await axios.get(`http://127.0.0.1:${port}/$pilet-api`);
       const pilets = res.data;
 
       expect(pilets).toEqual([{
