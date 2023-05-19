@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals';
 import { promises as fsPromises } from 'fs';
 import { resolve, dirname } from 'path';
-import { exists, globFiles, rimraf } from './io';
+import { exists, globFiles } from './io';
 import { run as runFrom, runAsync as runAsyncFrom } from './process';
 import { FileAssertions, FileMutations, TestContext } from './types';
 
@@ -96,12 +96,8 @@ export function createTestContextFactory(dir: string) {
       return cp;
     };
 
-    const clean = async (removeDir = false) => {
+    const clean = async () => {
       await Promise.all(cleanups.map((doCleanup) => doCleanup()));
-
-      if (removeDir) {
-        rimraf(root);
-      }
     };
 
     await fsPromises.mkdir(root, { recursive: true });

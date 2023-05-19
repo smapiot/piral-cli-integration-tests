@@ -11,7 +11,7 @@ export interface RunningProcess {
 export interface TestContext {
   root: string;
   id: string;
-  clean(removeDir?: boolean): Promise<void>;
+  clean(): Promise<void>;
   run(cmd: string): Promise<string>;
   runAsync(cmd: string): RunningProcess;
   setRef(id: string, file: string): void;

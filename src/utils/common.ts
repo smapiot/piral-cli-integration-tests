@@ -87,7 +87,7 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
         try {
           await cb(ctx);
         } finally {
-          await ctx.clean(isCleaning);
+          await ctx.clean();
         }
       });
     },
