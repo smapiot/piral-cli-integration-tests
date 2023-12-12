@@ -2,10 +2,10 @@ const { runApp } = require('sample-pilet-service');
 
 let server;
 
-process.on('message', ({ type, ...args }) => {
+process.on('message', async ({ type, ...args }) => {
   switch (type) {
     case 'start':
-      server = runApp({ port: args.port, apiKeys: [args.apiKey] });
+      server = await runApp({ port: args.port, apiKeys: [args.apiKey] });
       server.once('listening', () => {
         process.send('started');
       });
