@@ -10,33 +10,29 @@ parameters:
 
 strategy:
   matrix:
-    linux_node_14:
-      imageName: "ubuntu-20.04"
-      nodeVersion: 14.x
-      cleanup: "no"
     linux_node_16:
       imageName: "ubuntu-20.04"
       nodeVersion: 16.x
-      cleanup: "no"
-    linux_node_18:
-      imageName: "ubuntu-20.04"
-      nodeVersion: 18.x
       cleanup: "no"
     linux_node_20:
       imageName: "ubuntu-20.04"
       nodeVersion: 20.x
       cleanup: "no"
-    windows_node_14:
+    linux_node_21:
+      imageName: "ubuntu-20.04"
+      nodeVersion: 21.x
+      cleanup: "no"
+    windows_node_16:
       imageName: "windows-2019"
-      nodeVersion: 14.x
+      nodeVersion: 16.x
       cleanup: "yes"
     windows_node_20:
       imageName: "windows-2019"
       nodeVersion: 20.x
       cleanup: "yes"
-    macos_node_14:
+    macos_node_16:
       imageName: "macOS-11"
-      nodeVersion: 14.x
+      nodeVersion: 16.x
       cleanup: "no"
     macos_node_20:
       imageName: "macOS-11"
