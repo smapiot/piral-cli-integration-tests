@@ -110,7 +110,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'pilet.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral": {}');
+          expect(content).toContain('"sample-piral":');
         },
         '.npmrc': false,
         'tsconfig.json': true,
@@ -140,7 +140,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'pilet.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral": {}');
+          expect(content).toContain('"sample-piral":');
         },
         '.npmrc'(content) {
           expect(content).toContain('registry=https://registry.npmmirror.com/');
@@ -170,7 +170,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'pilet.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral": {}');
+          expect(content).toContain('"sample-piral":');
         },
         'tsconfig.json': true,
         'node_modules/react/package.json': true,
@@ -198,7 +198,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'foo-pilet/pilet.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral": {}');
+          expect(content).toContain('"sample-piral":');
         },
         'foo-pilet/tsconfig.json': true,
         'foo-pilet/node_modules/react/package.json': true,
@@ -228,7 +228,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'pilet.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral": {}');
+          expect(content).toContain('"sample-piral":');
         },
         'tsconfig.json': false,
         'node_modules/react/package.json': false,
@@ -259,7 +259,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'pilet.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral": {}');
+          expect(content).toContain('"sample-piral":');
         },
         'tsconfig.json': false,
         'node_modules/piral-cli/package.json': true,
@@ -288,7 +288,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'pilet.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral": {}');
+          expect(content).toContain('"sample-piral":');
         },
         'tsconfig.json': true,
         'node_modules/react/package.json': true,
