@@ -58,7 +58,7 @@ npm start -- src/pilet-build.test.ts -t 'can build a standard templated v2 pilet
 
 **Caution**: Tests that leverage the integrated browser (using the `page` variable) can only be run if the whole test suite (i.e., no `-t` is specified) is run.
 
-For Ubuntu 18.04 and Ubuntu 20.04 the system dependencies can get installed automatically. Many other systems may just work without any special dependencies:
+For Ubuntu 18.04 and higher the system dependencies can get installed automatically. Many other systems may just work without any special dependencies:
 
 ```sh
 npx playwright install-deps chromium
