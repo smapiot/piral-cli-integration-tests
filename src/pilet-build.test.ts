@@ -261,7 +261,7 @@ runTests('pilet-build', ({ test, setup }) => {
       'src/index.tsx'(content: string) {
         return content.replace(
           'export function setup(app: PiletApi) {',
-          `function foobar1234() { return 42; } 
+          `function foobar1234() { return 42; }
 export function setup(app: PiletApi) {
 console.log(foobar1234)`,
         );
@@ -287,7 +287,7 @@ console.log(foobar1234)`,
         'src/index.tsx'(content: string) {
           return content.replace(
             'export function setup(app: PiletApi) {',
-            `function foobar1234() { return 42; } 
+            `function foobar1234() { return 42; }
 export function setup(app: PiletApi) {
   console.log(foobar1234)`,
           );
