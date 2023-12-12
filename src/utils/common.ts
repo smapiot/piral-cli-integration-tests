@@ -1,7 +1,8 @@
 import { expect, describe, it, beforeEach, beforeAll, afterAll } from '@jest/globals';
 import { promises as fsPromises } from 'fs';
+import { rimraf } from 'rimraf';
 import { resolve } from 'path';
-import { rimraf, copyAll } from './io';
+import { copyAll } from './io';
 import { createTestContextFactory } from './context';
 import { TestEnvironment, TestEnvironmentRef } from './types';
 
@@ -47,7 +48,9 @@ export const isCleaning = process.env.CLEANUP === 'yes';
 export async function prepareTests(area: string): Promise<TestEnvironment> {
   const dir = resolve(outdir, area);
   const createTestContext = createTestContextFactory(dir);
-  const destroyTestContext = () => rimraf(dir);
+  const destroyTestContext = async () => {
+    await rimraf(dir);
+  };
   await rimraf(dir);
   await fsPromises.mkdir(dir, { recursive: true });
   return {
@@ -71,7 +74,7 @@ export function runTests(area: string, cb: (ref: TestEnvironmentRef) => void) {
     },
     test(prefix, description, flags, cb) {
       const noTemplate = flags.includes('#empty');
-      const features = flags.filter(flag => !flag.startsWith('#'));
+      const features = flags.filter((flag) => !flag.startsWith('#'));
       // either we run in the "standard repo" (i.e., not as a bundler plugin)
       // or we need to have some bundler-features defined (and all features should be available from the bundler - otherwise its broken by default)
       const canRun = !isBundlerPlugin || (features.length > 0 && features.every((s) => bundlerFeatures.includes(s)));
