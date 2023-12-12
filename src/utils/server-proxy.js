@@ -5,7 +5,7 @@ let server;
 process.on('message', async ({ type, ...args }) => {
   switch (type) {
     case 'start':
-      server = await runApp({ port: args.port, apiKeys: [args.apiKey] });
+      server = await runApp({ port: args.port, apiKeys: [args.apiKey], snapshotDir: '' });
       server.once('listening', () => {
         process.send('started');
       });
