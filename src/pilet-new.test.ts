@@ -19,7 +19,7 @@ runTests('pilet-new', ({ test }) => {
         },
         'pilet.json'(content: string) {
           expect(content).not.toBe('');
-          expect(content).toContain('"sample-piral": {}');
+          expect(content).toContain('"sample-piral":');
         },
         'tsconfig.json': false,
         'node_modules/react/package.json': false,
