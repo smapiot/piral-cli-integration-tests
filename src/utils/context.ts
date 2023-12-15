@@ -64,7 +64,10 @@ export function createTestContextFactory(dir: string) {
             await fsPromises.mkdir(dirname(path), { recursive: true });
             await fsPromises.writeFile(path, content, 'utf8');
           } else if (typeof content === 'function') {
-            const exists = await fsPromises.access(path).then(() => true, () => false);
+            const exists = await fsPromises.access(path).then(
+              () => true,
+              () => false,
+            );
 
             if (exists) {
               const original = await fsPromises.readFile(path, 'utf8');
@@ -88,11 +91,7 @@ export function createTestContextFactory(dir: string) {
 
     const runAsync = (cmd: string) => {
       const cp = runAsyncFrom(cmd, root);
-      cleanups.push(() => {
-        const result = cp.waitEnd();
-        cp.end();
-        return result;
-      });
+      cleanups.push(() => cp.end());
       return cp;
     };
 

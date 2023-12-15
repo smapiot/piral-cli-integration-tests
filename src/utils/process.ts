@@ -11,7 +11,7 @@ export function run(cmd: string, cwd = process.cwd()) {
     const { NODE_ENV, ...env } = process.env;
     exec(cmd, { cwd, env }, (err, stdout = '', stderr = '') => {
       const result = stdout + stderr;
-      
+
       if (err) {
         if (typeof result === 'string') {
           reject(result.trim());
@@ -29,15 +29,20 @@ export function runAsync(cmd: string, cwd = process.cwd()): RunningProcess {
   const { NODE_ENV, ...env } = process.env;
   const cp = exec(cmd, { cwd, env });
   const timeoutInSeconds = 45;
-
-  return {
-    waitEnd() {
+  const waitEnd = () => {
+    if (!cp.killed) {
       return new Promise<void>((resolve, reject) => {
         cp.on('error', reject);
         cp.on('exit', resolve);
         cp.on('close', resolve);
       });
-    },
+    }
+
+    return Promise.resolve();
+  };
+
+  return {
+    waitEnd,
     waitUntil(condition, error) {
       return new Promise<void>((resolve, reject) => {
         const ref = { timeout: undefined };
@@ -66,9 +71,13 @@ export function runAsync(cmd: string, cwd = process.cwd()): RunningProcess {
       });
     },
     end() {
+      const promise = waitEnd();
       cp.kill('SIGTERM');
+      cp.kill('SIGKILL');
+      cp.kill('SIGQUIT');
       cp.stdout.destroy();
       cp.stderr.destroy();
+      return promise;
     },
   };
 }

@@ -9,9 +9,6 @@ module.exports = {
   collectCoverage: false,
   globals: {
     NODE_ENV: 'test',
-    'ts-jest': {
-      diagnostics: false,
-    },
   },
   testEnvironmentOptions: {
     url: 'http://localhost',
@@ -48,8 +45,13 @@ module.exports = {
   roots: ['<rootDir>/src/'],
   testRegex: '(/__tests__/.*|\\.test)\\.ts$',
   transform: {
-    '^.+\\.ts$': 'ts-jest',
-    '^.+\\.js$': 'babel-jest',
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        diagnostics: false,
+      },
+    ],
+    '^.+\\.js$': ['babel-jest'],
   },
   moduleFileExtensions: ['ts', 'js', 'json'],
   moduleNameMapper: {},

@@ -47,24 +47,26 @@ runTests('pilet-debug', ({ test, setup }) => {
     'can produce a debug build with schema v0',
     ['debug.pilet'],
     async (ctx) => {
-      const port = await getFreePort(1256);
+      const port = await getFreePort(1258);
       const cp = ctx.runAsync(`npx pilet debug --port ${port} --schema v0`);
 
       await cp.waitUntil('Ready', 'The bundling process failed');
-
+      
       await page.goto(`http://localhost:${port}`);
 
       const res = await axios.get(`http://127.0.0.1:${port}/$pilet-api`);
       const pilets = res.data;
 
-      expect(pilets).toEqual([{
-        name: expect.anything(),
-        version: expect.anything(),
-        link: expect.anything(),
-        spec: 'v0',
-        hash: expect.anything(),
-        noCache: expect.anything(),
-      }]);
+      expect(pilets).toEqual([
+        {
+          name: expect.anything(),
+          version: expect.anything(),
+          link: expect.anything(),
+          spec: 'v0',
+          hash: expect.anything(),
+          noCache: expect.anything(),
+        },
+      ]);
 
       await expect(page).toHaveSelectorCount('.pi-tile', 1);
 
@@ -77,7 +79,7 @@ runTests('pilet-debug', ({ test, setup }) => {
     'can produce a debug build with schema v1',
     ['debug.pilet'],
     async (ctx) => {
-      const port = await getFreePort(1256);
+      const port = await getFreePort(1259);
       const cp = ctx.runAsync(`npx pilet debug --port ${port} --schema v1`);
 
       await cp.waitUntil('Ready', 'The bundling process failed');
@@ -87,14 +89,16 @@ runTests('pilet-debug', ({ test, setup }) => {
       const res = await axios.get(`http://127.0.0.1:${port}/$pilet-api`);
       const pilets = res.data;
 
-      expect(pilets).toEqual([{
-        name: expect.anything(),
-        version: expect.anything(),
-        link: expect.anything(),
-        spec: 'v1',
-        requireRef: expect.anything(),
-        integrity: expect.anything(),
-      }]);
+      expect(pilets).toEqual([
+        {
+          name: expect.anything(),
+          version: expect.anything(),
+          link: expect.anything(),
+          spec: 'v1',
+          requireRef: expect.anything(),
+          integrity: expect.anything(),
+        },
+      ]);
 
       await expect(page).toHaveSelectorCount('.pi-tile', 1);
 
@@ -107,7 +111,7 @@ runTests('pilet-debug', ({ test, setup }) => {
     'can produce a debug build with default schema v2',
     ['debug.pilet'],
     async (ctx) => {
-      const port = await getFreePort(1256);
+      const port = await getFreePort(1260);
       const cp = ctx.runAsync(`npx pilet debug --port ${port} --schema`);
 
       await cp.waitUntil('Ready', 'The bundling process failed');
@@ -117,14 +121,16 @@ runTests('pilet-debug', ({ test, setup }) => {
       const res = await axios.get(`http://127.0.0.1:${port}/$pilet-api`);
       const pilets = res.data;
 
-      expect(pilets).toEqual([{
-        name: expect.anything(),
-        version: expect.anything(),
-        link: expect.anything(),
-        spec: 'v2',
-        requireRef: expect.anything(),
-        dependencies: expect.anything(),
-      }]);
+      expect(pilets).toEqual([
+        {
+          name: expect.anything(),
+          version: expect.anything(),
+          link: expect.anything(),
+          spec: 'v2',
+          requireRef: expect.anything(),
+          dependencies: expect.anything(),
+        },
+      ]);
 
       await expect(page).toHaveSelectorCount('.pi-tile', 1);
 
@@ -137,7 +143,7 @@ runTests('pilet-debug', ({ test, setup }) => {
     'can produce a debug build with none schema',
     ['debug.pilet'],
     async (ctx) => {
-      const port = await getFreePort(1256);
+      const port = await getFreePort(1261);
       const cp = ctx.runAsync(`npx pilet debug --port ${port} --schema none`);
 
       await cp.waitUntil('Ready', 'The bundling process failed');
@@ -147,14 +153,16 @@ runTests('pilet-debug', ({ test, setup }) => {
       const res = await axios.get(`http://127.0.0.1:${port}/$pilet-api`);
       const pilets = res.data;
 
-      expect(pilets).toEqual([{
-        name: expect.anything(),
-        version: expect.anything(),
-        link: expect.anything(),
-        spec: 'v0',
-        hash: expect.anything(),
-        noCache: expect.anything(),
-      }]);
+      expect(pilets).toEqual([
+        {
+          name: expect.anything(),
+          version: expect.anything(),
+          link: expect.anything(),
+          spec: 'v0',
+          hash: expect.anything(),
+          noCache: expect.anything(),
+        },
+      ]);
 
       await expect(page).not.toHaveSelectorCount('.pi-tile', 1);
 
@@ -167,7 +175,7 @@ runTests('pilet-debug', ({ test, setup }) => {
     'can produce a debug build with an external feed',
     ['debug.pilet'],
     async (ctx) => {
-      const port = await getFreePort(1256);
+      const port = await getFreePort(1262);
       await ctx.setFiles({
         'src/index.tsx': `import * as React from 'react';
 import { PiletApi } from 'sample-piral';
@@ -214,7 +222,7 @@ export function setup(app: PiletApi) {
 }`,
       });
 
-      const port = await getFreePort(1256);
+      const port = await getFreePort(1263);
       const cp = ctx.runAsync(`npx pilet debug --port ${port} --app netflix-piral`);
 
       await cp.waitUntil('Ready', 'The bundling process failed');
