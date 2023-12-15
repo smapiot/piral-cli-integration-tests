@@ -72,7 +72,7 @@ npx playwright install chromium
 
 ## Testing Package
 
-[![npm version](https://img.shields.io/npm/v/piral-cli-webpack.svg?style=flat)](https://www.npmjs.com/package/piral-cli-webpack)
+[![npm version](https://img.shields.io/npm/v/@smapiot/piral-cli-integration-tests.svg?style=flat)](https://www.npmjs.com/package/@smapiot/piral-cli-integration-tests)
 
 The tests are also available as a drop-in package to test bundler plugins. You can install it with:
 
