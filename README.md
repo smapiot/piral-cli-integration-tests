@@ -108,9 +108,11 @@ If you don't specify the bundler name then the current working directory's *pack
 
 -   ✅ Scaffold pilet (using `sample-piral`)
 -   ✅ Run/debug new pilet
--   ✅ Build v2 pilet
--   ✅ Build v1 pilet
--   ✅ Build v0 pilet
+-   ✅ Build `mf` pilet
+-   ✅ Build `v3` pilet
+-   ✅ Build `v2` pilet
+-   ✅ Build `v1` pilet
+-   ✅ Build `v0` pilet
 -   ✅ Build standalone pilet
 -   ✅ Build pilet manifest file
 -   ✅ Publish pilet (to temp. feed)
@@ -142,6 +144,8 @@ Available features:
 - `pilet.v0`, supports the `v0` schema
 - `pilet.v1`, supports the `v1` schema
 - `pilet.v2`, supports the `v2` schema
+- `pilet.v3`, supports the `v3` schema
+- `pilet.mf`, supports the `mf` schema
 - `importmap.ref`, supports usage of an importmap
 - `importmap.local`, supports local creation of importmap side-bundles
 - `build.pilet`, supports building a pilet

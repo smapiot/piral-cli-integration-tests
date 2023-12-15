@@ -8,11 +8,51 @@ runTests('pilet-build', ({ test, setup }) => {
   });
 
   test(
+    'from-sample-piral-directly-mf',
+    'can build a standard templated mf pilet from sample-piral',
+    ['pilet.mf', 'build.pilet'],
+    async (ctx) => {
+      await ctx.run(`npx pilet build --schema mf`);
+
+      await ctx.assertFiles({
+        'dist/index.js'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).not.toContain('//@pilet');
+          expect(content).not.toContain('System.register(');
+          expect(content).toMatch(/^var\s/);
+          expect(content).toContain('./pilet');
+        },
+      });
+    },
+  );
+
+  test(
+    'from-sample-piral-directly-v3',
+    'can build a standard templated v3 pilet from sample-piral',
+    ['pilet.v3', 'build.pilet'],
+    async (ctx) => {
+      await ctx.run(`npx pilet build --schema v3`);
+
+      await ctx.assertFiles({
+        'dist/index.js'(content: string) {
+          expect(content).not.toBe('');
+          expect(content).toContain('//@pilet v:3');
+          expect(content).toContain('System.register(');
+          expect(content).not.toContain('currentScript.app=');
+          expect(content).not.toContain('require("react")');
+          expect(content).toContain('styles:');
+          expect(content).not.toContain('stylesheet');
+        },
+      });
+    },
+  );
+
+  test(
     'from-sample-piral-directly-v2',
     'can build a standard templated v2 pilet from sample-piral',
     ['pilet.v2', 'build.pilet'],
     async (ctx) => {
-      await ctx.run(`npx pilet build`);
+      await ctx.run(`npx pilet build --schema v2`);
 
       await ctx.assertFiles({
         'dist/index.js'(content: string) {
@@ -21,6 +61,8 @@ runTests('pilet-build', ({ test, setup }) => {
           expect(content).toContain('System.register(');
           expect(content).not.toContain('currentScript.app=');
           expect(content).not.toContain('require("react")');
+          expect(content).toContain('stylesheet');
+          expect(content).not.toContain('styles:');
         },
       });
     },
