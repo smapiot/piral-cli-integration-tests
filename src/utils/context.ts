@@ -39,6 +39,11 @@ export function createTestContextFactory(dir: string) {
       );
     };
 
+    const deleteFile = (file: string) => {
+      const path = resolve(root, file);
+      return fsPromises.rm(path, { force: true });
+    };
+
     const readFile = (file: string) => {
       const path = resolve(root, file);
       return fsPromises.readFile(path, 'utf8');
@@ -107,6 +112,7 @@ export function createTestContextFactory(dir: string) {
       clean,
       setRef,
       getRef,
+      deleteFile,
       readFile,
       setFiles,
       findFiles,

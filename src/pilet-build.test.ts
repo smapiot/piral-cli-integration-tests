@@ -284,7 +284,7 @@ runTests('pilet-build', ({ test, setup }) => {
       await ctx.run(`npx pilet build --target './different-target/index.js'`);
 
       await ctx.assertFiles({
-        dist: false,
+        dist: true,
         'different-target/index.js'(content: string) {
           expect(content).not.toBe('');
           expect(content).toContain('//@pilet v:2');
@@ -404,6 +404,7 @@ export function setup(app: PiletApi) {
     'can build a pilet with declaration',
     ['pilet.v2', 'build.pilet'],
     async (ctx) => {
+      await ctx.deleteFile('dist/index.d.ts');
       await ctx.run(`npx pilet build --declaration`);
 
       await ctx.assertFiles({
@@ -418,6 +419,7 @@ export function setup(app: PiletApi) {
     'can build a pilet without declaration',
     ['pilet.v2', 'build.pilet'],
     async (ctx) => {
+      await ctx.deleteFile('dist/index.d.ts');
       await ctx.run(`npx pilet build --no-declaration`);
 
       await ctx.assertFiles({

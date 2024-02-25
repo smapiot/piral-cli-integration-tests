@@ -16,6 +16,7 @@ export interface TestContext {
   runAsync(cmd: string): RunningProcess;
   setRef(id: string, file: string): void;
   getRef(id: string): string;
+  deleteFile(file: string): Promise<void>;
   readFile(file: string): Promise<string>;
   assertFiles(files: FileAssertions): Promise<void>;
   findFiles(glob: string): Promise<Array<string>>;
