@@ -1,6 +1,9 @@
 import { exec } from 'child_process';
+import { platform } from 'os';
 import { promisify } from 'util';
 import { RunningProcess } from './types';
+
+const isWindows = platform() === 'win32';
 
 export const execAsync = promisify(exec);
 
@@ -74,7 +77,12 @@ export function runAsync(cmd: string, cwd = process.cwd()): RunningProcess {
       const promise = waitEnd();
       cp.kill('SIGTERM');
       cp.kill('SIGKILL');
-      cp.kill('SIGQUIT');
+
+      if (!isWindows) {
+        // does not work on Windows
+        cp.kill('SIGQUIT');
+      }
+
       cp.stdout.destroy();
       cp.stderr.destroy();
       return promise;
