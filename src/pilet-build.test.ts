@@ -355,7 +355,7 @@ export function setup(app: PiletApi) {
       await ctx.run(`npx pilet build --type 'standalone'`);
 
       await ctx.assertFiles({
-        async 'dist/standalone/$pilet-api'(content: string) {
+        async 'dist/standalone/pilets.json'(content: string) {
           const pilets = JSON.parse(content);
           const { link } = pilets[0];
           const indexFileContent = await ctx.readFile(`dist/standalone/${link}`);
