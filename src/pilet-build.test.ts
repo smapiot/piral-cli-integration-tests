@@ -3,8 +3,11 @@ import { cliVersion, runTests, selectedBundler } from './utils';
 runTests('pilet-build', ({ test, setup }) => {
   setup(async (ctx) => {
     await ctx.run(`npx --package piral-cli@${cliVersion} pilet new sample-piral@${cliVersion} --bundler none`);
+    await ctx.pause(2); // pauses for windows
     await ctx.run(`npm i ${selectedBundler} --save-dev`);
+    await ctx.pause(1); // pauses for windows
     await ctx.run(`npm i emojis-list@3.0.0`);
+    await ctx.pause(1); // pauses for windows
   });
 
   test(

@@ -5,6 +5,11 @@ import { exists, globFiles } from './io';
 import { run as runFrom, runAsync as runAsyncFrom } from './process';
 import { FileAssertions, FileMutations, TestContext } from './types';
 
+export function pause(s: number) {
+  const ms = s * 1000;
+  return new Promise<void>(resolve => setTimeout(resolve, ms));
+}
+
 export function createTestContextFactory(dir: string) {
   const refs: Record<string, string> = {};
 
@@ -109,6 +114,7 @@ export function createTestContextFactory(dir: string) {
     return {
       id,
       root,
+      pause,
       clean,
       setRef,
       getRef,

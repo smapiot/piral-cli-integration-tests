@@ -13,6 +13,7 @@ export interface TestContext {
   id: string;
   clean(): Promise<void>;
   run(cmd: string): Promise<string>;
+  pause(seconds: number): Promise<void>;
   runAsync(cmd: string): RunningProcess;
   setRef(id: string, file: string): void;
   getRef(id: string): string;

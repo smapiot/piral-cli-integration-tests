@@ -76,7 +76,13 @@ export function runAsync(cmd: string, cwd = process.cwd()): RunningProcess {
     end() {
       const promise = waitEnd();
       cp.kill('SIGTERM');
-      cp.kill('SIGKILL');
+
+      try {
+        // might not work on Windows (EPERM)
+        cp.kill('SIGKILL');
+      } catch (err) {
+        console.warn(err);
+      }
 
       if (!isWindows) {
         // does not work on Windows
