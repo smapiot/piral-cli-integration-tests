@@ -20,13 +20,12 @@ Integration tests for the `piral-cli` tool and its default bundler. Can be used 
 
 ## Important Links
 
-* 📢 **[We are hiring!](https://smapiot.com/jobs)** - work with us on Piral, its ecosystem and our users
 * 🌍 [Website](https://piral.io/) - learn more about Piral
 * 📖 [Documentation](https://docs.piral.io/) - everything to get started and master micro frontends
 * 🉐 **Help translating Piral!** - making PRs in the [documentation branch](https://github.com/smapiot/piral/tree/documentation)
 * 🐞 [Issue Tracker](https://github.com/smapiot/piral/issues) - report bugs or suggest new features
 * 🗨  [Forums](https://stackoverflow.com/questions/tagged/piral) - use the community support on StackOverflow
-* 👪 [Community Chat](https://gitter.im/piral-io/community) - ask questions and provide answers in our Gitter room
+* 👪 [Community Chat](https://discord.gg/kKJ2FZmK8t) - ask questions and provide answers in our Discord server
 
 ## Running the Tests
 
